@@ -1,0 +1,523 @@
+{
+  "schema": 1,
+  "region": "Osa Peninsula, Costa Rica",
+  "window": "Corcovado and Golfo Dulce, early October",
+  "note": "48 species dealt into two complementary 24-cell cards from a single seed. Field-ID notes are written to help you tell each one apart in the field, not to be exhaustive. Photo credit is a legal requirement once real images land, so no image ships with an empty credit block.",
+  "species": [
+    {
+      "id": "scarlet-macaw",
+      "name": "Scarlet Macaw",
+      "binomial": "Ara macao",
+      "category": "bird",
+      "photo": "img/scarlet-macaw",
+      "id_note": "Look for the big unmistakable red body with yellow and blue across the wing, and listen first, because the raw scraping squawk usually reaches you before you find the pair crossing the canopy.",
+      "fun_fact": "They mate for life and you almost always see them in twos, one bird waiting on a branch while the other feeds.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "white-faced-capuchin",
+      "name": "White-faced Capuchin",
+      "binomial": "Cebus imitator",
+      "category": "mammal",
+      "photo": "img/white-faced-capuchin",
+      "id_note": "The small black monkey with the cream face and shoulders, quick and busy in the mid canopy, and if there is fruit or a dropped snack around it is usually the capuchin working out how to reach it.",
+      "fun_fact": "They rub crushed millipedes through their fur, which sounds strange until you learn it works on them as bug repellent.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "mantled-howler-monkey",
+      "name": "Mantled Howler Monkey",
+      "binomial": "Alouatta palliata",
+      "category": "mammal",
+      "photo": "img/mantled-howler-monkey",
+      "id_note": "Big and black with a fringe of gold-brown along the flanks, mostly sitting still and digesting leaves, and that deep rolling roar carrying through the forest at first light is him, not a jaguar.",
+      "fun_fact": "The roar comes from a hollow throat bone, and on a still morning it carries for miles through thick forest.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "three-toed-sloth",
+      "name": "Three-toed Sloth",
+      "binomial": "Bradypus variegatus",
+      "category": "mammal",
+      "photo": "img/three-toed-sloth",
+      "id_note": "A grey-brown lump high in a tree that slowly resolves into a sloth, and the three-toed one has the short stub tail and the dark mask through the eyes that the two-toed lacks.",
+      "fun_fact": "They climb all the way down to the ground about once a week, only to poop, which is one of the odder commitments in the forest.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "chestnut-mandibled-toucan",
+      "name": "Chestnut-mandibled Toucan",
+      "binomial": "Ramphastos ambiguus",
+      "category": "bird",
+      "photo": "img/chestnut-mandibled-toucan",
+      "id_note": "The big toucan of the Osa, black with a bright yellow face and chest, and a long bill that is yellow along the top and deep chestnut underneath, its yelping call ringing across the canopy all afternoon.",
+      "fun_fact": "The huge bill is mostly hollow honeycomb, so it weighs far less than it looks and doubles as a way to shed heat.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "great-curassow",
+      "name": "Great Curassow",
+      "binomial": "Crax rubra",
+      "category": "bird",
+      "photo": "img/great-curassow",
+      "id_note": "A big glossy-black ground bird about the size of a turkey with a curly crest, and on the male a bright yellow knob at the base of the bill, walking the forest floor far more than it flies.",
+      "fun_fact": "The female looks like a different bird entirely, barred rusty brown with the same curly crest, so a pair can fool you into counting two species.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "white-nosed-coati",
+      "name": "White-nosed Coati",
+      "binomial": "Nasua narica",
+      "category": "mammal",
+      "photo": "img/white-nosed-coati",
+      "id_note": "Think long-nosed raccoon cousin with a stripey tail held straight up like a flag, usually snuffling through the leaf litter in a loose band, nose down and tail up.",
+      "fun_fact": "The bands you see are all females and youngsters, while the big males wander off and live by themselves.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "blue-morpho-butterfly",
+      "name": "Blue Morpho Butterfly",
+      "binomial": "Morpho helenor",
+      "category": "invertebrate",
+      "photo": "img/blue-morpho-butterfly",
+      "id_note": "Impossible to miss, a big butterfly flashing electric blue as it flaps, then all but vanishing when it lands and folds up to show the dull brown, eye-spotted underside.",
+      "fun_fact": "The blue is not pigment at all, just microscopic scales bending the light, so the color shifts and flares as he tilts through the air.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "red-eyed-tree-frog",
+      "name": "Red-eyed Tree Frog",
+      "binomial": "Agalychnis callidryas",
+      "category": "amphibian",
+      "photo": "img/red-eyed-tree-frog",
+      "id_note": "The postcard frog, leaf green with blue-and-cream barred sides, orange feet and those huge red eyes, though by day it tucks it all in under a leaf and reads as a plain green blob.",
+      "fun_fact": "The red eyes are a startle trick, a sleeping frog flashes them to buy the half second it needs to leap clear.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "leafcutter-ants",
+      "name": "Leafcutter Ants",
+      "binomial": "Atta cephalotes",
+      "category": "invertebrate",
+      "photo": "img/leafcutter-ants",
+      "id_note": "You will spot the trail before the ants, a thin green river of carried leaf fragments flowing along the forest floor, each piece held up like a tiny sail.",
+      "fun_fact": "They do not eat the leaves at all, they compost them underground to farm a fungus, and that fungus is the only thing they actually eat.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "american-crocodile",
+      "name": "American Crocodile",
+      "binomial": "Crocodylus acutus",
+      "category": "reptile",
+      "photo": "img/american-crocodile",
+      "id_note": "The big one, grey and armored with a narrower, more tapered snout than a caiman, hauled out on a bank or drifting with just eyes and nostrils showing. Keep well back from the water's edge.",
+      "fun_fact": "The Tarcoles crocodiles get the fame, but Osa rivers hold plenty, and a big male here can pass four meters.",
+      "safety": "Genuinely dangerous. Never stand at the water's edge or let a dog near it, and watch from high on the bank.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "green-iguana",
+      "name": "Green Iguana",
+      "binomial": "Iguana iguana",
+      "category": "reptile",
+      "photo": "img/green-iguana",
+      "id_note": "The big lizard draped along a branch over water, greyish green with a banded tail and a row of spines down the back, and a round scale the size of a coin on the cheek below the ear.",
+      "fun_fact": "They drop straight into the river when startled and can stay under a long while to wait you out.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "king-vulture",
+      "name": "King Vulture",
+      "binomial": "Sarcoramphus papa",
+      "category": "bird",
+      "photo": "img/king-vulture",
+      "id_note": "The showy vulture, creamy white body with black wingtips and tail and a bare head splashed orange, red and yellow, and in a kettle of dark vultures it is the pale one that jumps out.",
+      "fun_fact": "It lets the smaller vultures sniff out the carcass, then lands and muscles straight to the front of the line.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "golfo-dulce-poison-frog",
+      "name": "Golfo Dulce Poison Frog",
+      "binomial": "Phyllobates vittatus",
+      "category": "amphibian",
+      "photo": "img/golfo-dulce-poison-frog",
+      "id_note": "Small and dark with a bold orange or gold stripe running down each side of the back and marbled blue-green legs, found only around the Golfo Dulce, so this one is a genuine local.",
+      "fun_fact": "It carries real toxin, one of only a handful of frogs potent enough that the whole family earned the poison-dart name.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "collared-peccary",
+      "name": "Collared Peccary",
+      "binomial": "Dicotyles tajacu",
+      "category": "mammal",
+      "photo": "img/collared-peccary",
+      "id_note": "A small dark pig-like animal with a pale collar band over the shoulder, in small calm groups, this is the mellow cousin of the big white-lipped herds.",
+      "fun_fact": "They say hello by scent, rubbing a gland on the rump so the whole band ends up carrying the same musky signature.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "basilisk-lizard",
+      "name": "Basilisk Lizard",
+      "binomial": "Basiliscus basiliscus",
+      "category": "reptile",
+      "photo": "img/basilisk-lizard",
+      "id_note": "Brown lizard with a crest on the head and back, usually caught mid-sprint, and the young ones will run flat across the surface of a stream on their hind legs before they drop in and swim.",
+      "fun_fact": "That water-running trick earned it the Jesus Christ lizard nickname, and the light babies pull it off far better than the heavy adults.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "bairds-tapir",
+      "name": "Baird's Tapir",
+      "binomial": "Tapirus bairdii",
+      "category": "mammal",
+      "photo": "img/bairds-tapir",
+      "id_note": "The big one, a heavy grey browser the size of a pony with a short grippy trunk of a nose, shy and mostly nocturnal, so a wallow or fresh three-toed tracks in the mud is often all you get.",
+      "fun_fact": "It is the largest land animal in Central America, and Corcovado is one of the last places you have a real chance of one.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "central-american-squirrel-monkey",
+      "name": "Central American Squirrel Monkey",
+      "binomial": "Saimiri oerstedii",
+      "category": "mammal",
+      "photo": "img/central-american-squirrel-monkey",
+      "id_note": "Small and quick with an orange back, a white face and a dark cap, pouring through the lower branches in a big loose troop, far tinier and busier than the capuchins.",
+      "fun_fact": "This one lives only along the Pacific coast of Costa Rica and Panama, and the Osa is one of the best places left to find it.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "neotropical-river-otter",
+      "name": "Neotropical River Otter",
+      "binomial": "Lontra longicaudis",
+      "category": "mammal",
+      "photo": "img/neotropical-river-otter",
+      "id_note": "A sleek brown swimmer in the rivers and mangrove channels, usually just a wake, a slick head and a glimpse of the long tail before it slips under, most likely around dawn.",
+      "fun_fact": "It leaves its droppings on the same riverside rocks again and again, little latrines that are easier to find than the otter itself.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "mangrove-tree-crab",
+      "name": "Mangrove Tree Crab",
+      "binomial": "Aratus pisonii",
+      "category": "invertebrate",
+      "photo": "img/mangrove-tree-crab",
+      "id_note": "A small dark crab that lives up in the mangrove branches rather than on the mud, scuttling around the trunk to keep the far side between you and it as you drift past.",
+      "fun_fact": "It climbs for a living, grazing on mangrove leaves, and drops down into the water only when it has to.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "ringed-kingfisher",
+      "name": "Ringed Kingfisher",
+      "binomial": "Megaceryle torquata",
+      "category": "bird",
+      "photo": "img/ringed-kingfisher",
+      "id_note": "The giant kingfisher, big shaggy crest, blue-grey back and a whole rusty-orange belly, perched over open water and rattling loudly as it flies off ahead of the boat.",
+      "fun_fact": "It is the largest kingfisher in the Americas, and that deep dry rattle carries a long way down a river.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "northern-jacana",
+      "name": "Northern Jacana",
+      "binomial": "Jacana spinosa",
+      "category": "bird",
+      "photo": "img/northern-jacana",
+      "id_note": "Chestnut body, black neck and a bright yellow bill and forehead shield, walking on lily pads and floating plants on absurdly long toes, flashing yellow-green in the wings when it flies.",
+      "fun_fact": "The female mates with several males and leaves each of them to raise a brood, tucking the chicks up under his wings.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "halloween-moon-crab",
+      "name": "Halloween Moon Crab",
+      "binomial": "Gecarcinus quadratus",
+      "category": "invertebrate",
+      "photo": "img/halloween-moon-crab",
+      "id_note": "A land crab in full costume, jet-black shell with orange legs, two purple claws and a pair of yellow spots up top, trooping across coastal trails, especially after rain.",
+      "fun_fact": "It lives in forest burrows as an adult, and heads back down to the sea only to release its eggs.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "bare-throated-tiger-heron",
+      "name": "Bare-throated Tiger-Heron",
+      "binomial": "Tigrisoma mexicanum",
+      "category": "bird",
+      "photo": "img/bare-throated-tiger-heron",
+      "id_note": "A stocky heron finely barred brown and grey, and the clincher is the bare throat, a strip of plain yellow-green skin down the front of the neck. Often stands frozen at the water for ages.",
+      "fun_fact": "It hunts on pure patience, holding dead still until a fish or a frog forgets it is even there.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "geoffroys-spider-monkey",
+      "name": "Geoffroy's Spider Monkey",
+      "binomial": "Ateles geoffroyi",
+      "category": "mammal",
+      "photo": "img/geoffroys-spider-monkey",
+      "id_note": "All limbs and tail, black-brown and loose-jointed, swinging through the high canopy and hanging by that long tail like a fifth arm, with barely a thumb on the hands.",
+      "fun_fact": "The tail works as a full extra hand, gripping branches and even picking up small things on its own.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "hoffmanns-two-toed-sloth",
+      "name": "Hoffmann's Two-toed Sloth",
+      "binomial": "Choloepus hoffmanni",
+      "category": "mammal",
+      "photo": "img/hoffmanns-two-toed-sloth",
+      "id_note": "The other sloth, shaggier and blonder with a pig-like snout and no face mask, two long claws on each front foot instead of three, and more of a night owl than the three-toed.",
+      "fun_fact": "Its fur runs the wrong way, parted along the belly, so rain sheds off cleanly while it hangs there upside down.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "fiery-billed-aracari",
+      "name": "Fiery-billed Aracari",
+      "binomial": "Pteroglossus frantzii",
+      "category": "bird",
+      "photo": "img/fiery-billed-aracari",
+      "id_note": "A small slim toucan with a fiery orange-and-black bill, yellow underparts crossed by a red band, and it belongs to the south Pacific, which is exactly why it, and not the keel-billed, rides this card.",
+      "fun_fact": "It is nearly an endemic, found only in southern Costa Rica and a sliver of Panama, so the Osa sits right in the middle of its small world.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "boat-billed-heron",
+      "name": "Boat-billed Heron",
+      "binomial": "Cochlearius cochlearius",
+      "category": "bird",
+      "photo": "img/boat-billed-heron",
+      "id_note": "A night heron with a huge black scoop of a bill and big dark eyes made for the dark, hunched in waterside trees through the day, so look for the roost rather than the hunt.",
+      "fun_fact": "That broad bill works like a scoop through the shallows, and the big eyes are built for feeding after dusk.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "roseate-spoonbill",
+      "name": "Roseate Spoonbill",
+      "binomial": "Platalea ajaja",
+      "category": "bird",
+      "photo": "img/roseate-spoonbill",
+      "id_note": "Nothing else out there is that pink, a wading bird washed rose and carrying a long grey spatula of a bill that it sweeps side to side through the shallows.",
+      "fun_fact": "The pink comes straight from what it eats, small crustaceans, the same pigment story that colors a flamingo.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "anhinga",
+      "name": "Anhinga",
+      "binomial": "Anhinga anhinga",
+      "category": "bird",
+      "photo": "img/anhinga",
+      "id_note": "Like a cormorant stretched thin, black with silver streaks on the wing and a dagger bill, often swimming with only the snaky neck above the water, then perched with wings spread to dry.",
+      "fun_fact": "Its feathers are not waterproof, which lets it sink low and hunt underwater, and is why you always catch it drying out afterward.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "tayra",
+      "name": "Tayra",
+      "binomial": "Eira barbara",
+      "category": "mammal",
+      "photo": "img/tayra",
+      "id_note": "A big dark weasel about the size of a small dog, long low body and a bushy tail, often with a paler head and a pale throat spot, bounding across a trail or a branch in a hurry.",
+      "fun_fact": "It will pick unripe plantains, stash them, and come back days later once they have ripened, planning ahead like few animals do.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "ocelot",
+      "name": "Ocelot",
+      "binomial": "Leopardus pardalis",
+      "category": "mammal",
+      "photo": "img/ocelot",
+      "id_note": "The mid-sized spotted cat, well bigger than a housecat, marked with chained rosettes that stretch into streaks, mostly nocturnal, so a dusk crossing or eyeshine in a torch is the usual look.",
+      "fun_fact": "Every ocelot's chain of spots is its own pattern, no two coats the same, which is how researchers tell them apart on camera traps.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "owl-butterfly",
+      "name": "Owl Butterfly",
+      "binomial": "Caligo sp.",
+      "category": "invertebrate",
+      "photo": "img/owl-butterfly",
+      "id_note": "A big dusk-flying butterfly with a giant eyespot under each hindwing that stares back like an owl, gliding low in the shade at the edges of the day. Species left open, several look alike.",
+      "fun_fact": "That huge fake eye can buy it a life, since a lizard aiming for the eye grabs a chunk of wing while the butterfly slips away.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "army-ants",
+      "name": "Army Ants",
+      "binomial": "Eciton burchellii",
+      "category": "invertebrate",
+      "photo": "img/army-ants",
+      "id_note": "Not a nest but a moving raid, a broad living front of ants sweeping across the forest floor, and the birds wheeling and calling above the column are half the giveaway.",
+      "fun_fact": "They build the nest out of their own linked bodies, a living wall around the queen that packs up and marches on each night.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "white-lipped-peccary",
+      "name": "White-lipped Peccary",
+      "binomial": "Tayassu pecari",
+      "category": "mammal",
+      "photo": "img/white-lipped-peccary",
+      "id_note": "Darker and bigger than the collared, with a white muzzle, and the real sign is the herd, sometimes dozens strong, moving together with a clatter of jaws and a strong musky smell. Give them room.",
+      "fun_fact": "A big herd is one of the few animals here worth genuinely respecting on foot, since they can turn bold when they are massed together.",
+      "safety": "Travels in large herds and can turn aggressive. Back away quietly and give a wide berth, ideally behind a tree or uphill.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "osprey",
+      "name": "Osprey",
+      "binomial": "Pandion haliaetus",
+      "category": "bird",
+      "photo": "img/osprey",
+      "id_note": "A big fish hawk, dark above and clean white below with a dark mask through the eye, hovering over water on kinked wings before it drops feet-first for a fish.",
+      "fun_fact": "Many of the ones you see here in October have just flown down from North America to fish these coasts for the winter.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "magnificent-frigatebird",
+      "name": "Magnificent Frigatebird",
+      "binomial": "Fregata magnificens",
+      "category": "bird",
+      "photo": "img/magnificent-frigatebird",
+      "id_note": "A big black seabird with long angular wings and a deeply forked tail, hanging almost motionless over the coast, and the male carries a red throat pouch he can blow up like a balloon.",
+      "fun_fact": "It cannot land on the water at all, so it makes part of its living chasing other seabirds and robbing them in mid-air.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "black-throated-trogon",
+      "name": "Black-throated Trogon",
+      "binomial": "Trogon rufus",
+      "category": "bird",
+      "photo": "img/black-throated-trogon",
+      "id_note": "A chunky, upright, sit-still bird of the mid-story, green above with a yellow belly, and on the male a black throat and a yellow bill. Usually you notice the stillness before the bird.",
+      "fun_fact": "Trogons have weak little feet and barely walk, so they sit and scan and dart out to snatch a fruit or an insect.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "long-billed-hermit",
+      "name": "Long-billed Hermit",
+      "binomial": "Phaethornis longirostris",
+      "category": "bird",
+      "photo": "img/long-billed-hermit",
+      "id_note": "A big brown hummingbird with a long curved bill and two long central tail feathers tipped white, keeping to the shady understory rather than the flowers out in the open.",
+      "fun_fact": "The males gather at the same spots day after day to sing and show off, a hummingbird singles bar that can run for years.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "costa-rica-zebra-tarantula",
+      "name": "Costa Rica Zebra Tarantula",
+      "binomial": "Aphonopelma seemanni",
+      "category": "invertebrate",
+      "photo": "img/costa-rica-zebra-tarantula",
+      "id_note": "A dark tarantula with pale striping down the legs, usually given away by a burrow with a silk-rimmed doorway near the ground, and the spider itself out mostly after dark.",
+      "fun_fact": "It is far likelier to bolt down its hole than to bother you, and even a bite runs about like a bee sting.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "red-mangrove",
+      "name": "Red Mangrove",
+      "binomial": "Rhizophora mangle",
+      "category": "plant",
+      "photo": "img/red-mangrove",
+      "id_note": "The tree that walks out into the water on a tangle of arching stilt roots, the front line of every mangrove channel, dropping long pencil-like seedlings straight down toward the mud.",
+      "fun_fact": "The seeds sprout while still hanging on the tree, then drop already growing, ready to root the moment they hit mud.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "spectacled-caiman",
+      "name": "Spectacled Caiman",
+      "binomial": "Caiman crocodilus",
+      "category": "reptile",
+      "photo": "img/spectacled-caiman",
+      "id_note": "The small croc relative, usually under two meters, with a bony ridge between the eyes like the bridge of a pair of glasses, lying still in ponds and slow backwaters. Smaller than a crocodile, still wild.",
+      "fun_fact": "The name comes from that ridge across the snout, which really does look like the bridge of a pair of spectacles.",
+      "safety": "Much smaller than a crocodile but still a wild predator. Do not wade in or reach toward one, and keep pets well back.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "olive-ridley-sea-turtle",
+      "name": "Olive Ridley Sea Turtle",
+      "binomial": "Lepidochelys olivacea",
+      "category": "marine",
+      "photo": "img/olive-ridley-sea-turtle",
+      "id_note": "A smallish sea turtle with a rounded olive-grey shell, seen as a head at the surface offshore, or as a female hauling up a beach at night to nest through the October arribadas.",
+      "fun_fact": "In an arribada, thousands of females come ashore on one beach over a few nights, one of the great spectacles of the Pacific coast.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "sally-lightfoot-crab",
+      "name": "Sally Lightfoot Crab",
+      "binomial": "Grapsus grapsus",
+      "category": "invertebrate",
+      "photo": "img/sally-lightfoot-crab",
+      "id_note": "The bright crab of the coastal rocks, red and orange over a darker shell as it ages, skittering across wet boulders in the splash zone and freezing the moment your shadow falls on it.",
+      "fun_fact": "It is remarkably quick and sure-footed on slick rock, and getting close enough for a photo is half the game.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "green-kingfisher",
+      "name": "Green Kingfisher",
+      "binomial": "Chloroceryle americana",
+      "category": "bird",
+      "photo": "img/green-kingfisher",
+      "id_note": "The small kingfisher, oily green above and white below with a rusty chest band on the male, low over quiet streams and easy to miss until it darts, so size alone splits it from the giant Ringed.",
+      "fun_fact": "It hunts from a low perch just above the water and hits so fast that the dive is often the first thing you notice.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "mangrove-black-hawk",
+      "name": "Mangrove Black-Hawk",
+      "binomial": "Buteogallus anthracinus",
+      "category": "bird",
+      "photo": "img/mangrove-black-hawk",
+      "id_note": "A stocky all-dark hawk with long yellow legs and a yellow face, a broad white band across the tail, perched low over mangrove and shore and very often working on a crab.",
+      "fun_fact": "Along this coast it lives on crabs more than anything, hunting the mudflats and the mangrove edge at low tide.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "whimbrel",
+      "name": "Whimbrel",
+      "binomial": "Numenius phaeopus",
+      "category": "bird",
+      "photo": "img/whimbrel",
+      "id_note": "A large brown shorebird with a long down-curved bill and bold dark stripes over the crown, working the mudflats and rocks, and the bill plus those head stripes settle it against lookalikes.",
+      "fun_fact": "Many are long-haul migrants resting here in October, some traveling between the far north and shores much further south.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    },
+    {
+      "id": "mangrove-swallow",
+      "name": "Mangrove Swallow",
+      "binomial": "Tachycineta albilinea",
+      "category": "bird",
+      "photo": "img/mangrove-swallow",
+      "id_note": "A small clean-cut swallow, green-blue above and white below with a white rump, skimming low over the water and often perched on a snag or a moored boat along the river.",
+      "fun_fact": "It feeds on the wing just above the surface, snapping up the insects that hover over open water.",
+      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+    }
+  ],
+  "safety": [
+    {
+      "name": "Fer-de-lance",
+      "binomial": "Bothrops asper",
+      "in_pool": false,
+      "note": "The snake to know here. A big pit viper, tan to grey with dark diamond edging down the sides, superbly camouflaged in leaf litter along trails and streams. Watch your feet, watch where you put your hands, and never step over a log blind."
+    },
+    {
+      "name": "Bullet ant",
+      "binomial": "Paraponera clavata",
+      "in_pool": false,
+      "note": "A very large black ant, up to two and a half centimeters, on tree trunks and low plants. The sting is famous for being about the most painful of any insect. Do not grab or brush against trunks you have not looked at first."
+    },
+    {
+      "name": "White-lipped Peccary",
+      "ref": "white-lipped-peccary",
+      "in_pool": true,
+      "note": "A large herd can turn aggressive. Back away quietly and give a wide berth, ideally behind a tree or uphill."
+    },
+    {
+      "name": "American Crocodile",
+      "ref": "american-crocodile",
+      "in_pool": true,
+      "note": "Genuinely dangerous. Stay well back from any river or estuary edge, and never let a dog near the water."
+    },
+    {
+      "name": "Spectacled Caiman",
+      "ref": "spectacled-caiman",
+      "in_pool": true,
+      "note": "Smaller than a crocodile but still a wild predator. Do not wade in or reach toward one, and keep pets back."
+    }
+  ]
+}

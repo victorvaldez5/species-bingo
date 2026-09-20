@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Osa Peninsula Wildlife Bingo</title>
+  <meta name="description" content="Offline field-spotting bingo for the wildlife of Corcovado and Golfo Dulce, Costa Rica.">
+
+  <meta name="theme-color" content="#36492e">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="img/icons/icon-192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="img/icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Osa Bingo">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#grid">Skip to card</a>
+
+  <header class="masthead paper-grain">
+    <div class="masthead__inner">
+      <span class="wnd-logo wnd-logo--cream" style="--logo-size: 30px" aria-hidden="true">
+        <span class="wnd-logo__row">Wild <em>&amp;</em> Native</span>
+        <span class="wnd-logo__sub"><span>Gardens</span></span>
+      </span>
+
+      <p class="masthead__kicker">Field notes · Osa Peninsula</p>
+      <h1 class="masthead__title">Wildlife <em>bingo.</em></h1>
+      <p class="masthead__sub">Corcovado and Golfo Dulce, early October. Twenty-four to find, one free.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Control strip -->
+    <section class="controls" aria-label="Card controls">
+      <div class="controls__meta">
+        <button id="card-toggle" class="btn btn--ghost" type="button" aria-live="polite">Card 1 of 2</button>
+        <span class="seed" title="Share this seed and card number so a friend gets the complementary card">
+          <span class="seed__label">seed</span>
+          <span id="seed" class="seed__value">----</span>
+        </span>
+      </div>
+      <div class="controls__actions">
+        <button id="new-card" class="btn" type="button">New card</button>
+        <button id="reset" class="btn btn--ghost" type="button">Reset marks</button>
+      </div>
+      <p id="progress" class="progress" aria-live="polite">0 of 24 spotted</p>
+    </section>
+
+    <!-- Bingo announcement -->
+    <p id="bingo-banner" class="bingo-banner" role="status" aria-live="polite" hidden></p>
+
+    <!-- The card -->
+    <section
+      id="grid"
+      class="grid"
+      aria-label="Bingo card, 5 by 5"
+      tabindex="-1">
+      <!-- cells injected by app.js -->
+    </section>
+
+    <!-- Safety callouts -->
+    <section class="safety" aria-labelledby="safety-head">
+      <div class="wn-orn wn-orn--tiny" aria-hidden="true"><span class="r"></span><span class="pip"></span><span class="r"></span></div>
+      <h2 id="safety-head" class="safety__head">Keep your distance.</h2>
+      <p class="safety__lead">These share the forest and the water. Two of them never belong on a bingo cell, so they live here instead. Look, log it in your head, and give it room.</p>
+      <ul id="safety-list" class="safety__list">
+        <!-- injected by app.js -->
+      </ul>
+    </section>
+
+    <!-- Credits -->
+    <section class="credits">
+      <details id="credits">
+        <summary class="credits__summary">Photo credits &amp; licenses</summary>
+        <p class="credits__intro">Every image ships with its author, license and source. Full list also in <code>CREDITS.md</code>.</p>
+        <ul id="credits-list" class="credits__list">
+          <!-- injected by app.js -->
+        </ul>
+      </details>
+    </section>
+
+    <footer class="colophon">
+      <p>Works offline. Add to your home screen on wifi, then it runs in airplane mode.</p>
+      <p class="colophon__seed">Same seed, same pair of cards, on any phone.</p>
+    </footer>
+  </main>
+
+  <!-- Species detail sheet -->
+  <dialog id="detail" class="sheet" aria-label="Species detail">
+    <form method="dialog" class="sheet__form">
+      <button class="sheet__close" value="close" aria-label="Close">&times;</button>
+    </form>
+    <div class="sheet__body">
+      <picture id="detail-picture" class="sheet__photo">
+        <img id="detail-img" alt="" decoding="async">
+      </picture>
+      <p id="detail-category" class="sheet__category">&nbsp;</p>
+      <h2 id="detail-name" class="sheet__name">&nbsp;</h2>
+      <p id="detail-binomial" class="sheet__binomial"></p>
+      <p id="detail-note" class="sheet__note"></p>
+      <p id="detail-fact" class="sheet__fact"></p>
+      <p id="detail-safety" class="sheet__safety" hidden></p>
+      <button id="detail-mark" class="btn btn--mark" type="button">Mark as spotted</button>
+      <p id="detail-credit" class="sheet__credit"></p>
+    </div>
+  </dialog>
+
+  <!-- Reset confirmation -->
+  <dialog id="confirm-reset" class="confirm" aria-labelledby="confirm-title">
+    <h2 id="confirm-title" class="confirm__title">Reset this card?</h2>
+    <p class="confirm__body">This clears <span id="confirm-count">everything</span> on card <span id="confirm-card">1</span>. You cannot undo it.</p>
+    <div class="confirm__actions">
+      <button id="confirm-cancel" class="btn btn--ghost" type="button" autofocus>Keep them</button>
+      <button id="confirm-yes" class="btn btn--danger" type="button">Reset marks</button>
+    </div>
+  </dialog>
+
+  <noscript>
+    <p style="padding:24px;max-width:36rem;margin:0 auto;font-family:system-ui">
+      This bingo card needs JavaScript to deal the species and remember what you have
+      spotted. It runs entirely in your browser and works offline once loaded.
+    </p>
+  </noscript>
+
+  <script src="app.js"></script>
+</body>
+</html>

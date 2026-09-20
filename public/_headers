@@ -1,0 +1,18 @@
+# Cloudflare edge-caches the service worker; without no-cache clients keep
+# running the old worker after a deploy and never receive updated assets.
+# This file overrides Cloudflare's defaults (up to 100 rules allowed).
+
+/sw.js
+  Cache-Control: no-cache
+
+/manifest.webmanifest
+  Cache-Control: no-cache
+
+/species.json
+  Cache-Control: no-cache
+
+/img/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable

@@ -1,0 +1,11 @@
+{
+  // Cloudflare Workers Static Assets — assets-only deployment.
+  // No `main` and no Worker script: this ships the ./public directory as-is.
+  // Adding `main` without a script file produces a "Missing entry-point" error.
+  "name": "osa-bingo",
+  "compatibility_date": "2026-09-20",
+  "assets": {
+    "directory": "./public",
+    "not_found_handling": "404-page"
+  }
+}
