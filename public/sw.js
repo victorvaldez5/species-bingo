@@ -14,7 +14,7 @@
    ============================================================= */
 
 const VERSION = 'v1';
-const BUILD = '1b24453796';                                 // BUILD (rewritten by build-manifest)
+const BUILD = '19b16abbcb';                                 // BUILD (rewritten by build-manifest)
 const CACHE = `osa-bingo-${VERSION}-${BUILD}`;
 
 const PRECACHE = [

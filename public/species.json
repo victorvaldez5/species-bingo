@@ -12,7 +12,7 @@
       "photo": "img/scarlet-macaw",
       "id_note": "Look for the big unmistakable red body with yellow and blue across the wing, and listen first, because the raw scraping squawk usually reaches you before you find the pair crossing the canopy.",
       "fun_fact": "They mate for life and you almost always see them in twos, one bird waiting on a branch while the other feeds.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Charles J. Sharp", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Scarlet_macaw_(Ara_macao_cyanopterus)_Copan.jpg" }
     },
     {
       "id": "white-faced-capuchin",
@@ -22,7 +22,7 @@
       "photo": "img/white-faced-capuchin",
       "id_note": "The small black monkey with the cream face and shoulders, quick and busy in the mid canopy, and if there is fruit or a dropped snack around it is usually the capuchin working out how to reach it.",
       "fun_fact": "They rub crushed millipedes through their fur, which sounds strange until you learn it works on them as bug repellent.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Rhododendrites", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Panamanian_white-faced_capuchins_(81622)2.jpg" }
     },
     {
       "id": "mantled-howler-monkey",
@@ -32,7 +32,7 @@
       "photo": "img/mantled-howler-monkey",
       "id_note": "Big and black with a fringe of gold-brown along the flanks, mostly sitting still and digesting leaves, and that deep rolling roar carrying through the forest at first light is him, not a jaguar.",
       "fun_fact": "The roar comes from a hollow throat bone, and on a still morning it carries for miles through thick forest.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Dr. Ariel Rodriguez-Vargas", "license": "CC BY 4.0", "source": "https://commons.wikimedia.org/wiki/File:Panamanian_Male_Adult_Howler_Monkey.jpg" }
     },
     {
       "id": "three-toed-sloth",
@@ -42,7 +42,7 @@
       "photo": "img/three-toed-sloth",
       "id_note": "A grey-brown lump high in a tree that slowly resolves into a sloth, and the three-toed one has the short stub tail and the dark mask through the eyes that the two-toed lacks.",
       "fun_fact": "They climb all the way down to the ground about once a week, only to poop, which is one of the odder commitments in the forest.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Stefan Laube (Tauchgurke)", "license": "Public domain", "source": "https://commons.wikimedia.org/wiki/File:Bradypus.jpg" }
     },
     {
       "id": "chestnut-mandibled-toucan",
@@ -52,7 +52,7 @@
       "photo": "img/chestnut-mandibled-toucan",
       "id_note": "The big toucan of the Osa, black with a bright yellow face and chest, and a long bill that is yellow along the top and deep chestnut underneath, its yelping call ringing across the canopy all afternoon.",
       "fun_fact": "The huge bill is mostly hollow honeycomb, so it weighs far less than it looks and doubles as a way to shed heat.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Rhododendrites", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Yellow-throated_toucan_(02923).jpg" }
     },
     {
       "id": "great-curassow",
@@ -62,7 +62,7 @@
       "photo": "img/great-curassow",
       "id_note": "A big glossy-black ground bird about the size of a turkey with a curly crest, and on the male a bright yellow knob at the base of the bill, walking the forest floor far more than it flies.",
       "fun_fact": "The female looks like a different bird entirely, barred rusty brown with the same curly crest, so a pair can fool you into counting two species.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "lwolfartist", "license": "CC BY 2.0", "source": "https://commons.wikimedia.org/wiki/File:Great_curassow_arenal_observatory_lodge_3.25.24_DSC_4518-topaz-denoiseraw.jpg" }
     },
     {
       "id": "white-nosed-coati",
@@ -72,7 +72,7 @@
       "photo": "img/white-nosed-coati",
       "id_note": "Think long-nosed raccoon cousin with a stripey tail held straight up like a flag, usually snuffling through the leaf litter in a loose band, nose down and tail up.",
       "fun_fact": "The bands you see are all females and youngsters, while the big males wander off and live by themselves.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Chuck Homler, Focus On Wildlife", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:WNCoati_Alajuela_CR.png" }
     },
     {
       "id": "blue-morpho-butterfly",
@@ -82,7 +82,7 @@
       "photo": "img/blue-morpho-butterfly",
       "id_note": "Impossible to miss, a big butterfly flashing electric blue as it flaps, then all but vanishing when it lands and folds up to show the dull brown, eye-spotted underside.",
       "fun_fact": "The blue is not pigment at all, just microscopic scales bending the light, so the color shifts and flares as he tilts through the air.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Photograph by Mike Peel (www.mikepeel.net).", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:At_Mariposario_del_Drago_2022_052.jpg" }
     },
     {
       "id": "red-eyed-tree-frog",
@@ -92,7 +92,7 @@
       "photo": "img/red-eyed-tree-frog",
       "id_note": "The postcard frog, leaf green with blue-and-cream barred sides, orange feet and those huge red eyes, though by day it tucks it all in under a leaf and reads as a plain green blob.",
       "fun_fact": "The red eyes are a startle trick, a sleeping frog flashes them to buy the half second it needs to leap clear.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Geoff Gallice (derivative by B. Kimmel)", "license": "CC BY 2.0", "source": "https://commons.wikimedia.org/wiki/File:Red-eyed_Tree_Frog_(Agalychnis_callidryas)_1.png" }
     },
     {
       "id": "leafcutter-ants",
@@ -102,7 +102,7 @@
       "photo": "img/leafcutter-ants",
       "id_note": "You will spot the trail before the ants, a thin green river of carried leaf fragments flowing along the forest floor, each piece held up like a tiny sail.",
       "fun_fact": "They do not eat the leaves at all, they compost them underground to farm a fungus, and that fungus is the only thing they actually eat.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Pjt56", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Atta_cephalotes-pjt.jpg" }
     },
     {
       "id": "american-crocodile",
@@ -113,7 +113,7 @@
       "id_note": "The big one, grey and armored with a narrower, more tapered snout than a caiman, hauled out on a bank or drifting with just eyes and nostrils showing. Keep well back from the water's edge.",
       "fun_fact": "The Tarcoles crocodiles get the fame, but Osa rivers hold plenty, and a big male here can pass four meters.",
       "safety": "Genuinely dangerous. Never stand at the water's edge or let a dog near it, and watch from high on the bank.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Tomás Castelazo", "license": "CC BY-SA 2.5", "source": "https://commons.wikimedia.org/wiki/File:Crocodylus_acutus_mexico_02-edit1.jpg" }
     },
     {
       "id": "green-iguana",
@@ -123,7 +123,7 @@
       "photo": "img/green-iguana",
       "id_note": "The big lizard draped along a branch over water, greyish green with a banded tail and a row of spines down the back, and a round scale the size of a coin on the cheek below the ear.",
       "fun_fact": "They drop straight into the river when startled and can stay under a long while to wait you out.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Basile Morin", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Close-up_photograph_of_an_Iguana_iguana.jpg" }
     },
     {
       "id": "king-vulture",
@@ -133,7 +133,7 @@
       "photo": "img/king-vulture",
       "id_note": "The showy vulture, creamy white body with black wingtips and tail and a bare head splashed orange, red and yellow, and in a kettle of dark vultures it is the pale one that jumps out.",
       "fun_fact": "It lets the smaller vultures sniff out the carcass, then lands and muscles straight to the front of the line.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Renato Augusto Martins", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Urubu_rei_-_Sarcoramphus_papa.jpg" }
     },
     {
       "id": "golfo-dulce-poison-frog",
@@ -143,7 +143,7 @@
       "photo": "img/golfo-dulce-poison-frog",
       "id_note": "Small and dark with a bold orange or gold stripe running down each side of the back and marbled blue-green legs, found only around the Golfo Dulce, so this one is a genuine local.",
       "fun_fact": "It carries real toxin, one of only a handful of frogs potent enough that the whole family earned the poison-dart name.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Celloc85", "license": "CC BY 4.0", "source": "https://commons.wikimedia.org/wiki/File:Golfo_Dulce_Poison_Dart_Frog.jpg" }
     },
     {
       "id": "collared-peccary",
@@ -153,7 +153,7 @@
       "photo": "img/collared-peccary",
       "id_note": "A small dark pig-like animal with a pale collar band over the shoulder, in small calm groups, this is the mellow cousin of the big white-lipped herds.",
       "fun_fact": "They say hello by scent, rubbing a gland on the rump so the whole band ends up carrying the same musky signature.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Carlos Delgado", "license": "CC BY-SA 3.0", "source": "https://commons.wikimedia.org/wiki/File:Pecari_tajacu_-_02.jpg" }
     },
     {
       "id": "basilisk-lizard",
@@ -163,7 +163,7 @@
       "photo": "img/basilisk-lizard",
       "id_note": "Brown lizard with a crest on the head and back, usually caught mid-sprint, and the young ones will run flat across the surface of a stream on their hind legs before they drop in and swim.",
       "fun_fact": "That water-running trick earned it the Jesus Christ lizard nickname, and the light babies pull it off far better than the heavy adults.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Charles J. Sharp", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Common_basilisk_(Basiliscus_basiliscus)_male.jpg" }
     },
     {
       "id": "bairds-tapir",
@@ -173,7 +173,7 @@
       "photo": "img/bairds-tapir",
       "id_note": "The big one, a heavy grey browser the size of a pony with a short grippy trunk of a nose, shy and mostly nocturnal, so a wallow or fresh three-toed tracks in the mud is often all you get.",
       "fun_fact": "It is the largest land animal in Central America, and Corcovado is one of the last places you have a real chance of one.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Rhododendrites", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Baird%27s_tapir_mother_with_baby_(92151).jpg" }
     },
     {
       "id": "central-american-squirrel-monkey",
@@ -183,7 +183,7 @@
       "photo": "img/central-american-squirrel-monkey",
       "id_note": "Small and quick with an orange back, a white face and a dark cap, pouring through the lower branches in a big loose troop, far tinier and busier than the capuchins.",
       "fun_fact": "This one lives only along the Pacific coast of Costa Rica and Panama, and the Osa is one of the best places left to find it.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Trufa8", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Male_Central_American_Squirrel_Monkey.jpg" }
     },
     {
       "id": "neotropical-river-otter",
@@ -193,7 +193,7 @@
       "photo": "img/neotropical-river-otter",
       "id_note": "A sleek brown swimmer in the rivers and mangrove channels, usually just a wake, a slick head and a glimpse of the long tail before it slips under, most likely around dawn.",
       "fun_fact": "It leaves its droppings on the same riverside rocks again and again, little latrines that are easier to find than the otter itself.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Heidy Sanz Montoya", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Nutria_zona_de_conservaci%C3%B3n.jpg" }
     },
     {
       "id": "mangrove-tree-crab",
@@ -203,7 +203,7 @@
       "photo": "img/mangrove-tree-crab",
       "id_note": "A small dark crab that lives up in the mangrove branches rather than on the mud, scuttling around the trunk to keep the far side between you and it as you drift past.",
       "fun_fact": "It climbs for a living, grazing on mangrove leaves, and drops down into the water only when it has to.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Everglades NPS from Homestead, Florida, United States", "license": "Public domain", "source": "https://commons.wikimedia.org/wiki/File:Mangrove_Tree_Crab,_NPSPhoto,_David_Grimes_(8720316307).jpg" }
     },
     {
       "id": "ringed-kingfisher",
@@ -213,7 +213,7 @@
       "photo": "img/ringed-kingfisher",
       "id_note": "The giant kingfisher, big shaggy crest, blue-grey back and a whole rusty-orange belly, perched over open water and rattling loudly as it flies off ahead of the boat.",
       "fun_fact": "It is the largest kingfisher in the Americas, and that deep dry rattle carries a long way down a river.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "lwolfartist", "license": "CC BY 2.0", "source": "https://commons.wikimedia.org/wiki/File:Ringed_kingfisher_ca%C3%B1o_negro_pm_4.17.25_DSC_0774-topaz-rawdenoise.jpg" }
     },
     {
       "id": "northern-jacana",
@@ -223,7 +223,7 @@
       "photo": "img/northern-jacana",
       "id_note": "Chestnut body, black neck and a bright yellow bill and forehead shield, walking on lily pads and floating plants on absurdly long toes, flashing yellow-green in the wings when it flies.",
       "fun_fact": "The female mates with several males and leaves each of them to raise a brood, tucking the chicks up under his wings.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Telegro", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Northern_Jacana_Costa_Rica.jpg" }
     },
     {
       "id": "halloween-moon-crab",
@@ -233,7 +233,7 @@
       "photo": "img/halloween-moon-crab",
       "id_note": "A land crab in full costume, jet-black shell with orange legs, two purple claws and a pair of yellow spots up top, trooping across coastal trails, especially after rain.",
       "fun_fact": "It lives in forest burrows as an adult, and heads back down to the sea only to release its eggs.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Charles J. Sharp", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Pacific_land_crab_(Gecarcinus_quadratus).jpg" }
     },
     {
       "id": "bare-throated-tiger-heron",
@@ -243,7 +243,7 @@
       "photo": "img/bare-throated-tiger-heron",
       "id_note": "A stocky heron finely barred brown and grey, and the clincher is the bare throat, a strip of plain yellow-green skin down the front of the neck. Often stands frozen at the water for ages.",
       "fun_fact": "It hunts on pure patience, holding dead still until a fish or a frog forgets it is even there.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Mikeschafer.wildlife", "license": "CC BY 4.0", "source": "https://commons.wikimedia.org/wiki/File:Bare-throated_Tiger_Heron_in_Corcovado_National_Park,_Costa_Rica.jpg" }
     },
     {
       "id": "geoffroys-spider-monkey",
@@ -253,7 +253,7 @@
       "photo": "img/geoffroys-spider-monkey",
       "id_note": "All limbs and tail, black-brown and loose-jointed, swinging through the high canopy and hanging by that long tail like a fifth arm, with barely a thumb on the hands.",
       "fun_fact": "The tail works as a full extra hand, gripping branches and even picking up small things on its own.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Charles J. Sharp", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Geoffroy%27s_spider_monkey_(Ateles_geoffroyi_yucatanensis)_male_Peten.jpg" }
     },
     {
       "id": "hoffmanns-two-toed-sloth",
@@ -263,7 +263,7 @@
       "photo": "img/hoffmanns-two-toed-sloth",
       "id_note": "The other sloth, shaggier and blonder with a pig-like snout and no face mask, two long claws on each front foot instead of three, and more of a night owl than the three-toed.",
       "fun_fact": "Its fur runs the wrong way, parted along the belly, so rain sheds off cleanly while it hangs there upside down.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Jsfouche", "license": "CC BY-SA 3.0", "source": "https://commons.wikimedia.org/wiki/File:2_toed_sloth.jpg" }
     },
     {
       "id": "fiery-billed-aracari",
@@ -273,7 +273,7 @@
       "photo": "img/fiery-billed-aracari",
       "id_note": "A small slim toucan with a fiery orange-and-black bill, yellow underparts crossed by a red band, and it belongs to the south Pacific, which is exactly why it, and not the keel-billed, rides this card.",
       "fun_fact": "It is nearly an endemic, found only in southern Costa Rica and a sliver of Panama, so the Osa sits right in the middle of its small world.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "CRaPuLe (Alison Le Garec)", "license": "CC BY 3.0", "source": "https://commons.wikimedia.org/wiki/File:Pteroglossus_frantzii.JPG" }
     },
     {
       "id": "boat-billed-heron",
@@ -283,7 +283,7 @@
       "photo": "img/boat-billed-heron",
       "id_note": "A night heron with a huge black scoop of a bill and big dark eyes made for the dark, hunched in waterside trees through the day, so look for the roost rather than the hunt.",
       "fun_fact": "That broad bill works like a scoop through the shallows, and the big eyes are built for feeding after dusk.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Joseph C Boone", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Boat-billed_Heron_2_JCB.jpg" }
     },
     {
       "id": "roseate-spoonbill",
@@ -293,7 +293,7 @@
       "photo": "img/roseate-spoonbill",
       "id_note": "Nothing else out there is that pink, a wading bird washed rose and carrying a long grey spatula of a bill that it sweeps side to side through the shallows.",
       "fun_fact": "The pink comes straight from what it eats, small crustaceans, the same pigment story that colors a flamingo.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Andy Morffew from Itchen Abbas, Hampshire, UK", "license": "CC BY 2.0", "source": "https://commons.wikimedia.org/wiki/File:Looking_Back_through_Rose-Tinted_Glasses_(52847859917).jpg" }
     },
     {
       "id": "anhinga",
@@ -303,7 +303,7 @@
       "photo": "img/anhinga",
       "id_note": "Like a cormorant stretched thin, black with silver streaks on the wing and a dagger bill, often swimming with only the snaky neck above the water, then perched with wings spread to dry.",
       "fun_fact": "Its feathers are not waterproof, which lets it sink low and hunt underwater, and is why you always catch it drying out afterward.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Tim from Ithaca", "license": "CC BY 2.0", "source": "https://commons.wikimedia.org/wiki/File:Anhinga_anhinga_-Costa_Rica-8.jpg" }
     },
     {
       "id": "tayra",
@@ -313,7 +313,7 @@
       "photo": "img/tayra",
       "id_note": "A big dark weasel about the size of a small dog, long low body and a bushy tail, often with a paler head and a pale throat spot, bounding across a trail or a branch in a hurry.",
       "fun_fact": "It will pick unripe plantains, stash them, and come back days later once they have ripened, planning ahead like few animals do.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Ninahale", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Tayra_-_Male,_Brazil_(cropped).jpg" }
     },
     {
       "id": "ocelot",
@@ -323,7 +323,7 @@
       "photo": "img/ocelot",
       "id_note": "The mid-sized spotted cat, well bigger than a housecat, marked with chained rosettes that stretch into streaks, mostly nocturnal, so a dusk crossing or eyeshine in a torch is the usual look.",
       "fun_fact": "Every ocelot's chain of spots is its own pattern, no two coats the same, which is how researchers tell them apart on camera traps.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Giles Laurent", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:016_Ocelot_in_Encontro_das_%C3%81guas_State_Park_Photo_by_Giles_Laurent.jpg" }
     },
     {
       "id": "owl-butterfly",
@@ -333,7 +333,7 @@
       "photo": "img/owl-butterfly",
       "id_note": "A big dusk-flying butterfly with a giant eyespot under each hindwing that stares back like an owl, gliding low in the shade at the edges of the day. Species left open, several look alike.",
       "fun_fact": "That huge fake eye can buy it a life, since a lizard aiming for the eye grabs a chunk of wing while the butterfly slips away.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Charles J. Sharp", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Yellow-fronted_owl-butterfly_(Caligo_telamonius).jpg" }
     },
     {
       "id": "army-ants",
@@ -343,7 +343,7 @@
       "photo": "img/army-ants",
       "id_note": "Not a nest but a moving raid, a broad living front of ants sweeping across the forest floor, and the birds wheeling and calling above the column are half the giveaway.",
       "fun_fact": "They build the nest out of their own linked bodies, a living wall around the queen that packs up and marches on each night.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "rodrigo_lazaro", "license": "CC BY 4.0", "source": "https://commons.wikimedia.org/wiki/File:Eciton_burchellii_-_rodrigo_lazaro_-_323639271.jpeg" }
     },
     {
       "id": "white-lipped-peccary",
@@ -354,7 +354,7 @@
       "id_note": "Darker and bigger than the collared, with a white muzzle, and the real sign is the herd, sometimes dozens strong, moving together with a clatter of jaws and a strong musky smell. Give them room.",
       "fun_fact": "A big herd is one of the few animals here worth genuinely respecting on foot, since they can turn bold when they are massed together.",
       "safety": "Travels in large herds and can turn aggressive. Back away quietly and give a wide berth, ideally behind a tree or uphill.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Rafael Mitsuo", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Queixada-RPPN_Cristalino_I-Rafael_Mitsuo(001).jpg" }
     },
     {
       "id": "osprey",
@@ -364,7 +364,7 @@
       "photo": "img/osprey",
       "id_note": "A big fish hawk, dark above and clean white below with a dark mask through the eye, hovering over water on kinked wings before it drops feet-first for a fish.",
       "fun_fact": "Many of the ones you see here in October have just flown down from North America to fish these coasts for the winter.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Chuck Homler / Focus On Wildlife", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Osprey_Perched_Snag_Heislerville.jpg" }
     },
     {
       "id": "magnificent-frigatebird",
@@ -374,7 +374,7 @@
       "photo": "img/magnificent-frigatebird",
       "id_note": "A big black seabird with long angular wings and a deeply forked tail, hanging almost motionless over the coast, and the male carries a red throat pouch he can blow up like a balloon.",
       "fun_fact": "It cannot land on the water at all, so it makes part of its living chasing other seabirds and robbing them in mid-air.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Andrew Turner from Washington, DC, United States", "license": "CC BY 2.0", "source": "https://commons.wikimedia.org/wiki/File:Fregata_magnificens_-Galapagos,_Ecuador_-male-8_(1).jpg" }
     },
     {
       "id": "black-throated-trogon",
@@ -384,7 +384,7 @@
       "photo": "img/black-throated-trogon",
       "id_note": "A chunky, upright, sit-still bird of the mid-story, green above with a yellow belly, and on the male a black throat and a yellow bill. Usually you notice the stillness before the bird.",
       "fun_fact": "Trogons have weak little feet and barely walk, so they sit and scan and dart out to snatch a fruit or an insect.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Frank Vassen from Brussels, Belgium", "license": "CC BY 2.0", "source": "https://commons.wikimedia.org/wiki/File:Male_Black-throated_Trogon_(Trogon_rufus),_Peninsula_di_Osa,_Costa_Rica_(3987049937).jpg" }
     },
     {
       "id": "long-billed-hermit",
@@ -394,7 +394,7 @@
       "photo": "img/long-billed-hermit",
       "id_note": "A big brown hummingbird with a long curved bill and two long central tail feathers tipped white, keeping to the shady understory rather than the flowers out in the open.",
       "fun_fact": "The males gather at the same spots day after day to sing and show off, a hummingbird singles bar that can run for years.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Kradlum", "license": "CC BY 2.0", "source": "https://commons.wikimedia.org/wiki/File:Phaethornis_longirostris.jpg" }
     },
     {
       "id": "costa-rica-zebra-tarantula",
@@ -404,7 +404,7 @@
       "photo": "img/costa-rica-zebra-tarantula",
       "id_note": "A dark tarantula with pale striping down the legs, usually given away by a burrow with a silk-rimmed doorway near the ground, and the spider itself out mostly after dark.",
       "fun_fact": "It is far likelier to bolt down its hole than to bother you, and even a bite runs about like a bee sting.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Cerre", "license": "CC BY 3.0", "source": "https://commons.wikimedia.org/wiki/File:Aphonopelma_seemanni_004.jpg" }
     },
     {
       "id": "red-mangrove",
@@ -414,7 +414,7 @@
       "photo": "img/red-mangrove",
       "id_note": "The tree that walks out into the water on a tangle of arching stilt roots, the front line of every mangrove channel, dropping long pencil-like seedlings straight down toward the mud.",
       "fun_fact": "The seeds sprout while still hanging on the tree, then drop already growing, ready to root the moment they hit mud.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Emőke Dénes", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Malpighiales_-_Rhizophora_mangle_-_39.jpg" }
     },
     {
       "id": "spectacled-caiman",
@@ -425,7 +425,7 @@
       "id_note": "The small croc relative, usually under two meters, with a bony ridge between the eyes like the bridge of a pair of glasses, lying still in ponds and slow backwaters. Smaller than a crocodile, still wild.",
       "fun_fact": "The name comes from that ridge across the snout, which really does look like the bridge of a pair of spectacles.",
       "safety": "Much smaller than a crocodile but still a wild predator. Do not wade in or reach toward one, and keep pets well back.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Berrucomons", "license": "CC BY-SA 3.0", "source": "https://commons.wikimedia.org/wiki/File:Caiman_crocodilus_llanos.JPG" }
     },
     {
       "id": "olive-ridley-sea-turtle",
@@ -435,7 +435,7 @@
       "photo": "img/olive-ridley-sea-turtle",
       "id_note": "A smallish sea turtle with a rounded olive-grey shell, seen as a head at the surface offshore, or as a female hauling up a beach at night to nest through the October arribadas.",
       "fun_fact": "In an arribada, thousands of females come ashore on one beach over a few nights, one of the great spectacles of the Pacific coast.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Thierry Caro", "license": "CC BY-SA 3.0", "source": "https://commons.wikimedia.org/wiki/File:Lepidochelys-olivacea-K%C3%A9lonia-1.JPG" }
     },
     {
       "id": "sally-lightfoot-crab",
@@ -445,7 +445,7 @@
       "photo": "img/sally-lightfoot-crab",
       "id_note": "The bright crab of the coastal rocks, red and orange over a darker shell as it ages, skittering across wet boulders in the splash zone and freezing the moment your shadow falls on it.",
       "fun_fact": "It is remarkably quick and sure-footed on slick rock, and getting close enough for a photo is half the game.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Nosferattus", "license": "CC0", "source": "https://commons.wikimedia.org/wiki/File:Sally_Lightfoot_Crab_2019.jpg" }
     },
     {
       "id": "green-kingfisher",
@@ -455,7 +455,7 @@
       "photo": "img/green-kingfisher",
       "id_note": "The small kingfisher, oily green above and white below with a rusty chest band on the male, low over quiet streams and easy to miss until it darts, so size alone splits it from the giant Ringed.",
       "fun_fact": "It hunts from a low perch just above the water and hits so fast that the dive is often the first thing you notice.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Charles J. Sharp", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Green_kingfisher_(Chloroceryle_americana)_male_3.jpg" }
     },
     {
       "id": "mangrove-black-hawk",
@@ -465,17 +465,17 @@
       "photo": "img/mangrove-black-hawk",
       "id_note": "A stocky all-dark hawk with long yellow legs and a yellow face, a broad white band across the tail, perched low over mangrove and shore and very often working on a crab.",
       "fun_fact": "Along this coast it lives on crabs more than anything, hunting the mudflats and the mangrove edge at low tide.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Hans Hillewaert", "license": "CC BY-SA 3.0", "source": "https://commons.wikimedia.org/wiki/File:Buteogallus_anthracinus_subtilis.jpg" }
     },
     {
       "id": "whimbrel",
       "name": "Whimbrel",
-      "binomial": "Numenius phaeopus",
+      "binomial": "Numenius hudsonicus",
       "category": "bird",
       "photo": "img/whimbrel",
       "id_note": "A large brown shorebird with a long down-curved bill and bold dark stripes over the crown, working the mudflats and rocks, and the bill plus those head stripes settle it against lookalikes.",
       "fun_fact": "Many are long-haul migrants resting here in October, some traveling between the far north and shores much further south.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Mike's Birds from Riverside, CA, US", "license": "CC BY-SA 2.0", "source": "https://commons.wikimedia.org/wiki/File:Hudsonian_Whimbrel_(Numenius_hudsonicus),_California_(48619863296).jpg" }
     },
     {
       "id": "mangrove-swallow",
@@ -485,7 +485,7 @@
       "photo": "img/mangrove-swallow",
       "id_note": "A small clean-cut swallow, green-blue above and white below with a white rump, skimming low over the water and often perched on a snag or a moored boat along the river.",
       "fun_fact": "It feeds on the wing just above the surface, snapping up the insects that hover over open water.",
-      "credit": { "author": "", "title": "", "license": "", "source": "", "status": "unsourced" }
+      "credit": { "author": "Charles J. Sharp", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/wiki/File:Mangrove_swallow_(Tachycineta_albilinea)_Peten.jpg" }
     }
   ],
   "safety": [

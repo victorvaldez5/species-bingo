@@ -114,11 +114,23 @@ Nothing about a species lives in the markup or JS. Each entry:
 
 ## Photos
 
-**Current status: all 48 are branded placeholders. No real photos are sourced
-yet.** The app runs and caches offline today; the placeholders are clearly
-labeled so nobody mistakes one for a real, credited image.
+**Current status: all 48 species carry real, licensed photos.** Every image was
+sourced from Wikimedia Commons (including Commons-hosted iNaturalist and Flickr
+uploads) under a public-domain, CC0, CC BY or CC BY-SA license, matched to the
+species by **binomial** and verified by eye against the field-ID notes, with extra
+care on the look-alike pairs. No placeholders remain (`public/img/.placeholders.json`
+is empty). Per-photo attribution lives in each species' `credit` block in
+`species.json` and is regenerated into `CREDITS.md`.
 
-To source photos:
+Two notes on identity worth keeping:
+
+- **Blue Morpho** uses a live, open-wing _Morpho helenor_ (peleides form) so the
+  electric blue that names it actually shows; the wings-closed brown underside is
+  accurate but unrecognizable on a grid.
+- **Whimbrel** is the American **Hudsonian Whimbrel** (_Numenius hudsonicus_), the
+  bird that actually reaches the Osa, not the white-rumped Eurasian _N. phaeopus_.
+
+To swap or add a photo later:
 
 1. Find a **public-domain or CC-licensed** image (Wikimedia Commons, iNaturalist
    CC-BY/CC0, Flickr Creative Commons). No all-rights-reserved images.
