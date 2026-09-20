@@ -1,11 +1,38 @@
 {
-  // Cloudflare Workers Static Assets — assets-only deployment.
-  // No `main` and no Worker script: this ships the ./public directory as-is.
-  // Adding `main` without a script file produces a "Missing entry-point" error.
+  // Cloudflare Workers Static Assets — assets-first, with a thin Worker.
+  //
+  // ./public is served straight from Cloudflare's edge, so the `_headers`
+  // cache rules stay in effect and asset delivery is free + fast. The Worker
+  // at ./src/index.js runs ONLY for the app-open navigation (see
+  // `run_worker_first`) so Workers Observability has a real invocation to log
+  // + trace per page load — without routing every asset request through a
+  // Worker (which would also bypass the `_headers` rules).
   "name": "osa-bingo",
+  "main": "src/index.js",
   "compatibility_date": "2026-09-20",
   "assets": {
     "directory": "./public",
-    "not_found_handling": "404-page"
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    // Worker-first only for the navigation entry points; every other path
+    // (img/*, fonts/*, *.css, *.js, species.json, the manifest, sw.js) is
+    // served directly as a static asset with its `_headers` rules applied.
+    "run_worker_first": ["/", "/index.html"]
+  },
+  // Observability captures logs + traces from Worker invocations. Each app
+  // open now yields one invocation (see the Worker above); static-asset
+  // requests are not invocations and won't appear here.
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "invocation_logs": true,
+      "persist": true
+    },
+    "traces": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "persist": true
+    }
   }
 }
