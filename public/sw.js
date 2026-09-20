@@ -13,7 +13,7 @@
      stale-while-revalidate for the HTML shell and species.json.
    ============================================================= */
 
-const VERSION = 'v1';
+const VERSION = 'v2';                                       // manual major — bumped to purge the pre-reload immutable-poisoned cache
 const BUILD = '19b16abbcb';                                 // BUILD (rewritten by build-manifest)
 const CACHE = `osa-bingo-${VERSION}-${BUILD}`;
 
@@ -137,9 +137,15 @@ const PRECACHE = [
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE);
-    // addAll is atomic-ish: if any asset 404s the install fails, which
-    // is what we want — a half-cached app is worse than a failed update.
-    await cache.addAll(PRECACHE);
+    // Precache from the NETWORK, never the browser's HTTP cache. Image URLs are
+    // reused across content swaps (img/<id>.webp is overwritten when a photo
+    // changes), so a plain fetch can hand back bytes the browser is still
+    // holding under an earlier `immutable` response — which is exactly how a
+    // real-photo deploy left old placeholders cached. `cache: 'reload'` bypasses
+    // the HTTP cache so the worker always stores the current bytes.
+    // addAll stays atomic-ish: if any asset 404s the install fails, which is
+    // what we want — a half-cached app is worse than a failed update.
+    await cache.addAll(PRECACHE.map(url => new Request(url, { cache: 'reload' })));
     await self.skipWaiting();
   })());
 });

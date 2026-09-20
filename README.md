@@ -167,17 +167,27 @@ TTFs there, or point `FONTS_SRC` at the design system's `fonts/` directory.
 `sw.js` is hand-rolled (~40 lines of logic) because offline *is* the feature and
 must stay debuggable:
 
-- Versioned cache `osa-bingo-v1-<hash>`. The hash is a fingerprint of every
+- Versioned cache `osa-bingo-<major>-<hash>`. The hash is a fingerprint of every
   precached file, written by `build-manifest`, so any changed asset makes a new
-  cache and the update actually lands. `activate` purges old caches.
+  cache and the update actually lands; `<major>` is a manual bump for worker-logic
+  changes. `activate` purges old caches.
 - On install it precaches the shell, `species.json`, all fonts, all icons and
   **both** formats of all 48 photos (a missing font or format is a silently ugly
-  or broken card offline).
+  or broken card offline). The precache fetches with `cache: 'reload'` so it
+  always stores the current bytes from the network, never a stale copy the
+  browser is still holding for that URL (see the immutable trap below).
 - Strategy: **cache-first** for images/fonts/static assets, **stale-while-
   revalidate** for the HTML shell and `species.json`.
 - `_headers` sets `/sw.js` to `no-cache`. This is not optional: Cloudflare
   edge-caches service workers, and without it clients keep the old worker after
   a deploy and never get new assets.
+- `_headers` must **not** mark `/img/*` or `/fonts/*` `immutable`. These
+  filenames are stable but their bytes are overwritten in place when a photo is
+  swapped, and `immutable` tells the browser to reuse a cached response for a
+  year with no revalidation — which stranded old placeholder photos in browsers
+  that had visited an earlier deploy (a normal reload showed placeholders; only
+  a hard reload, which bypasses the HTTP cache, showed the real photos). They use
+  `no-cache` so an unchanged asset costs a 304 and a changed one is picked up.
 
 ### Verify offline for real (do this on a phone before the trip)
 
