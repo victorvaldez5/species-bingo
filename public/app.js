@@ -107,6 +107,24 @@
     try { localStorage.setItem(marksKey(seed, card), JSON.stringify([...set])); }
     catch { /* private mode / blocked storage: card still works this session */ }
   }
+  function hasSavedMarks(seed, card) {
+    try { return localStorage.getItem(marksKey(seed, card)) !== null; }
+    catch { return false; }
+  }
+  // Load saved marks, splitting out the FREE center's checked flag (persisted
+  // as CENTER inside the same set). A brand-new card starts with FREE checked.
+  function applySavedMarks(seed, card) {
+    const saved = loadMarks(seed, card);
+    state.free = hasSavedMarks(seed, card) ? saved.has(CENTER) : true;
+    saved.delete(CENTER);
+    state.marks = saved;
+  }
+  // Persist the marks and the FREE flag together.
+  function persist() {
+    const set = new Set(state.marks);
+    if (state.free) set.add(CENTER);
+    saveMarks(state.seed, state.card, set);
+  }
 
   // ---- URL / seed --------------------------------------------
   function randomSeed() {
@@ -134,6 +152,23 @@
   function esc(s) {
     return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   }
+  async function copyText(text) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch { /* fall through to the legacy path (older / non-secure contexts) */ }
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      const ok = document.execCommand('copy');
+      ta.remove();
+      return ok;
+    } catch { return false; }
+  }
   function pictureHtml(stem, alt, cls) {
     return `<picture>` +
       `<source srcset="${esc(stem)}.webp" type="image/webp">` +
@@ -149,6 +184,7 @@
     card: 1,          // 1 or 2
     layout: [],       // 24 species for the current card, in position order
     marks: new Set(), // marked cell indices (0..24), excluding CENTER
+    free: true,       // FREE center checked (tap toggles; it always counts for lines)
     lines: 0,         // completed line count last render
   };
 
@@ -182,8 +218,13 @@
     let html = '';
     for (let i = 0; i < GRID; i++) {
       if (i === CENTER) {
-        html += `<div class="cell cell--free" aria-label="Free space, already marked">` +
-          `<span class="cell--free__stamp">free.</span></div>`;
+        const on = state.free;
+        html += `<div class="cell cell--free${on ? ' is-marked' : ''}">` +
+          `<button class="cell__mark cell__free-btn" type="button" aria-pressed="${on}" ` +
+          `aria-label="Free space${on ? ', marked' : ', tap to mark'}" data-free="1">` +
+          `<span class="cell--free__stamp">free.</span>` +
+          CHECK +
+          `</button></div>`;
         continue;
       }
       const s = speciesAt(i);
@@ -221,6 +262,24 @@
     for (const cell of document.querySelectorAll('#grid .cell[data-index]')) {
       cell.classList.toggle('is-line', lineCells.has(Number(cell.dataset.index)));
     }
+  }
+
+  // The FREE center's check is cosmetic — it always counts toward a line, but
+  // the player can tap it on or off like any other cell.
+  function paintFree() {
+    const cell = $('#grid .cell--free');
+    if (!cell) return;
+    cell.classList.toggle('is-marked', state.free);
+    const btn = cell.querySelector('[data-free]');
+    if (btn) {
+      btn.setAttribute('aria-pressed', String(state.free));
+      btn.setAttribute('aria-label', `Free space${state.free ? ', marked' : ', tap to mark'}`);
+    }
+  }
+  function toggleFree() {
+    state.free = !state.free;
+    persist();
+    paintFree();
   }
 
   function renderProgress() {
@@ -299,7 +358,7 @@
     if (index === CENTER) return;
     if (state.marks.has(index)) state.marks.delete(index);
     else state.marks.add(index);
-    saveMarks(state.seed, state.card, state.marks);
+    persist();
     // Touch only the toggled cell, then recompute line rings / banner.
     paintCell(index);
     paintLines();
@@ -335,7 +394,7 @@
     const rng = makeRng(seed);
     const pair = deal(state.data.species, rng);
     state.layout = pair[card - 1];
-    state.marks = loadMarks(seed, card);
+    applySavedMarks(seed, card);
     saveLast(seed, card);
     writeUrl(seed, card, push);
     render();
@@ -359,7 +418,8 @@
   }
   function resetMarks() {
     state.marks = new Set();
-    saveMarks(state.seed, state.card, state.marks);
+    state.free = true;
+    persist();
     render();
   }
 
@@ -378,6 +438,8 @@
 
     // Event delegation on the grid.
     $('#grid').addEventListener('click', e => {
+      const free = e.target.closest('[data-free]');
+      if (free) { toggleFree(); return; }
       const mark = e.target.closest('[data-mark]');
       if (mark) { toggleMark(Number(mark.dataset.mark)); return; }
       const info = e.target.closest('[data-info]');
@@ -388,9 +450,37 @@
       toggleMark(detailIndex);
       syncDetailMark();
     });
+    // Tap the dimmed backdrop (outside the drawer) to dismiss it, the way a
+    // bottom sheet should close. Escape and the × button close it too.
+    $('#detail').addEventListener('click', e => {
+      if (e.target === e.currentTarget) e.currentTarget.close();
+    });
     $('#card-toggle').addEventListener('click', flipCard);
     $('#new-card').addEventListener('click', newSeed);
     $('#reset').addEventListener('click', askReset);
+
+    // Actions menu: close it after a choice, on an outside click, or on Escape.
+    const actionsMenu = $('#actions-menu');
+    if (actionsMenu) {
+      $('#copy-link').addEventListener('click', async () => {
+        const head = $('#copy-link').querySelector('.menu__share-head');
+        const ok = await copyText(location.href);           // the URL already carries ?s=<seed>&c=<card>
+        head.textContent = ok ? 'Link copied' : 'Copy failed — select and copy';
+        clearTimeout(head._resetT);
+        head._resetT = setTimeout(() => { head.textContent = 'Copy link to this card'; }, 1800);
+      });
+      actionsMenu.querySelector('.menu__panel').addEventListener('click', e => {
+        const btn = e.target.closest('button');
+        // Keep the menu open for copy-link so its "Link copied" feedback shows.
+        if (btn && btn.id !== 'copy-link') actionsMenu.open = false;
+      });
+      document.addEventListener('click', e => {
+        if (actionsMenu.open && !actionsMenu.contains(e.target)) actionsMenu.open = false;
+      });
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && actionsMenu.open) actionsMenu.open = false;
+      });
+    }
     $('#confirm-cancel').addEventListener('click', () => $('#confirm-reset').close());
     $('#confirm-yes').addEventListener('click', () => { $('#confirm-reset').close(); resetMarks(); });
 
@@ -400,7 +490,7 @@
       if (seed) { state.seed = seed; state.card = card;
         const pair = deal(state.data.species, makeRng(seed));
         state.layout = pair[card - 1];
-        state.marks = loadMarks(seed, card);
+        applySavedMarks(seed, card);
         render();
       }
     });

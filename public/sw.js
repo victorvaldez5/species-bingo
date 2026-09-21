@@ -14,7 +14,7 @@
    ============================================================= */
 
 const VERSION = 'v2';                                       // manual major — bumped to purge the pre-reload immutable-poisoned cache
-const BUILD = '19b16abbcb';                                 // BUILD (rewritten by build-manifest)
+const BUILD = '7f4a746a20';                                 // BUILD (rewritten by build-manifest)
 const CACHE = `osa-bingo-${VERSION}-${BUILD}`;
 
 const PRECACHE = [

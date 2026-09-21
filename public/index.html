@@ -22,14 +22,12 @@
 
   <header class="masthead paper-grain">
     <div class="masthead__inner">
-      <span class="wnd-logo wnd-logo--cream" style="--logo-size: 30px" aria-hidden="true">
+      <span class="wnd-logo wnd-logo--cream" style="--logo-size: 20px" aria-hidden="true">
         <span class="wnd-logo__row">Wild <em>&amp;</em> Native</span>
         <span class="wnd-logo__sub"><span>Gardens</span></span>
       </span>
 
-      <p class="masthead__kicker">Field notes · Osa Peninsula</p>
       <h1 class="masthead__title">Wildlife <em>bingo.</em></h1>
-      <p class="masthead__sub">Corcovado and Golfo Dulce, early October. Twenty-four to find, one free.</p>
     </div>
   </header>
 
@@ -38,14 +36,17 @@
     <section class="controls" aria-label="Card controls">
       <div class="controls__meta">
         <button id="card-toggle" class="btn btn--ghost" type="button" aria-live="polite">Card 1 of 2</button>
-        <span class="seed" title="Share this seed and card number so a friend gets the complementary card">
-          <span class="seed__label">seed</span>
-          <span id="seed" class="seed__value">----</span>
-        </span>
-      </div>
-      <div class="controls__actions">
-        <button id="new-card" class="btn" type="button">New card</button>
-        <button id="reset" class="btn btn--ghost" type="button">Reset marks</button>
+        <details class="menu" id="actions-menu">
+          <summary class="menu__trigger btn btn--ghost">Actions</summary>
+          <div class="menu__panel" aria-label="Card actions">
+            <button id="copy-link" class="menu__share" type="button">
+              <span class="menu__share-head">Copy link to this card</span>
+              <span class="menu__share-sub">seed <span id="seed">----</span></span>
+            </button>
+            <button id="new-card" class="btn menu__item" type="button">New card</button>
+            <button id="reset" class="btn btn--ghost menu__item" type="button">Reset marks</button>
+          </div>
+        </details>
       </div>
       <p id="progress" class="progress" aria-live="polite">0 of 24 spotted</p>
     </section>
@@ -63,9 +64,7 @@
     </section>
 
     <!-- Safety callouts -->
-    <section class="safety" aria-labelledby="safety-head">
-      <div class="wn-orn wn-orn--tiny" aria-hidden="true"><span class="r"></span><span class="pip"></span><span class="r"></span></div>
-      <h2 id="safety-head" class="safety__head">Keep your distance.</h2>
+    <section class="safety" aria-label="Keep your distance">
       <p class="safety__lead">These share the forest and the water. Two of them never belong on a bingo cell, so they live here instead. Look, log it in your head, and give it room.</p>
       <ul id="safety-list" class="safety__list">
         <!-- injected by app.js -->
