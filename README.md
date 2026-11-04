@@ -244,6 +244,35 @@ the design system's `contrast_check.html`; all pass AA, most AAA.
 
 ---
 
+## Plant Bingo at `/moplants`
+
+A second, separate game lives in `public/moplants/` (plain-English notes for
+the plant list's owner are in `MOPLANTS.md`). It shares only `tokens.css` and
+`fonts/` with the Osa app, by relative path, and is otherwise self-contained:
+its own `index.html`, `app.js`, `styles.css`, `species.json`, `img/` and
+`manifest.webmanifest` (scope `/moplants/`).
+
+- 25 plants, 5 x 5, **no free space**. Every card holds all 25 in a fresh
+  shuffle. Order and found marks persist in `localStorage` under
+  `moplants-bingo:v1` (theme choice under `moplants-bingo:theme`).
+- **Online only, no service worker.** The Osa `sw.js` is scoped to `/`, so it
+  explicitly returns early for `/moplants` and `/moplants/*`. Without that,
+  a navigation there could fall back to the cached Osa `index.html`.
+  `build-manifest.mjs` only reads `public/img/` and the Osa `species.json`,
+  so `/moplants` never enters the precache.
+- Each plant's fun fact is paraphrased from the URLs in its `sources` array.
+  `uncertain` holds a name question still open with the list's owner, and
+  `photo_note` says when the photo shows the species or a relative, not the
+  exact cultivar. The detail sheet shows both.
+
+```bash
+npm run moplants:images    # img-raw/moplants/<id>.jpg -> public/moplants/img/ (full + 240x300 grid thumbs) + icons
+npm run moplants:credits   # validate species.json, write CREDITS-moplants.md
+npm run moplants:check     # validate only (part of `npm run deploy`)
+```
+
+---
+
 ## Verified in this build
 
 - Determinism, exact 24 / 24 split, and fully complementary cards across 500
