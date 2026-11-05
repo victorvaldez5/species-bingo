@@ -114,8 +114,8 @@ groups the list, which fields the detail sheet reads, the optional section under
 the card (`belowCard`, Osa's "Keep your distance"), the banner wording per mode
 (`words`), the offline and empty-Hunt lines (`errors`, `messages`) and the accent
 colour (`hub.accent`, the line under the top bar and the hub card stripe). There
-is one theme for the whole site, light and dark, with a Light / Dark / Auto switch
-(Actions menu in a game, footer elsewhere) stored under `species-bingo:theme`;
+is one theme for the whole site, light and dark, with one small "Theme: Auto" button that
+steps Auto, Light, Dark (Actions menu in a game, footer elsewhere) stored under `species-bingo:theme`;
 the inline head script in `src/lib/theme.ts` applies it before first paint.
 
 **To add a game:** add `games/<id>/game.json`, an entry in `games/games.json`, a

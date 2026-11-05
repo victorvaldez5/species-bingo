@@ -888,8 +888,8 @@
     actionsMenu.querySelector('.menu__panel').addEventListener('click', e => {
       const btn = e.target.closest('button');
       // Keep the menu open for copy-link (its "Link copied" feedback) and for
-      // the theme switch (so the change is seen).
-      if (btn && btn.id !== 'copy-link' && !btn.hasAttribute('data-theme-set')) actionsMenu.open = false;
+      // the theme button (so the change is seen).
+      if (btn && btn.id !== 'copy-link' && !btn.hasAttribute('data-theme-cycle')) actionsMenu.open = false;
     });
     document.addEventListener('click', e => {
       if (actionsMenu.open && !actionsMenu.contains(e.target)) actionsMenu.open = false;

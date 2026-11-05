@@ -66,7 +66,7 @@ for (const { built, game } of pages) {
     assert.ok(/<header class="bar bar--game">\s*<a class="bar__back" href="\/" aria-label="All games">/.test(html), 'top bar back link');
     assert.ok(html.includes('id="actions-menu"') && html.indexOf('id="actions-menu"') < html.indexOf('<main'), 'Actions lives in the bar');
     assert.ok(!html.includes('class="wnd-logo wnd-logo--cream"') && !html.includes('masthead'), 'the lockup left the header');
-    for (const choice of ['light', 'dark', 'auto']) assert.ok(html.includes(`data-theme-set="${choice}"`), `theme toggle ${choice}`);
+    assert.equal((html.slice(html.indexOf("</head>")).match(/data-theme-cycle/g) || []).length, 1, 'one theme button, in Actions');
     assert.ok(!html.includes('id="mode-hint"') && !html.includes('id="patterns"'), 'hint line and chips are gone');
 
     // The status row and the pattern sheet (S2, S3): one row, a <dialog>
@@ -155,7 +155,7 @@ test('The hub redirects old Osa links before paint and links every game', t => {
     }
   }
   assert.ok(head.includes('species-bingo:theme') && head.indexOf('species-bingo:theme') < head.indexOf('rel="stylesheet"'), 'theme script before first paint');
-  for (const choice of ['light', 'dark', 'auto']) assert.ok(html.includes(`data-theme-set="${choice}"`), `footer toggle ${choice}`);
+  assert.equal((html.slice(html.indexOf("</head>")).match(/data-theme-cycle/g) || []).length, 1, 'one theme button in the footer');
   assert.ok(html.includes('id="continue"') && html.includes('/core/deal.js'));
   for (const href of ['/how-to-play/', '/about/', '/credits/', '/privacy/']) assert.ok(html.includes(`<a href="${href}">`));
   assert.ok(html.includes("register('/sw.js')") && html.includes("register('/osa/sw.js', { scope: '/osa/' })"));
