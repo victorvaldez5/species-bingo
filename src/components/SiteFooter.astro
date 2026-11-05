@@ -16,14 +16,7 @@ const { game } = Astro.props;
     {game && <a href="/">All games</a>}
   </nav>
   {!game && (
-  <div class="theme">
-    <span class="theme__lbl" id="theme-lbl">Theme</span>
-    <div class="seg" role="group" aria-labelledby="theme-lbl">
-      <button type="button" data-theme-set="light" aria-pressed="false">Light</button>
-      <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
-      <button type="button" data-theme-set="auto" aria-pressed="true">Auto</button>
-    </div>
-  </div>
+  <button type="button" class="theme-btn" data-theme-cycle>Theme: <span data-theme-label>Auto</span></button>
   )}
   <p class="site-foot__maker">
     <span>made by</span>

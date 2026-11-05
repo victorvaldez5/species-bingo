@@ -16,7 +16,7 @@
    ============================================================= */
 
 const VERSION = 'v3';                                       // manual major — v3: Osa moved from / to /osa/ (the old root-scoped v2 cache is deleted on activate below)
-const BUILD = 'db8df6745b';                                 // BUILD (rewritten by build-games)
+const BUILD = '9a4f8f15d9';                                 // BUILD (rewritten by build-games)
 const CACHE = `osa-bingo-${VERSION}-${BUILD}`;
 
 const PRECACHE = [

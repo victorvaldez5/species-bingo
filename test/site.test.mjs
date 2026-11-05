@@ -28,7 +28,7 @@ for (const name of ['how-to-play', 'about', 'credits', 'privacy']) {
     const scripts = html.match(/<script[\s>]/g) || [];
     assert.equal(scripts.length, 1, 'a text page has just the theme script');
     assert.ok(html.slice(0, html.indexOf('</head>')).includes('species-bingo:theme'), 'theme script in <head>');
-    for (const choice of ['light', 'dark', 'auto']) assert.ok(html.includes(`data-theme-set="${choice}"`), `footer toggle ${choice}`);
+    assert.equal((html.slice(html.indexOf("</head>")).match(/data-theme-cycle/g) || []).length, 1, 'one theme button in the footer');
   });
 }
 

@@ -195,18 +195,6 @@ button { font: inherit; color: inherit; }
   font-family: var(--font-mono); text-transform: none; letter-spacing: .04em;
   color: var(--accent-text);
 }
-/* Light / Dark / Auto: the same switch in the Actions menu and the footer. */
-.seg {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 3px;
-  background: var(--surface); border: 1px solid var(--surface-deep); border-radius: var(--r-pill);
-}
-.seg button {
-  appearance: none; cursor: pointer;
-  min-height: 44px; padding: 0 var(--sp-2);
-  border: 0; border-radius: var(--r-pill); background: none; color: var(--brand-text);
-  font-family: var(--font-body); font-weight: 700; font-size: var(--t-small);
-}
-.seg button[aria-pressed="true"] { background: var(--brand-text); color: var(--bg); }
 /* Game switch: Bingo / Hunt / Race */
 .modes {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
@@ -675,7 +663,7 @@ button { font: inherit; color: inherit; }
 }
 .errcard__title:focus { outline: none; }
 .is-error .safety, .is-error .colophon { display: none; }   /* the card is all the page says */
-.is-error .menu__share, .is-error .menu__item, .is-error .menu__link, .is-error .menu__rule { display: none; }   /* only the theme is left to change */
+.is-error .menu__share, .is-error .menu__item, .is-error .menu__link:not(.menu__theme), .is-error .menu__rule { display: none; }   /* only the theme is left to change */
 .errcard__body { margin: 0 0 var(--sp-5); font-size: var(--t-body); line-height: 1.5; color: var(--text-soft); }
 .errcard__acts { display: flex; flex-direction: column; gap: var(--sp-2); }
 .errcard__acts .btn { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
@@ -831,9 +819,14 @@ button { font: inherit; color: inherit; }
   font-size: var(--t-small); font-weight: 700; color: var(--brand-text); text-decoration: none;
 }
 .site-foot__links a:hover { text-decoration: underline; }
-.theme { display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); margin-top: var(--sp-3); }
-.theme__lbl { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--text-mute); }
-.theme .seg { width: min(260px, 100%); }
+/* The theme button: one small text button that steps Auto, Light, Dark. */
+.theme-btn {
+  appearance: none; cursor: pointer;
+  min-height: 44px; padding: 0 var(--sp-2);
+  border: 0; background: none;
+  font-family: var(--font-body); font-size: var(--t-small); font-weight: 700; color: var(--text-mute);
+}
+@media (hover: hover) { .theme-btn:hover { color: var(--brand-text); text-decoration: underline; } }
 .site-foot__maker {
   margin: var(--sp-3) 0 0;
   display: flex; flex-direction: column; align-items: center; gap: 6px;

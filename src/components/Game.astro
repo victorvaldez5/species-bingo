@@ -98,12 +98,7 @@ const belowHtml = belowCard && `<!-- Safety callouts -->
       <button id="reset" class="btn btn--ghost menu__item" type="button">Reset marks</button>
       <hr class="menu__rule">
       <button id="howto-open" class="menu__link" type="button">How to play</button>
-      <p class="menu__lbl" id="menu-theme-lbl">Theme</p>
-      <div class="seg" role="group" aria-labelledby="menu-theme-lbl">
-        <button type="button" data-theme-set="light" aria-pressed="false">Light</button>
-        <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
-        <button type="button" data-theme-set="auto" aria-pressed="true">Auto</button>
-      </div>
+      <button type="button" class="menu__link menu__theme" data-theme-cycle>Theme: <span data-theme-label>Auto</span></button>
     </div>
   </details>
 
