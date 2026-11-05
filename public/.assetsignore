@@ -1,0 +1,4 @@
+# Files in public/ that wrangler must not upload (gitignore syntax).
+# .gitignore keeps these out of git, but wrangler uploads whatever is on
+# disk in the assets directory, so they need excluding here too.
+.DS_Store
