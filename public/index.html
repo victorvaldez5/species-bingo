@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <a class="skip-link" href="#grid">Skip to card</a>
+  <a class="skip-link" href="#play">Skip to the game</a>
 
   <header class="masthead paper-grain">
     <div class="masthead__inner">
@@ -34,6 +34,18 @@
   <main class="wrap">
     <!-- Control strip -->
     <section class="controls" aria-label="Card controls">
+      <div id="modes" class="modes" role="group" aria-label="Game">
+        <button class="modes__btn" type="button" data-mode="bingo" aria-pressed="true">Bingo</button>
+        <button class="modes__btn" type="button" data-mode="hunt" aria-pressed="false">Hunt</button>
+        <button class="modes__btn" type="button" data-mode="race" aria-pressed="false">Race</button>
+      </div>
+      <div id="patterns" class="chips" role="group" aria-label="Win pattern">
+        <button class="chip" type="button" data-pattern="line" aria-pressed="true">Any line</button>
+        <button class="chip" type="button" data-pattern="corners" aria-pressed="false">Four corners</button>
+        <button class="chip" type="button" data-pattern="x" aria-pressed="false">Big X</button>
+        <button class="chip" type="button" data-pattern="blackout" aria-pressed="false">Blackout</button>
+      </div>
+      <p id="mode-hint" class="mode-hint" aria-live="polite"></p>
       <div class="controls__meta">
         <button id="card-toggle" class="btn btn--ghost" type="button" aria-live="polite">Card 1 of 2</button>
         <details class="menu" id="actions-menu">
@@ -54,14 +66,24 @@
     <!-- Bingo announcement -->
     <p id="bingo-banner" class="bingo-banner" role="status" aria-live="polite" hidden></p>
 
-    <!-- The card -->
-    <section
-      id="grid"
-      class="grid"
-      aria-label="Bingo card, 5 by 5"
-      tabindex="-1">
-      <!-- cells injected by app.js -->
-    </section>
+    <div id="play" tabindex="-1">
+      <!-- The card -->
+      <section
+        id="grid"
+        class="grid"
+        aria-label="Bingo card, 5 by 5">
+        <!-- cells injected by app.js -->
+      </section>
+
+      <!-- Hunt: every species, one checklist for the trip -->
+      <section id="hunt" class="hunt" aria-label="Hunt list" hidden>
+        <div id="hunt-filters" class="chips" role="group" aria-label="Show category"></div>
+        <div id="hunt-list"></div>
+      </section>
+
+      <!-- Race: this racer's targets -->
+      <section id="race" class="grid grid--race" aria-label="Race targets" hidden></section>
+    </div>
 
     <!-- Safety callouts -->
     <section class="safety" aria-label="Keep your distance">
@@ -111,7 +133,7 @@
   <!-- Reset confirmation -->
   <dialog id="confirm-reset" class="confirm" aria-labelledby="confirm-title">
     <h2 id="confirm-title" class="confirm__title">Reset this card?</h2>
-    <p class="confirm__body">This clears <span id="confirm-count">everything</span> on card <span id="confirm-card">1</span>. You cannot undo it.</p>
+    <p id="confirm-body" class="confirm__body">This clears everything on this card. You cannot undo it.</p>
     <div class="confirm__actions">
       <button id="confirm-cancel" class="btn btn--ghost" type="button" autofocus>Keep them</button>
       <button id="confirm-yes" class="btn btn--danger" type="button">Reset marks</button>

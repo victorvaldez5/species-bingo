@@ -2,6 +2,7 @@ node_modules/
 img-raw/
 fonts-src/
 .wrangler/
+.claude/worktrees/
 
 # OS / editor cruft
 .DS_Store
