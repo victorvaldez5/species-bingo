@@ -5,15 +5,20 @@
 There is a new plant bingo game at **/moplants** on the same site as the Osa
 wildlife bingo. The Osa game at the main address works exactly as before.
 
+It looks and works like the Osa game: same header, same Actions menu, same
+card, same pop-up drawer for each plant.
+
 - The card has all 25 plants from the handwritten list in a 5 x 5 grid, with
-  no free space. Every card has the same 25 plants. "New card" shuffles them.
-- Tap a plant to mark it found. Tap the small **i** to see a photo, both
+  no free space. Every card has the same 25 plants in a different order.
+- Tap a plant to mark it spotted. Tap the small **i** to see a photo, both
   names, a fun fact, where the fact came from, and a link to the Missouri
   Botanical Garden Plant Finder.
 - Five in a row, a column or a diagonal lights up and shows a **bingo** banner.
+- Actions > **New card** deals a fresh order. Actions > **Copy link to this
+  card** shares the exact same card with someone else's phone. The browser's
+  Back button returns to the previous card with its marks.
 - The phone remembers the card and the marks, even after closing the browser.
-- It follows the phone's light or dark setting. Menu > Theme switches it by hand,
-  which helps in bright sun.
+- It follows the phone's light or dark setting.
 - It needs an internet connection. It does not work offline.
 
 ## How to preview it

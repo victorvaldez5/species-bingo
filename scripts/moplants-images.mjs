@@ -6,7 +6,7 @@
 
    - Reads raw downloads from img-raw/moplants/<id>.jpg (git-ignored)
    - Emits public/moplants/img/<id>.webp (q82, ~800px long edge) + .jpg
-     for the detail sheet, and img/thumb/<id>.webp + .jpg (240x300,
+     for the detail sheet, and img/thumb/<id>.webp + .jpg (300x300,
      cropped to the subject) for the 5x5 grid, so a phone loads ~1/10
      of the bytes to draw the card
    - Skips already-processed, unchanged files (cheap reruns)
@@ -28,7 +28,7 @@ const THUMBS = join(IMG, 'thumb');
 const RAW = join(ROOT, 'img-raw', 'moplants');
 
 const LONG_EDGE = 800;
-const THUMB_W = 240, THUMB_H = 300;   // matches the grid cell's 4:5 aspect
+const THUMB_W = 300, THUMB_H = 300;   // the grid cells are square, like Osa
 const WEBP_Q = 82;
 const JPEG_Q = 82;
 const RAW_EXT = ['jpg', 'jpeg', 'png', 'webp', 'JPG', 'JPEG', 'PNG', 'WEBP'];
