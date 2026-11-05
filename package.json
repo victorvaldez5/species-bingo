@@ -10,7 +10,10 @@
     "manifest": "node scripts/build-manifest.mjs",
     "check": "node scripts/build-manifest.mjs --dry-run",
     "dev": "wrangler dev",
-    "deploy": "npm run check && wrangler deploy"
+    "deploy": "npm run check && npm run moplants:check && wrangler deploy",
+    "moplants:images": "node scripts/moplants-images.mjs",
+    "moplants:credits": "node scripts/moplants-check.mjs",
+    "moplants:check": "node scripts/moplants-check.mjs --dry-run"
   },
   "devDependencies": {
     "sharp": "^0.33.5",

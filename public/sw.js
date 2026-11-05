@@ -16,6 +16,9 @@
 const VERSION = 'v2';                                       // manual major — bumped to purge the pre-reload immutable-poisoned cache
 const BUILD = '7f4a746a20';                                 // BUILD (rewritten by build-manifest)
 const CACHE = `osa-bingo-${VERSION}-${BUILD}`;
+// Path of the sibling plant game, derived from the scope so it still works
+// if the site is ever served from a subpath.
+const MOPLANTS = new URL('moplants', self.registration.scope).pathname;
 
 const PRECACHE = [
   // BEGIN-PRECACHE
@@ -192,6 +195,12 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;   // don't touch cross-origin
+
+  // /moplants is a separate, online-only game that shares this origin. This
+  // worker's scope ("/") covers it, so step aside entirely: otherwise a
+  // navigation there could fall back to the cached Osa index.html, and its
+  // assets would pile up in the Osa cache. The browser handles these normally.
+  if (url.pathname === MOPLANTS || url.pathname.startsWith(`${MOPLANTS}/`)) return;
 
   // The HTML shell: fresh when possible, cached when not.
   if (request.mode === 'navigate') {

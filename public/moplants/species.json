@@ -1,0 +1,587 @@
+{
+  "version": 1,
+  "species": [
+    {
+      "id": "pink-lemonade",
+      "name": "Pink Lemonade",
+      "botanical": "Vaccinium 'Pink Lemonade'",
+      "kind": "pink blueberry",
+      "photo": "img/pink-lemonade",
+      "photo_note": "A regular blue highbush blueberry (Vaccinium corymbosum) is shown, not 'Pink Lemonade'.",
+      "fun_fact": "This blueberry was bred in New Jersey, and its berries go from pale green to bright pink as they ripen. It needs far fewer cold winter hours than most blueberries to set fruit, so it crops even after mild winters.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=298790"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=298790",
+      "uncertain": "The plant list just says \"Pink Lemonade\". This assumes the pink blueberry. Baptisia 'Pink Lemonade' (sold as DECADENCE DELUXE false indigo) is another common plant with the same name.",
+      "credit": {
+        "author": "Opioła Jerzy (Poland)",
+        "license": "CC BY 2.5",
+        "license_url": "https://creativecommons.org/licenses/by/2.5",
+        "source": "https://commons.wikimedia.org/wiki/File:Vaccinium_corymbosum_a2.jpg",
+        "file": "Vaccinium corymbosum a2.jpg"
+      }
+    },
+    {
+      "id": "bottlebrush-buckeye",
+      "name": "Bottlebrush Buckeye",
+      "botanical": "Aesculus parviflora",
+      "kind": "shrub",
+      "photo": "img/bottlebrush-buckeye",
+      "fun_fact": "It is one of the best summer-flowering shrubs for shade, with foot-long white flower spikes and red-tipped stamens. Missouri Botanical Garden has a large planting along the walk heading south from the Climatron.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=281048"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=281048",
+      "credit": {
+        "author": "robert_alabama",
+        "license": "CC0",
+        "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "source": "https://commons.wikimedia.org/wiki/File:Aesculus_parviflora,_Irondale,_Alabama_1.jpg",
+        "file": "Aesculus parviflora, Irondale, Alabama 1.jpg"
+      }
+    },
+    {
+      "id": "st-johnwort",
+      "name": "St. Johnswort",
+      "botanical": "Hypericum calycinum",
+      "kind": "groundcover shrub",
+      "photo": "img/st-johnwort",
+      "fun_fact": "The genus name means \"above a picture\", from the old habit of hanging these flowers over images and windows. They were also gathered and burned on the eve of St. John's Day to keep evil spirits away.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=279207"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=279207",
+      "credit": {
+        "author": "そらみみ (Soramimi)",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Flower_of_hypericum_calycinum_in_Hakozaki_Campus,_Kyushu_University.JPG",
+        "file": "Flower of hypericum calycinum in Hakozaki Campus, Kyushu University.JPG"
+      }
+    },
+    {
+      "id": "pretty-in-pink-epimedium",
+      "name": "Pretty in Pink Epimedium",
+      "botanical": "Epimedium grandiflorum 'Pretty in Pink'",
+      "kind": "shade perennial",
+      "photo": "img/pretty-in-pink-epimedium",
+      "photo_note": "Species shown (Epimedium grandiflorum), not the cultivar.",
+      "fun_fact": "Epimediums are nicknamed bishop's hat and fairy wings for their spurred, airy flowers. The large-flowered species behind 'Pretty in Pink' grows wild in the woodlands of Japan and Korea and blooms in April and May.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=277770"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=277770",
+      "uncertain": "Written as \"Pretty & Pink Epimedium\". This assumes the cultivar 'Pretty in Pink'.",
+      "credit": {
+        "author": "Alpsdake",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Epimedium_grandiflorum.JPG",
+        "file": "Epimedium grandiflorum.JPG"
+      }
+    },
+    {
+      "id": "korean-feather-reed-grass",
+      "name": "Korean Feather Reed Grass",
+      "short": "Korean Reed Grass",
+      "botanical": "Calamagrostis brachytricha",
+      "kind": "ornamental grass",
+      "photo": "img/korean-feather-reed-grass",
+      "fun_fact": "In late summer it sends up feathery plumes with a pink tinge, up to about 4 feet tall, that ripen to light tan. Those fluffy seed heads are where the names feather reed grass and foxtail grass come from.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=285318"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=285318",
+      "credit": {
+        "author": "Aleksandrs Balodis (AfroBrazilian)",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Calamagrostis_brachytricha_01.JPG",
+        "file": "Calamagrostis brachytricha 01.JPG"
+      }
+    },
+    {
+      "id": "new-jersey-tea",
+      "name": "New Jersey Tea",
+      "botanical": "Ceanothus americanus",
+      "kind": "native shrub",
+      "photo": "img/new-jersey-tea",
+      "fun_fact": "During the Revolutionary War, Americans dried its leaves as a caffeine-free substitute for tea, which is how it got its name. It grows wild in prairies, glades and open woods all over Missouri.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=245521"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=245521",
+      "credit": {
+        "author": "Dan Keck from Ohio",
+        "license": "CC0",
+        "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "source": "https://commons.wikimedia.org/wiki/File:New_Jersey_Tea_(35268197676).jpg",
+        "file": "New Jersey Tea (35268197676).jpg"
+      }
+    },
+    {
+      "id": "girard-azalea",
+      "name": "Girard Azalea",
+      "botanical": "Rhododendron (Girard hybrid)",
+      "kind": "evergreen azalea",
+      "photo": "img/girard-azalea",
+      "photo_note": "Shown: 'Girard's Rose', one Girard azalea. The one here may be a different color.",
+      "fun_fact": "Azaleas belong to the genus Rhododendron, Greek for \"rose tree\". A quick way to tell them apart: true rhododendron flowers have 10 stamens, azaleas have 5.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder (Girard's Crimson)",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=253329"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=253329",
+      "uncertain": "The plant list does not say which Girard azalea. There are many, such as Girard's Crimson, Fuchsia, Rose and Scarlet.",
+      "credit": {
+        "author": "David J. Stang",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Rhododendron_x_Girard_Girards_Rose_0zz.jpg",
+        "file": "Rhododendron x Girard Girards Rose 0zz.jpg"
+      }
+    },
+    {
+      "id": "hillside-black-beauty-actaea",
+      "name": "Hillside Black Beauty Bugbane",
+      "short": "Hillside Black Beauty",
+      "botanical": "Actaea simplex 'Hillside Black Beauty'",
+      "kind": "shade perennial",
+      "photo": "img/hillside-black-beauty-actaea",
+      "fun_fact": "The common name bugbane comes from the plant's insect-repelling smell. 'Hillside Black Beauty' has ferny, coppery-purple leaves under tall, fragrant white flower spires in late summer and fall.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=258346"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=258346",
+      "credit": {
+        "author": "Megan Hansen",
+        "license": "CC BY-SA 2.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Actaea_%27Hillside_Black_Beauty%27.jpg",
+        "file": "Actaea 'Hillside Black Beauty'.jpg"
+      }
+    },
+    {
+      "id": "sugar-shack-buttonbush",
+      "name": "Sugar Shack Buttonbush",
+      "botanical": "Cephalanthus occidentalis 'Sugar Shack'",
+      "kind": "native shrub",
+      "photo": "img/sugar-shack-buttonbush",
+      "photo_note": "Species shown (Cephalanthus occidentalis), not the cultivar.",
+      "fun_fact": "The round, pincushion-like flower heads are a magnet for bees and butterflies. 'Sugar Shack' is a dwarf form, about 4 feet tall, whose flowers are followed by red, ball-shaped fruit.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=443503"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=443503",
+      "credit": {
+        "author": "Fritzflohrreynolds",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Cephalanthus_occidentalis_-_Buttonbush_2.jpg",
+        "file": "Cephalanthus occidentalis - Buttonbush 2.jpg"
+      }
+    },
+    {
+      "id": "sweet-woodruff",
+      "name": "Sweet Woodruff",
+      "botanical": "Galium odoratum",
+      "kind": "groundcover",
+      "photo": "img/sweet-woodruff",
+      "fun_fact": "Crushed leaves smell like fresh-cut hay, and the scent gets stronger as they dry, which is why it goes into sachets. It is the traditional flavoring for May wine, a white wine punch.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=286666"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=286666",
+      "credit": {
+        "author": "Jerzy Opioła",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Galium_odoratum_a2_(2).JPG",
+        "file": "Galium odoratum a2 (2).JPG"
+      }
+    },
+    {
+      "id": "emerald-spreader-yew",
+      "name": "Emerald Spreader Yew",
+      "botanical": "Taxus cuspidata 'Monloo' (EMERALD SPREADER)",
+      "kind": "evergreen shrub",
+      "photo": "img/emerald-spreader-yew",
+      "photo_note": "Species shown (Taxus cuspidata), not the cultivar.",
+      "fun_fact": "This Japanese yew creeps slowly outward, reaching about 2.5 feet tall but up to 9 feet wide over 20 years. The red \"berries\" on female plants are really a fleshy cup, called an aril, around a single seed.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=258893"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=258893",
+      "credit": {
+        "author": "Alpsdake",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Taxus_cuspidata_fruits.JPG",
+        "file": "Taxus cuspidata fruits.JPG"
+      }
+    },
+    {
+      "id": "lipstick-hosta",
+      "name": "Lipstick Hosta",
+      "botanical": "Hosta (cultivar uncertain)",
+      "kind": "shade perennial",
+      "photo": "img/lipstick-hosta",
+      "photo_note": "A different gold-leaved hosta is shown, not 'Lipstick'.",
+      "fun_fact": "Hostas are shade-loving perennials from the woodlands of Japan, Korea, China and eastern Russia, grown mostly for their leaves. If this is 'Lipstick Blonde', it was registered in Belgium in 2012 and has golden leaves on purple-red stalks.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder (Hosta genus notes)",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=248640"
+        },
+        {
+          "label": "American Hosta Society Hosta Helper ('Lipstick Blonde')",
+          "url": "https://ahshostahelper.com/cultivars/L/Hosta_Lipstick_Blonde.htm"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderListResults.aspx?basic=Hosta",
+      "uncertain": "No hosta named just 'Lipstick' turned up. The likeliest match is 'Lipstick Blonde' (gold leaves, red stems), or its green-centered sport 'Lipstick Blush'.",
+      "credit": {
+        "author": "JLPC",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Hosta_FR_2013.jpg",
+        "file": "Hosta FR 2013.jpg"
+      }
+    },
+    {
+      "id": "short-beak-sedge",
+      "name": "Short-beak Sedge",
+      "botanical": "Carex brevior",
+      "kind": "native sedge",
+      "photo": "img/short-beak-sedge",
+      "fun_fact": "This native sedge likes it dry and sunny, growing wild in prairies, savannas, rock outcrops and dunes. Its chunky seed clusters ripen in June and July on stems up to about 3 feet tall.",
+      "sources": [
+        {
+          "label": "Minnesota Wildflowers",
+          "url": "https://minnesotawildflowers.info/grass-sedge-rush/short-beak-sedge"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderListResults.aspx?basic=Carex",
+      "credit": {
+        "author": "Matt Lavin from Bozeman, Montana, USA",
+        "license": "CC BY-SA 2.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Carex_brevior_(7462230936).jpg",
+        "file": "Carex brevior (7462230936).jpg"
+      }
+    },
+    {
+      "id": "yellowwood",
+      "name": "Yellowwood",
+      "botanical": "Cladrastis kentukea",
+      "kind": "native tree",
+      "photo": "img/yellowwood",
+      "fun_fact": "The heartwood holds a yellow dye, which gives the tree its name. In late spring a mature tree can be draped in drooping, wisteria-like white flowers, though big bloom years may come only every 2 or 3 years.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=280286"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=280286",
+      "credit": {
+        "author": "Rachel White",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Cladrastis_kentukea_Yellowwood_turning_yellow_in_fall.jpg",
+        "file": "Cladrastis kentukea Yellowwood turning yellow in fall.jpg"
+      }
+    },
+    {
+      "id": "paperbark-maple",
+      "name": "Paperbark Maple",
+      "botanical": "Acer griseum",
+      "kind": "tree",
+      "photo": "img/paperbark-maple",
+      "fun_fact": "Its cinnamon-colored bark peels into curls that stay on the tree instead of falling. Plant hunter E. H. Wilson brought it from China to England in 1899, and Boston's Arnold Arboretum introduced it to the U.S. soon after.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=275402"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=275402",
+      "credit": {
+        "author": "Bostonian13",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Acer_griseum_trunk.jpg",
+        "file": "Acer griseum trunk.jpg"
+      }
+    },
+    {
+      "id": "espalier-topiary",
+      "name": "Espalier or Topiary",
+      "botanical": "Various species",
+      "kind": "shaped tree or shrub",
+      "various": true,
+      "photo": "img/espalier-topiary",
+      "photo_note": "Any tree or shrub trained flat on a wall or clipped into a shape counts. Shown: an espaliered fruit tree.",
+      "fun_fact": "Espalier comes from the Italian spalliera, \"something to rest the shoulder against\". Ancient Egyptian tomb paintings show fig trees trained this way, and Roman gardeners grew them against walls to stretch the season and get more fruit.",
+      "sources": [
+        {
+          "label": "UC Marin Master Gardeners (University of California)",
+          "url": "https://ucanr.edu/site/uc-marin-master-gardeners/article/training-fruit-fit-guide-espaliers"
+        }
+      ],
+      "plantfinder": null,
+      "credit": {
+        "author": "KVDP",
+        "license": "Public domain",
+        "license_url": "",
+        "source": "https://commons.wikimedia.org/wiki/File:Horizontal_espalier.JPG",
+        "file": "Horizontal espalier.JPG"
+      }
+    },
+    {
+      "id": "weeping-tree",
+      "name": "Weeping Tree",
+      "botanical": "Various species",
+      "kind": "tree with hanging branches",
+      "various": true,
+      "photo": "img/weeping-tree",
+      "photo_note": "Any tree with a weeping form counts. Shown: a weeping cherry.",
+      "fun_fact": "Many weeping trees are grafted: a weeping top is joined to a straight trunk, often 5 to 6 feet up, which sets the tree's height. Upright shoots that sprout below the graft should be removed.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder (weeping cherry)",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=262313"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=262313",
+      "credit": {
+        "author": "Marty Aligata",
+        "license": "CC BY-SA 3.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Pink_Weeping_Cherry,_Cedar_Hill_Cemetery,_Wethersfield,_CT_-_March_27,_2012.jpg",
+        "file": "Pink Weeping Cherry, Cedar Hill Cemetery, Wethersfield, CT - March 27, 2012.jpg"
+      }
+    },
+    {
+      "id": "elderberry",
+      "name": "Elderberry",
+      "botanical": "Sambucus canadensis (assumed)",
+      "kind": "native shrub",
+      "photo": "img/elderberry",
+      "fun_fact": "American elder grows wild along streams, woods and fence rows all over Missouri. Its flat clusters of lemon-scented flowers turn into black berries used for jam, pie and elderberry wine.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=278942"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=278942",
+      "uncertain": "Written as \"Sambucas\". This assumes elderberry (Sambucus), most likely the native American elder. The cultivar is unknown, and it could also be a European elder such as BLACK LACE.",
+      "credit": {
+        "author": "Franz Xaver",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Sambucus_canadensis_1.jpg",
+        "file": "Sambucus canadensis 1.jpg"
+      }
+    },
+    {
+      "id": "cardinal-flower",
+      "name": "Cardinal Flower",
+      "botanical": "Lobelia cardinalis",
+      "kind": "native perennial",
+      "photo": "img/cardinal-flower",
+      "fun_fact": "Hummingbirds and butterflies love the flowers, but not cardinals. The name comes from the scarlet robes worn by Roman Catholic cardinals.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=278870"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=278870",
+      "credit": {
+        "author": "John Rusk from Berkeley, CA, United States of America",
+        "license": "CC BY 2.0",
+        "license_url": "https://creativecommons.org/licenses/by/2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:H20120823-5379%E2%80%94Lobelia_cardinalis--RPBG_(48546935411).jpg",
+        "file": "H20120823-5379—Lobelia cardinalis--RPBG (48546935411).jpg"
+      }
+    },
+    {
+      "id": "thunderhead-black-pine",
+      "name": "Thunderhead Japanese Black Pine",
+      "short": "Thunder­head Pine",
+      "botanical": "Pinus thunbergii 'Thunderhead'",
+      "kind": "evergreen",
+      "photo": "img/thunderhead-black-pine",
+      "fun_fact": "Japanese black pine is known for whitish buds that stand out against its dark green needles. The species is named for Carl Peter Thunberg, an 18th and 19th century Swedish physician and botanist.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder (species)",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=284971"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=284971",
+      "credit": {
+        "author": "Greg Hume",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Thunderhead_Japanese_Black_Pine.JPG",
+        "file": "Thunderhead Japanese Black Pine.JPG"
+      }
+    },
+    {
+      "id": "arnold-tulip-tree",
+      "name": "Arnold Columnar Tulip Tree",
+      "short": "Arnold Tulip Tree",
+      "botanical": "Liriodendron tulipifera 'Arnold'",
+      "kind": "native tree",
+      "photo": "img/arnold-tulip-tree",
+      "photo_note": "Shown: a tree labeled 'Fastigiatum', the same cultivar under its other name.",
+      "fun_fact": "'Arnold' is a narrow, columnar tulip tree named for Boston's Arnold Arboretum, and it is the same tree sold as 'Fastigiatum'. The tulip tree is the state tree of Kentucky, Tennessee and Indiana.",
+      "sources": [
+        {
+          "label": "NC State Extension",
+          "url": "https://extensiongardener.ces.ncsu.edu/gardening-publications-2/extgardener-previous-newsletters/extgardener-past-features/extgardener-tulip-poplars-for-large-and-small-landscapes/"
+        },
+        {
+          "label": "Missouri Botanical Garden Plant Finder (species)",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=282514"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=282514",
+      "credit": {
+        "author": "Agnieszka Kwiecień, Nova",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Liriodendron_tulipifera_%27Fastigiatum%27_Tulipanowiec_ameryka%C5%84ski_2021-10-02_02.jpg",
+        "file": "Liriodendron tulipifera 'Fastigiatum' Tulipanowiec amerykański 2021-10-02 02.jpg"
+      }
+    },
+    {
+      "id": "fireworks-goldenrod",
+      "name": "Fireworks Goldenrod",
+      "botanical": "Solidago rugosa 'Fireworks'",
+      "kind": "native perennial",
+      "photo": "img/fireworks-goldenrod",
+      "fun_fact": "Its arching sprays of tiny yellow flowers are said to look like bursting fireworks. Goldenrod gets blamed for hay fever, but the real culprit is wind-blown pollen from plants like ragweed.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=254540"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=254540",
+      "credit": {
+        "author": "David J. Stang",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Solidago_rugosa_Fireworks_1zz.jpg",
+        "file": "Solidago rugosa Fireworks 1zz.jpg"
+      }
+    },
+    {
+      "id": "storm-cloud-amsonia",
+      "name": "Storm Cloud Bluestar",
+      "botanical": "Amsonia tabernaemontana 'Storm Cloud'",
+      "kind": "native perennial",
+      "photo": "img/storm-cloud-amsonia",
+      "photo_note": "Species shown (Amsonia tabernaemontana), not the cultivar.",
+      "fun_fact": "Cut stems ooze a milky sap that helps keep grazing animals away. 'Storm Cloud' starts spring with near-black stems and silver-veined leaves, then opens pale periwinkle-blue star flowers.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=364284"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=364284",
+      "credit": {
+        "author": "Radomil",
+        "license": "CC BY-SA 3.0",
+        "license_url": "http://creativecommons.org/licenses/by-sa/3.0/",
+        "source": "https://commons.wikimedia.org/wiki/File:Amsonia_nadrenska_Amsonia_tabernaemontana2.jpg",
+        "file": "Amsonia nadrenska Amsonia tabernaemontana2.jpg"
+      }
+    },
+    {
+      "id": "lemon-perfection-catmint",
+      "name": "Lemon Purrfection Catmint",
+      "botanical": "Nepeta 'Lemon Purrfection'",
+      "kind": "perennial",
+      "photo": "img/lemon-perfection-catmint",
+      "photo_note": "A common blue-flowered catmint (Nepeta × faassenii) is shown, not the gold-leaved cultivar.",
+      "fun_fact": "This compact catmint keeps its bright golden leaves all summer, turning more chartreuse in shade. Lavender-blue flowers start early and keep coming without cutting back.",
+      "sources": [
+        {
+          "label": "Walters Gardens (the grower that introduced it)",
+          "url": "https://www.waltersgardens.com/variety.php?ID=NEPLP"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=250745",
+      "uncertain": "Written as \"Lemon Perfection\". The catmint on the market is spelled 'Lemon Purrfection' (Walters Gardens, 2024), so this assumes that one.",
+      "credit": {
+        "author": "David J. Stang",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Nepeta_faassenii_0zz.jpg",
+        "file": "Nepeta faassenii 0zz.jpg"
+      }
+    },
+    {
+      "id": "hummelo-stachys",
+      "name": "Hummelo Betony",
+      "botanical": "Stachys officinalis 'Hummelo'",
+      "alt_botanical": "Betonica officinalis 'Hummelo'",
+      "kind": "perennial",
+      "photo": "img/hummelo-stachys",
+      "fun_fact": "The species name officinalis was given to plants sold in apothecary shops for real or supposed medicinal uses. 'Hummelo' sends up dense rose-lavender flower spikes 1.5 to 2 feet tall in summer.",
+      "sources": [
+        {
+          "label": "Missouri Botanical Garden Plant Finder",
+          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=258994"
+        }
+      ],
+      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=258994",
+      "credit": {
+        "author": "Salicyna",
+        "license": "CC BY-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Stachys_officinalis_Hummelo_2020-06-23_0002.jpg",
+        "file": "Stachys officinalis Hummelo 2020-06-23 0002.jpg"
+      }
+    }
+  ]
+}
