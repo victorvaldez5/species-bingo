@@ -10,13 +10,16 @@
     "manifest": "node scripts/build-manifest.mjs",
     "check": "node scripts/build-manifest.mjs --dry-run",
     "dev": "wrangler dev",
-    "deploy": "npm test && npm run check && npm run moplants:check && wrangler deploy",
+    "deploy": "npm run ci && wrangler deploy",
     "moplants:images": "node scripts/moplants-images.mjs",
     "moplants:credits": "node scripts/moplants-check.mjs",
     "moplants:check": "node scripts/moplants-check.mjs --dry-run",
-    "test": "node --test 'test/*.test.mjs'"
+    "test": "node --test 'test/*.test.mjs'",
+    "lint": "oxlint --deny-warnings",
+    "ci": "npm run lint && npm test && npm run check && npm run moplants:check"
   },
   "devDependencies": {
+    "oxlint": "^1.91.0",
     "sharp": "^0.35.5",
     "subset-font": "^2.9.0",
     "wrangler": "^4.157.0"

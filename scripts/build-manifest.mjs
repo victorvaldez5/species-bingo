@@ -110,7 +110,6 @@ if (errors.length) {
 console.log(`  ✓ structure valid`);
 
 // ---- Build the precache list -------------------------------
-const listFile = p => (existsSync(join(PUBLIC, p)) ? [p] : []);
 const fontFiles = existsSync(FONTS)
   ? readdirSync(FONTS).filter(f => /\.(woff2|woff|ttf)$/i.test(f)).sort().map(f => `fonts/${f}`)
   : [];
@@ -137,7 +136,7 @@ const hash = createHash('sha256');
 for (const rel of precache) {
   if (rel === './') continue;
   const p = join(PUBLIC, rel);
-  if (existsSync(p)) hash.update(rel), hash.update(readFileSync(p));
+  if (existsSync(p)) hash.update(rel).update(readFileSync(p));
 }
 const build = hash.digest('hex').slice(0, 10);
 
@@ -145,7 +144,7 @@ if (fontFiles.length === 0) warn('no font files found in public/fonts — run `n
 if (iconFiles.length < 3) warn(`only ${iconFiles.length}/3 PWA icons present — run \`npm run images\`.`);
 
 // ---- Rewrite sw.js -----------------------------------------
-let sw = readFileSync(SW, 'utf8');
+const sw = readFileSync(SW, 'utf8');
 if (!sw.includes('// BEGIN-PRECACHE') || !sw.includes('// END-PRECACHE')) {
   console.error('✗ sw.js is missing the // BEGIN-PRECACHE / // END-PRECACHE markers.');
   process.exit(1);

@@ -40,8 +40,11 @@
       return h >>> 0;
     };
   }
+  // Reference mulberry32, kept verbatim: the deal (and every shared link)
+  // depends on its exact output. See test/deal.test.mjs.
   function mulberry32(a) {
     return () => {
+      // oxlint-disable-next-line no-param-reassign
       a |= 0; a = (a + 0x6D2B79F5) | 0;
       let t = Math.imul(a ^ (a >>> 15), 1 | a);
       t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
@@ -454,9 +457,9 @@
   // The sheet works for any game: it gets the plant plus how to read and
   // flip that plant's mark in the current game.
   let detail = null;   // { isMarked(), toggle() }
-  function openDetail(p, isMarked, toggle) {
+  function openDetail(p, readMark, toggle) {
     if (!p) return;
-    detail = { isMarked, toggle };
+    detail = { isMarked: readMark, toggle };
     $('#detail-picture').innerHTML =
       `<source srcset="${esc(p.photo)}.webp" type="image/webp">` +
       `<img src="${esc(p.photo)}.jpg" alt="${esc(p.name)}" decoding="async">`;
