@@ -51,7 +51,7 @@ for (const s of species) {
   for (const rel of ['webp', 'jpg'].flatMap(ext => [`${s.photo}.${ext}`, `img/thumb/${s.id}.${ext}`])) {
     if (!existsSync(join(APP, rel))) err(`[${s.id}] missing ${rel} (run npm run moplants:images).`);
   }
-  if (!Array.isArray(s.sources) || !s.sources.every(x => x && x.label && /^https:\/\//.test(x.url))) {
+  if (!Array.isArray(s.sources) || !s.sources.every(x => x && x.label && String(x.url).startsWith('https://'))) {
     err(`[${s.id}] sources must be [{label, url}] with https URLs.`);
   }
   const c = s.credit || {};

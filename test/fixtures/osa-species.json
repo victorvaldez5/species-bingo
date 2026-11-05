@@ -1,0 +1,194 @@
+[
+  {
+    "id": "scarlet-macaw",
+    "category": "bird"
+  },
+  {
+    "id": "white-faced-capuchin",
+    "category": "mammal"
+  },
+  {
+    "id": "mantled-howler-monkey",
+    "category": "mammal"
+  },
+  {
+    "id": "three-toed-sloth",
+    "category": "mammal"
+  },
+  {
+    "id": "chestnut-mandibled-toucan",
+    "category": "bird"
+  },
+  {
+    "id": "great-curassow",
+    "category": "bird"
+  },
+  {
+    "id": "white-nosed-coati",
+    "category": "mammal"
+  },
+  {
+    "id": "blue-morpho-butterfly",
+    "category": "invertebrate"
+  },
+  {
+    "id": "red-eyed-tree-frog",
+    "category": "amphibian"
+  },
+  {
+    "id": "leafcutter-ants",
+    "category": "invertebrate"
+  },
+  {
+    "id": "american-crocodile",
+    "category": "reptile"
+  },
+  {
+    "id": "green-iguana",
+    "category": "reptile"
+  },
+  {
+    "id": "king-vulture",
+    "category": "bird"
+  },
+  {
+    "id": "golfo-dulce-poison-frog",
+    "category": "amphibian"
+  },
+  {
+    "id": "collared-peccary",
+    "category": "mammal"
+  },
+  {
+    "id": "basilisk-lizard",
+    "category": "reptile"
+  },
+  {
+    "id": "bairds-tapir",
+    "category": "mammal"
+  },
+  {
+    "id": "central-american-squirrel-monkey",
+    "category": "mammal"
+  },
+  {
+    "id": "neotropical-river-otter",
+    "category": "mammal"
+  },
+  {
+    "id": "mangrove-tree-crab",
+    "category": "invertebrate"
+  },
+  {
+    "id": "ringed-kingfisher",
+    "category": "bird"
+  },
+  {
+    "id": "northern-jacana",
+    "category": "bird"
+  },
+  {
+    "id": "halloween-moon-crab",
+    "category": "invertebrate"
+  },
+  {
+    "id": "bare-throated-tiger-heron",
+    "category": "bird"
+  },
+  {
+    "id": "geoffroys-spider-monkey",
+    "category": "mammal"
+  },
+  {
+    "id": "hoffmanns-two-toed-sloth",
+    "category": "mammal"
+  },
+  {
+    "id": "fiery-billed-aracari",
+    "category": "bird"
+  },
+  {
+    "id": "boat-billed-heron",
+    "category": "bird"
+  },
+  {
+    "id": "roseate-spoonbill",
+    "category": "bird"
+  },
+  {
+    "id": "anhinga",
+    "category": "bird"
+  },
+  {
+    "id": "tayra",
+    "category": "mammal"
+  },
+  {
+    "id": "ocelot",
+    "category": "mammal"
+  },
+  {
+    "id": "owl-butterfly",
+    "category": "invertebrate"
+  },
+  {
+    "id": "army-ants",
+    "category": "invertebrate"
+  },
+  {
+    "id": "white-lipped-peccary",
+    "category": "mammal"
+  },
+  {
+    "id": "osprey",
+    "category": "bird"
+  },
+  {
+    "id": "magnificent-frigatebird",
+    "category": "bird"
+  },
+  {
+    "id": "black-throated-trogon",
+    "category": "bird"
+  },
+  {
+    "id": "long-billed-hermit",
+    "category": "bird"
+  },
+  {
+    "id": "costa-rica-zebra-tarantula",
+    "category": "invertebrate"
+  },
+  {
+    "id": "red-mangrove",
+    "category": "plant"
+  },
+  {
+    "id": "spectacled-caiman",
+    "category": "reptile"
+  },
+  {
+    "id": "olive-ridley-sea-turtle",
+    "category": "marine"
+  },
+  {
+    "id": "sally-lightfoot-crab",
+    "category": "invertebrate"
+  },
+  {
+    "id": "green-kingfisher",
+    "category": "bird"
+  },
+  {
+    "id": "mangrove-black-hawk",
+    "category": "bird"
+  },
+  {
+    "id": "whimbrel",
+    "category": "bird"
+  },
+  {
+    "id": "mangrove-swallow",
+    "category": "bird"
+  }
+]

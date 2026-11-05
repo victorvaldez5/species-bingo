@@ -1,0 +1,76 @@
+# Three checks on every PR: build, lint, test. They share one job
+# definition (the matrix below), so setup changes happen in one place.
+# Each command is also runnable locally; `npm run ci` runs lint, test
+# and the data checks together.
+# On main only, a fourth job deploys once all three pass.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# A new push to a PR branch cancels the run it replaces. On main, runs
+# queue instead, so a deploy is never cut off halfway.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  check:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Validate both games' data, regenerate sw.js and the CREDITS
+          # files, and fail if they differ from what was committed. A
+          # stale precache list is how an asset quietly goes missing
+          # offline.
+          - name: build
+            run: |
+              npm run manifest
+              npm run moplants:credits
+              git diff --exit-code -- public/sw.js CREDITS.md CREDITS-moplants.md
+          - name: lint
+            run: npm run lint
+          # Pins the seeded deal so shared links keep showing the same card.
+          - name: test
+            run: npm test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      # --ignore-scripts: none of these need sharp's or wrangler's
+      # install steps.
+      - run: npm ci --ignore-scripts
+      - run: ${{ matrix.run }}
+
+  deploy:
+    needs: check
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Add protection rules (required reviewer, wait timer) to this
+    # environment in the repo settings if deploys should need approval.
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      # The checks above already ran, so call wrangler directly rather
+      # than `npm run deploy`, which would run them all again.
+      - run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

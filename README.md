@@ -20,6 +20,7 @@ npm run fonts        # TTF -> subset woff2  (needs fonts-src/, see Fonts)
 npm run images       # optimize photos + generate PWA icons + placeholders
 npm run manifest     # validate, rewrite the sw.js precache, write CREDITS.md
 npm run dev          # wrangler dev — closest to production
+npm run ci           # lint, deal tests, data checks (CI runs these as build, lint, test)
 ```
 
 Then open the printed `http://127.0.0.1:8788`. Other ways to serve `public/`:
@@ -204,14 +205,21 @@ so treat step 4 as required, outdoors, not just on a desk.
 
 ## Deploy (Cloudflare Workers Static Assets)
 
+**Merging to `main` deploys.** The CI workflow (`.github/workflows/ci.yml`)
+runs build, lint and test on every PR and push; on `main` only, a deploy job
+runs `wrangler deploy` once all three pass. It needs the repo secrets
+`CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. GitHub Actions is the only
+deployer: Cloudflare Workers Builds must not also deploy `main`.
+
+By hand, as a fallback:
+
 ```bash
-npm run deploy       # runs `npm run check`, then `wrangler deploy`
+npm run deploy       # runs `npm run ci` (lint, tests, data checks), then `wrangler deploy`
 ```
 
-`wrangler.jsonc` is assets-only: it has `assets.directory` and no `main` / Worker
-script. The `deploy` script gates on `npm run check`, so a species missing its
-photo fails the deploy instead of failing you in the field. `npm run images` is
-**local only** — commit the optimized output; nothing regenerates it remotely.
+Both paths gate on the data checks, so a species missing its photo fails the
+deploy instead of failing you in the field. `npm run images` is **local only**:
+commit the optimized output; nothing regenerates it remotely.
 
 ---
 

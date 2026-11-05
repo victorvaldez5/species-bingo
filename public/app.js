@@ -41,8 +41,11 @@
       return h >>> 0;
     };
   }
+  // Reference mulberry32, kept verbatim: the deal (and every shared link)
+  // depends on its exact output. See test/deal.test.mjs.
   function mulberry32(a) {
     return () => {
+      // oxlint-disable-next-line no-param-reassign
       a |= 0; a = (a + 0x6D2B79F5) | 0;
       let t = Math.imul(a ^ (a >>> 15), 1 | a);
       t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
