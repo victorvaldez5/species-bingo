@@ -128,6 +128,37 @@ button { font: inherit; color: inherit; }
   font-family: var(--font-mono); text-transform: none; letter-spacing: .04em;
   color: var(--terracotta-deep);
 }
+/* Game switch: Bingo / Hunt / Race */
+.modes {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
+  padding: 4px;
+  background: var(--paper);
+  border: 1px solid var(--paper-deep);
+  border-radius: var(--r-pill);
+}
+.modes__btn {
+  appearance: none; cursor: pointer;
+  min-height: 44px; padding: 0 var(--sp-3);
+  border: 0; border-radius: var(--r-pill);
+  background: none; color: var(--forest);
+  font-family: var(--font-body); font-weight: 700; font-size: var(--t-small);
+}
+/* No transition: the page can open straight into Hunt or Race, and a fade
+   would flash Bingo as selected on load. */
+.modes__btn[aria-pressed="true"] { background: var(--forest); color: var(--cream); }
+/* Pattern picker and hunt filters */
+.chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.chip {
+  appearance: none; cursor: pointer;
+  min-height: 40px; padding: 0 var(--sp-3);
+  border: 1.5px solid var(--bark); border-radius: var(--r-pill);
+  background: transparent; color: var(--forest);
+  font-family: var(--font-body); font-weight: 700; font-size: var(--t-caption);
+  white-space: nowrap;
+}
+.chip[aria-pressed="true"] { background: var(--terracotta-deep); border-color: var(--terracotta-deep); color: var(--cream); }
+.chip__count { margin-left: 6px; font-family: var(--font-mono); font-weight: 400; }
+.mode-hint { margin: 0; font-size: var(--t-small); line-height: 1.45; color: var(--ink-soft); }
 .progress {
   margin: 0;
   font-family: var(--font-mono);
@@ -246,6 +277,9 @@ button { font: inherit; color: inherit; }
 
 /* Completed-line ring: redundant cue on top of the fill. */
 .cell.is-line { box-shadow: 0 0 0 3px var(--sun), var(--shadow-md); }
+/* Cells that make up the chosen pattern (four corners, big X). */
+.cell.is-target { outline: 3px dashed var(--terracotta-deep); outline-offset: 1px; }
+.cell.is-target.is-line { outline-color: var(--sun); }
 
 /* Info button (secondary action) */
 .cell__info {
@@ -291,6 +325,54 @@ button { font: inherit; color: inherit; }
   transition: opacity var(--dur-fast) var(--ease-soft);
 }
 .cell.cell--free.is-marked .cell__check { opacity: 1; transform: none; }
+
+/* ---- Hunt list --------------------------------------------- */
+.hunt__heading {
+  margin: var(--sp-5) 0 var(--sp-2);
+  font-family: var(--font-body); font-weight: 800; text-transform: uppercase;
+  letter-spacing: .18em; font-size: var(--t-overline); color: var(--terracotta-deep);
+}
+.hunt__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-2); }
+.hunt__item { display: flex; align-items: center; gap: var(--sp-2); }
+.hunt__mark {
+  appearance: none; cursor: pointer;
+  flex: 1 1 auto; min-width: 0;
+  display: flex; align-items: center; gap: var(--sp-3);
+  min-height: 64px; padding: var(--sp-2) var(--sp-3) var(--sp-2) var(--sp-2);
+  text-align: left;
+  background: var(--paper); color: var(--ink);
+  border: 1px solid var(--paper-deep); border-radius: var(--r-md);
+  transition: background var(--dur-fast) var(--ease-soft);
+}
+.hunt__mark picture { flex: none; }
+.hunt__thumb { width: 52px; height: 52px; object-fit: cover; border-radius: var(--r-sm); }
+.hunt__text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.hunt__name { font-weight: 700; font-size: var(--t-body); line-height: 1.2; }
+.hunt__bino { font-style: italic; font-size: var(--t-caption); color: var(--ink-mute); }
+.hunt__box {
+  flex: none; width: 32px; height: 32px;
+  display: grid; place-items: center;
+  border: 2px solid var(--bark); border-radius: var(--r-pill);
+  color: var(--forest);
+}
+.hunt__check { width: 18px; height: 18px; opacity: 0; }
+.hunt__info {
+  appearance: none; cursor: pointer;
+  flex: none; width: 44px; height: 44px; padding: 0;
+  display: grid; place-items: center;
+  border: 1.5px solid var(--forest); border-radius: var(--r-pill);
+  background: transparent; color: var(--forest);
+  font-family: var(--font-display); font-style: italic; font-weight: 700; font-size: 17px;
+}
+/* Found: the same solid forest fill as a marked cell, never a tint. */
+.hunt__item.is-found .hunt__mark { background: var(--forest); border-color: var(--forest); color: var(--cream); }
+.hunt__item.is-found .hunt__bino { color: color-mix(in srgb, var(--cream) 82%, transparent); }
+.hunt__item.is-found .hunt__box { background: var(--cream); border-color: var(--cream); }
+.hunt__item.is-found .hunt__check { opacity: 1; }
+
+/* ---- Race -------------------------------------------------- */
+/* The race board reuses .grid / .cell: RACE_SIZE cells, two rows of five. */
+.grid--race { margin-top: var(--sp-1); }
 
 /* ---- Safety ------------------------------------------------ */
 .safety {
@@ -484,7 +566,8 @@ button { font: inherit; color: inherit; }
   .masthead .wnd-logo { display: none; }
   .masthead__title { color: #000; font-size: 28pt; }
   .masthead__title em { color: #000; }
-  .menu, .cell__info, .credits, .colophon, .skip-link, .bingo-banner { display: none !important; }
+  .menu, .cell__info, .credits, .colophon, .skip-link, .bingo-banner,
+  .modes, .chips, .mode-hint, .hunt__info { display: none !important; }
   .controls { display: block; margin-bottom: 4mm; }
   .grid { gap: 2mm; }
   .cell {

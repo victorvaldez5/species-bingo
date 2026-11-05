@@ -6,6 +6,12 @@
    the 48 species are partitioned into two non-overlapping 24s
    and each is dealt into fixed grid positions. Two people on the
    same seed hold complementary cards (card 1 and card 2).
+
+   Three games share the data and the seed:
+   - bingo: the 5 x 5 card, with a choice of win pattern
+   - hunt:  every species as one checklist for the whole trip
+   - race:  each racer gets 10 targets from the seed; first to
+            find all of theirs wins
    ============================================================= */
 
 (() => {
@@ -15,6 +21,8 @@
   const GRID = 25;                        // 5 x 5
   const CENTER = 12;                      // FREE cell index
   const POSITIONS = Array.from({ length: GRID }, (_, i) => i).filter(i => i !== CENTER);
+  const RACE_SIZE = 10;                   // targets per racer
+  const MODES = ['bingo', 'hunt', 'race'];
 
   // ---- Deterministic PRNG ------------------------------------
   // xmur3 hashes the seed string to a 32-bit integer; mulberry32
@@ -85,13 +93,33 @@
     return lines;
   })();
 
+  // Win patterns. 'line' wins on any of the 12 lines; the others are one
+  // shape that has to be filled completely. FREE always counts. Patterns
+  // with `targets` outline their cells so you can see what to go after.
+  const PATTERNS = {
+    line:     { label: 'Any line',     hint: 'Fill any row, column or diagonal.', lines: LINES },
+    corners:  { label: 'Four corners', hint: 'Spot the four species in the corners.', lines: [[0, 4, 20, 24]], targets: true,
+                win: 'All four corners. Bingo.' },
+    x:        { label: 'Big X',        hint: 'Fill both diagonals.', lines: [[0, 6, 12, 18, 24, 4, 8, 16, 20]], targets: true,
+                win: 'The X is complete. Bingo.' },
+    blackout: { label: 'Blackout',     hint: 'Spot all 24 species on your card.', lines: [Array.from({ length: GRID }, (_, i) => i)],
+                win: 'Full card. Every cell on the board.' },
+  };
+
+  // The race reuses the bingo deal on its own stream, so racer 1 and racer 2
+  // draw from opposite halves and never chase the same species.
+  function dealRace(species, seed) {
+    return deal(species, makeRng(`${seed}:race`)).map(card => card.slice(0, RACE_SIZE));
+  }
+
   // ---- Persistence (per seed + card) -------------------------
   const marksKey = (seed, card) => `${CACHE_NS}:${seed}:c${card}`;
   const LAST_KEY = `${CACHE_NS}:last`;
   // Remember the current card so relaunching the installed app (start_url
   // has no seed) reopens your in-progress card instead of dealing a new one.
-  function saveLast(seed, card) {
-    try { localStorage.setItem(LAST_KEY, JSON.stringify({ seed, card })); } catch { /* ignore */ }
+  function saveLast() {
+    const { seed, card, mode, pattern } = state;
+    try { localStorage.setItem(LAST_KEY, JSON.stringify({ seed, card, mode, pattern })); } catch { /* ignore */ }
   }
   function loadLast() {
     try { return JSON.parse(localStorage.getItem(LAST_KEY) || 'null'); } catch { return null; }
@@ -126,25 +154,64 @@
     saveMarks(state.seed, state.card, set);
   }
 
+  // Race marks live beside the bingo marks under their own key, with the
+  // finish time (epoch ms) kept separately so racers can compare.
+  const raceKey = (seed, card) => `${CACHE_NS}:${seed}:r${card}`;
+  function loadRace(seed, card) {
+    try {
+      const arr = JSON.parse(localStorage.getItem(raceKey(seed, card)) || '[]');
+      state.raceMarks = new Set(Array.isArray(arr) ? arr : []);
+    } catch { state.raceMarks = new Set(); }
+    try { state.raceEnd = Number(localStorage.getItem(`${raceKey(seed, card)}:end`)) || null; }
+    catch { state.raceEnd = null; }
+  }
+  function persistRace() {
+    try {
+      localStorage.setItem(raceKey(state.seed, state.card), JSON.stringify([...state.raceMarks]));
+      const k = `${raceKey(state.seed, state.card)}:end`;
+      if (state.raceEnd) localStorage.setItem(k, String(state.raceEnd));
+      else localStorage.removeItem(k);
+    } catch { /* ignore */ }
+  }
+
+  // The hunt list is one checklist per phone, not per seed: it runs the trip.
+  const HUNT_KEY = `${CACHE_NS}:hunt`;
+  function loadFound() {
+    try {
+      const arr = JSON.parse(localStorage.getItem(HUNT_KEY) || '[]');
+      return new Set(Array.isArray(arr) ? arr : []);
+    } catch { return new Set(); }
+  }
+  function saveFound() {
+    try { localStorage.setItem(HUNT_KEY, JSON.stringify([...state.found])); } catch { /* ignore */ }
+  }
+
   // ---- URL / seed --------------------------------------------
   function randomSeed() {
     // short, shareable token; xmur3 hashes it anyway so any string works
     const n = (crypto?.getRandomValues?.(new Uint32Array(1))[0]) ?? (Math.random() * 2 ** 32);
     return (n >>> 0).toString(36).slice(0, 5).padStart(4, '0');
   }
+  // Mode and pattern are null when the URL does not name them, so the caller
+  // can fall back to the last-used ones. Bingo / 'line' are left out of the
+  // URL, which keeps links from before the other games working unchanged.
   function readUrl() {
     const p = new URLSearchParams(location.search);
     const s = (p.get('s') || '').trim();
     const c = p.get('c') === '2' ? 2 : 1;
-    return { seed: s, card: c };
+    const m = MODES.includes(p.get('m')) ? p.get('m') : null;
+    const pat = Object.hasOwn(PATTERNS, p.get('p') || '') ? p.get('p') : null;
+    return { seed: s, card: c, mode: m, pattern: pat };
   }
-  function writeUrl(seed, card, push) {
+  function writeUrl(push) {
     const p = new URLSearchParams(location.search);
-    p.set('s', seed);
-    p.set('c', String(card));
+    p.set('s', state.seed);
+    p.set('c', String(state.card));
+    if (state.mode === 'bingo') p.delete('m'); else p.set('m', state.mode);
+    if (state.pattern === 'line') p.delete('p'); else p.set('p', state.pattern);
     const url = `${location.pathname}?${p.toString()}`;
-    if (push) history.pushState({ seed, card }, '', url);
-    else history.replaceState({ seed, card }, '', url);
+    if (push) history.pushState(null, '', url);
+    else history.replaceState(null, '', url);
   }
 
   // ---- Small helpers -----------------------------------------
@@ -175,7 +242,11 @@
       `<img class="${cls}" src="${esc(stem)}.jpg" alt="${esc(alt)}" decoding="async" draggable="false">` +
       `</picture>`;
   }
-  const CHECK = `<svg class="cell__check" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5 11-12" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const checkSvg = cls => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5 11-12" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const CHECK = checkSvg('cell__check');
+  function fmtClock(ms) {
+    return new Date(ms).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  }
 
   // ---- App state ---------------------------------------------
   const state = {
@@ -186,6 +257,13 @@
     marks: new Set(), // marked cell indices (0..24), excluding CENTER
     free: true,       // FREE center checked (tap toggles; it always counts for lines)
     lines: 0,         // completed line count last render
+    mode: 'bingo',    // 'bingo' | 'hunt' | 'race'
+    pattern: 'line',  // key of PATTERNS
+    found: new Set(), // hunt: species ids found, across every seed
+    huntFilter: 'all',// hunt: category shown, or 'all'
+    race: [],         // race: this racer's RACE_SIZE targets
+    raceMarks: new Set(), // race: found target indices (0..RACE_SIZE-1)
+    raceEnd: null,    // race: when the last target was found (epoch ms)
   };
 
   // Map a grid cell index -> species (or null for the free center).
@@ -196,7 +274,7 @@
 
   function completedLines() {
     const done = [];
-    for (const line of LINES) {
+    for (const line of PATTERNS[state.pattern].lines) {
       if (line.every(i => i === CENTER || state.marks.has(i))) done.push(line);
     }
     return done;
@@ -207,14 +285,59 @@
   // Marking uses paintCell()/paintLines() to touch only what changed,
   // so a tap never rebuilds the grid or reloads its images.
   function render() {
-    buildGrid();
+    renderChrome();
+    if (state.mode === 'bingo') { buildGrid(); renderBingo(false); }
+    else if (state.mode === 'hunt') { buildHunt(); renderHuntDone(); }
+    else { buildRace(); renderRaceDone(false); }
     renderProgress();
-    renderBingo(false);
+  }
+
+  // Mode switch, pattern chips, section visibility and the mode-specific
+  // labels on the shared controls.
+  function renderChrome() {
+    const { mode } = state;
+    for (const b of document.querySelectorAll('[data-mode]')) {
+      b.setAttribute('aria-pressed', String(b.dataset.mode === mode));
+    }
+    for (const b of document.querySelectorAll('[data-pattern]')) {
+      b.setAttribute('aria-pressed', String(b.dataset.pattern === state.pattern));
+    }
+    $('#patterns').hidden = mode !== 'bingo';
+    $('#grid').hidden = mode !== 'bingo';
+    $('#hunt').hidden = mode !== 'hunt';
+    $('#race').hidden = mode !== 'race';
+    $('#card-toggle').hidden = mode === 'hunt';
+    $('#copy-link').hidden = mode === 'hunt';
+    $('#new-card').hidden = mode === 'hunt';
+    $('#new-card').textContent = mode === 'race' ? 'New race' : 'New card';
+    $('#copy-link .menu__share-head').textContent = mode === 'race' ? 'Copy link to this race' : 'Copy link to this card';
+    $('#mode-hint').textContent =
+      mode === 'hunt' ? 'Every species on the list, for the whole trip. Tap each one the first time you see it.'
+      : mode === 'race' ? `Two racers on the same seed get ${RACE_SIZE} different targets each. First to find all of theirs wins.`
+      : PATTERNS[state.pattern].hint;
+  }
+
+  function hideBanner() {
+    const banner = $('#bingo-banner');
+    banner.hidden = true; banner.textContent = '';
+  }
+  function showBanner(stamp, msg) {
+    const banner = $('#bingo-banner');
+    banner.hidden = false;
+    banner.innerHTML = `<span class="bingo-banner__stamp">${esc(stamp)}</span> <span>${esc(msg)}</span>`;
+  }
+  function buzz() {
+    if ('vibrate' in navigator) { try { navigator.vibrate(30); } catch { /* not supported */ } }
+  }
+
+  function patternTargets() {
+    return PATTERNS[state.pattern].targets ? new Set(PATTERNS[state.pattern].lines[0]) : new Set();
   }
 
   function buildGrid() {
     const grid = $('#grid');
     const lineCells = new Set(completedLines().flat());
+    const targets = patternTargets();
     let html = '';
     for (let i = 0; i < GRID; i++) {
       if (i === CENTER) {
@@ -231,7 +354,7 @@
       if (!s) { html += `<div class="cell cell--empty" aria-hidden="true"></div>`; continue; }
       const marked = state.marks.has(i);
       const inLine = lineCells.has(i);
-      html += `<div class="cell${marked ? ' is-marked' : ''}${inLine ? ' is-line' : ''}" data-index="${i}">` +
+      html += `<div class="cell${marked ? ' is-marked' : ''}${inLine ? ' is-line' : ''}${targets.has(i) ? ' is-target' : ''}" data-index="${i}">` +
         `<button class="cell__mark" type="button" aria-pressed="${marked}" ` +
         `aria-label="${esc(s.name)}${marked ? ', spotted' : ''}" data-mark="${i}">` +
         pictureHtml(s.photo, s.name, 'cell__photo') +
@@ -283,36 +406,166 @@
   }
 
   function renderProgress() {
-    $('#progress').textContent = `${state.marks.size} of ${POSITIONS.length} spotted`;
-    const toggle = $('#card-toggle');
-    toggle.textContent = `Card ${state.card} of 2`;
+    let text;
+    if (state.mode === 'hunt') {
+      text = `${state.found.size} of ${state.data.species.length} found`;
+    } else if (state.mode === 'race') {
+      text = `${state.raceMarks.size} of ${RACE_SIZE} found`;
+    } else {
+      text = `${state.marks.size} of ${POSITIONS.length} spotted`;
+      const targets = [...patternTargets()].filter(i => i !== CENTER);
+      if (targets.length) {
+        text += ` · ${targets.filter(i => state.marks.has(i)).length} of ${targets.length} on the pattern`;
+      }
+    }
+    $('#progress').textContent = text;
+    $('#card-toggle').textContent = `${state.mode === 'race' ? 'Racer' : 'Card'} ${state.card} of 2`;
     $('#seed').textContent = state.seed;
   }
 
   function renderBingo(justChanged) {
-    const banner = $('#bingo-banner');
     const done = completedLines();
     const n = done.length;
-    const blackout = state.marks.size === POSITIONS.length;
-    if (n === 0) { banner.hidden = true; banner.textContent = ''; state.lines = 0; return; }
-    banner.hidden = false;
-    let msg;
-    if (blackout) msg = 'Full card. Every cell on the board.';
-    else if (n === 1) msg = 'That is a line. Bingo.';
-    else msg = `${n} full lines now.`;
-    banner.innerHTML = `<span class="bingo-banner__stamp">bingo.</span> <span>${esc(msg)}</span>`;
-    if (justChanged && n > state.lines && 'vibrate' in navigator) {
-      try { navigator.vibrate(30); } catch { /* not supported */ }
+    if (n === 0) { hideBanner(); state.lines = 0; return; }
+    let msg = PATTERNS[state.pattern].win;
+    if (!msg) {
+      if (state.marks.size === POSITIONS.length) msg = 'Full card. Every cell on the board.';
+      else if (n === 1) msg = 'That is a line. Bingo.';
+      else msg = `${n} full lines now.`;
     }
+    showBanner('bingo.', msg);
+    if (justChanged && n > state.lines) buzz();
     state.lines = n;
   }
 
+  // ---- Hunt (one checklist of every species) -----------------
+  const CATEGORY_LABELS = {
+    bird: 'Birds', mammal: 'Mammals', reptile: 'Reptiles', amphibian: 'Amphibians',
+    invertebrate: 'Invertebrates', marine: 'Marine life', plant: 'Plants',
+  };
+  const categoryLabel = cat => CATEGORY_LABELS[cat] || cat.charAt(0).toUpperCase() + cat.slice(1);
+  // Categories in species.json order, so the list reads the way the data does.
+  function huntCategories() {
+    return [...new Set(state.data.species.map(s => s.category))];
+  }
+  const speciesById = id => state.data.species.find(s => s.id === id) || null;
+
+  function renderHuntFilters() {
+    const all = state.data.species;
+    const chip = (key, label, members) => {
+      const got = members.filter(s => state.found.has(s.id)).length;
+      return `<button class="chip" type="button" data-hunt-filter="${esc(key)}" ` +
+        `aria-pressed="${state.huntFilter === key}">${esc(label)}` +
+        `<span class="chip__count">${got}/${members.length}</span></button>`;
+    };
+    $('#hunt-filters').innerHTML = chip('all', 'All', all) +
+      huntCategories().map(cat => chip(cat, categoryLabel(cat), all.filter(s => s.category === cat))).join('');
+  }
+
+  function huntRowHtml(s) {
+    const found = state.found.has(s.id);
+    return `<li class="hunt__item${found ? ' is-found' : ''}" data-id="${esc(s.id)}">` +
+      `<button class="hunt__mark" type="button" aria-pressed="${found}" ` +
+      `aria-label="${esc(s.name)}${found ? ', found' : ''}" data-hunt="${esc(s.id)}">` +
+      pictureHtml(s.photo, '', 'hunt__thumb') +
+      `<span class="hunt__text"><span class="hunt__name">${esc(s.name)}</span>` +
+      (s.binomial ? `<span class="hunt__bino">${esc(s.binomial)}</span>` : '') + `</span>` +
+      `<span class="hunt__box">${checkSvg('hunt__check')}</span>` +
+      `</button>` +
+      `<button class="hunt__info" type="button" aria-label="About ${esc(s.name)}" data-hunt-info="${esc(s.id)}">i</button>` +
+      `</li>`;
+  }
+
+  function buildHunt() {
+    renderHuntFilters();
+    const cats = state.huntFilter === 'all' ? huntCategories() : [state.huntFilter];
+    $('#hunt-list').innerHTML = cats.map(cat =>
+      `<h2 class="hunt__heading">${esc(categoryLabel(cat))}</h2>` +
+      `<ul class="hunt__list">` +
+      state.data.species.filter(s => s.category === cat).map(huntRowHtml).join('') +
+      `</ul>`
+    ).join('');
+  }
+
+  function toggleFound(id) {
+    const wasDone = state.found.size === state.data.species.length;
+    if (state.found.has(id)) state.found.delete(id);
+    else state.found.add(id);
+    saveFound();
+    // Touch only the row and the chip counts, never the photos.
+    const row = document.querySelector(`#hunt-list .hunt__item[data-id="${CSS.escape(id)}"]`);
+    if (row) {
+      const on = state.found.has(id);
+      row.classList.toggle('is-found', on);
+      const btn = row.querySelector('.hunt__mark');
+      btn.setAttribute('aria-pressed', String(on));
+      btn.setAttribute('aria-label', `${speciesById(id)?.name || ''}${on ? ', found' : ''}`);
+    }
+    renderHuntFilters();
+    renderProgress();
+    renderHuntDone();
+    if (!wasDone && state.found.size === state.data.species.length) buzz();
+  }
+
+  function renderHuntDone() {
+    if (state.found.size === state.data.species.length) {
+      showBanner('found.', `All ${state.found.size} species on the list. That is the whole peninsula.`);
+    } else hideBanner();
+  }
+
+  // ---- Race (RACE_SIZE targets per racer) --------------------
+  function buildRace() {
+    let html = '';
+    state.race.forEach((s, i) => {
+      const marked = state.raceMarks.has(i);
+      html += `<div class="cell${marked ? ' is-marked' : ''}" data-race-index="${i}">` +
+        `<button class="cell__mark" type="button" aria-pressed="${marked}" ` +
+        `aria-label="${esc(s.name)}${marked ? ', found' : ''}" data-race-mark="${i}">` +
+        pictureHtml(s.photo, s.name, 'cell__photo') +
+        `<span class="cell__name">${esc(s.name)}</span>` +
+        CHECK +
+        `</button>` +
+        `<button class="cell__info" type="button" aria-label="About ${esc(s.name)}" data-race-info="${i}">i</button>` +
+        `</div>`;
+    });
+    $('#race').innerHTML = html;
+  }
+
+  function toggleRaceMark(i) {
+    if (state.raceMarks.has(i)) state.raceMarks.delete(i);
+    else state.raceMarks.add(i);
+    const done = state.raceMarks.size === RACE_SIZE;
+    const justFinished = done && !state.raceEnd;
+    // The finish time is set on the last find and dropped if one is undone.
+    if (justFinished) state.raceEnd = Date.now();
+    if (!done) state.raceEnd = null;
+    persistRace();
+    const cell = $(`#race .cell[data-race-index="${i}"]`);
+    if (cell) {
+      const on = state.raceMarks.has(i);
+      cell.classList.toggle('is-marked', on);
+      const btn = cell.querySelector('.cell__mark');
+      btn.setAttribute('aria-pressed', String(on));
+      btn.setAttribute('aria-label', `${state.race[i].name}${on ? ', found' : ''}`);
+    }
+    renderProgress();
+    renderRaceDone(justFinished);
+  }
+
+  function renderRaceDone(justFinished) {
+    if (state.raceMarks.size === RACE_SIZE && state.raceEnd) {
+      showBanner('done.', `All ${RACE_SIZE} found at ${fmtClock(state.raceEnd)}. Compare times: the earlier finish wins.`);
+      if (justFinished) buzz();
+    } else hideBanner();
+  }
+
   // ---- Detail sheet ------------------------------------------
-  let detailIndex = null;
-  function openDetail(index) {
-    const s = speciesAt(index);
+  // The sheet works for any game: it gets the species plus how to read and
+  // flip that species' mark in the current game.
+  let detail = null;   // { isMarked(), toggle() }
+  function openDetail(s, isMarked, toggle) {
     if (!s) return;
-    detailIndex = index;
+    detail = { isMarked, toggle };
     $('#detail-picture').innerHTML =
       `<source srcset="${esc(s.photo)}.webp" type="image/webp">` +
       `<img src="${esc(s.photo)}.jpg" alt="${esc(s.name)}" decoding="async">`;
@@ -336,7 +589,7 @@
   }
   function syncDetailMark() {
     const btn = $('#detail-mark');
-    const marked = state.marks.has(detailIndex);
+    const marked = detail.isMarked();
     btn.textContent = marked ? 'Spotted. Tap to undo.' : 'Mark as spotted';
     btn.classList.toggle('is-marked', marked);
     btn.setAttribute('aria-pressed', String(marked));
@@ -388,15 +641,34 @@
   }
 
   // ---- Wiring a card -----------------------------------------
-  function loadCard(seed, card, push) {
+  function applyCard(seed, card) {
     state.seed = seed;
     state.card = card;
     const rng = makeRng(seed);
     const pair = deal(state.data.species, rng);
     state.layout = pair[card - 1];
     applySavedMarks(seed, card);
-    saveLast(seed, card);
-    writeUrl(seed, card, push);
+    state.race = dealRace(state.data.species, seed)[card - 1];
+    loadRace(seed, card);
+  }
+  function loadCard(seed, card, push) {
+    applyCard(seed, card);
+    saveLast();
+    writeUrl(push);
+    render();
+  }
+  function setMode(mode) {
+    if (mode === state.mode) return;
+    state.mode = mode;
+    saveLast();
+    writeUrl(true);
+    render();
+  }
+  function setPattern(pattern) {
+    if (pattern === state.pattern) return;
+    state.pattern = pattern;
+    saveLast();
+    writeUrl(false);
     render();
   }
 
@@ -408,18 +680,33 @@
     loadCard(state.seed, state.card === 1 ? 2 : 1, true);
   }
   function askReset() {
-    if (state.marks.size === 0) return;            // nothing to clear, no prompt
-    const n = state.marks.size;
-    $('#confirm-count').textContent = `${n} mark${n === 1 ? '' : 's'}`;
-    $('#confirm-card').textContent = String(state.card);
+    const { mode } = state;
+    const n = mode === 'hunt' ? state.found.size : mode === 'race' ? state.raceMarks.size : state.marks.size;
+    if (n === 0) return;                           // nothing to clear, no prompt
+    const what = `${n} ${mode === 'bingo' ? 'mark' : 'find'}${n === 1 ? '' : 's'}`;
+    $('#confirm-title').textContent =
+      mode === 'hunt' ? 'Reset your hunt list?' : mode === 'race' ? 'Reset this race?' : 'Reset this card?';
+    $('#confirm-body').textContent =
+      mode === 'hunt' ? `This clears ${what} on your hunt list. You cannot undo it.`
+      : mode === 'race' ? `This clears ${what} for racer ${state.card}. You cannot undo it.`
+      : `This clears ${what} on card ${state.card}. You cannot undo it.`;
     const dlg = $('#confirm-reset');
     if (typeof dlg.showModal === 'function') dlg.showModal();
     else dlg.setAttribute('open', '');
   }
   function resetMarks() {
-    state.marks = new Set();
-    state.free = true;
-    persist();
+    if (state.mode === 'hunt') {
+      state.found = new Set();
+      saveFound();
+    } else if (state.mode === 'race') {
+      state.raceMarks = new Set();
+      state.raceEnd = null;
+      persistRace();
+    } else {
+      state.marks = new Set();
+      state.free = true;
+      persist();
+    }
     render();
   }
 
@@ -435,6 +722,7 @@
 
     renderSafety();
     renderCredits();
+    state.found = loadFound();
 
     // Event delegation on the grid.
     $('#grid').addEventListener('click', e => {
@@ -443,11 +731,42 @@
       const mark = e.target.closest('[data-mark]');
       if (mark) { toggleMark(Number(mark.dataset.mark)); return; }
       const info = e.target.closest('[data-info]');
-      if (info) { openDetail(Number(info.dataset.info)); }
+      if (info) {
+        const i = Number(info.dataset.info);
+        openDetail(speciesAt(i), () => state.marks.has(i), () => toggleMark(i));
+      }
+    });
+    $('#hunt').addEventListener('click', e => {
+      const filter = e.target.closest('[data-hunt-filter]');
+      if (filter) { state.huntFilter = filter.dataset.huntFilter; buildHunt(); return; }
+      const mark = e.target.closest('[data-hunt]');
+      if (mark) { toggleFound(mark.dataset.hunt); return; }
+      const info = e.target.closest('[data-hunt-info]');
+      if (info) {
+        const id = info.dataset.huntInfo;
+        openDetail(speciesById(id), () => state.found.has(id), () => toggleFound(id));
+      }
+    });
+    $('#race').addEventListener('click', e => {
+      const mark = e.target.closest('[data-race-mark]');
+      if (mark) { toggleRaceMark(Number(mark.dataset.raceMark)); return; }
+      const info = e.target.closest('[data-race-info]');
+      if (info) {
+        const i = Number(info.dataset.raceInfo);
+        openDetail(state.race[i], () => state.raceMarks.has(i), () => toggleRaceMark(i));
+      }
+    });
+    $('#modes').addEventListener('click', e => {
+      const b = e.target.closest('[data-mode]');
+      if (b) setMode(b.dataset.mode);
+    });
+    $('#patterns').addEventListener('click', e => {
+      const b = e.target.closest('[data-pattern]');
+      if (b) setPattern(b.dataset.pattern);
     });
 
     $('#detail-mark').addEventListener('click', () => {
-      toggleMark(detailIndex);
+      detail.toggle();
       syncDetailMark();
     });
     // Tap the dimmed backdrop (outside the drawer) to dismiss it, the way a
@@ -464,10 +783,11 @@
     if (actionsMenu) {
       $('#copy-link').addEventListener('click', async () => {
         const head = $('#copy-link').querySelector('.menu__share-head');
-        const ok = await copyText(location.href);           // the URL already carries ?s=<seed>&c=<card>
+        const label = head.textContent;
+        const ok = await copyText(location.href);           // the URL already carries ?s=<seed>&c=<card>[&m=&p=]
         head.textContent = ok ? 'Link copied' : 'Copy failed — select and copy';
         clearTimeout(head._resetT);
-        head._resetT = setTimeout(() => { head.textContent = 'Copy link to this card'; }, 1800);
+        head._resetT = setTimeout(() => { head.textContent = label; }, 1800);
       });
       actionsMenu.querySelector('.menu__panel').addEventListener('click', e => {
         const btn = e.target.closest('button');
@@ -484,27 +804,28 @@
     $('#confirm-cancel').addEventListener('click', () => $('#confirm-reset').close());
     $('#confirm-yes').addEventListener('click', () => { $('#confirm-reset').close(); resetMarks(); });
 
-    // Back / forward through seeds and card flips.
+    // Back / forward through seeds, card flips and mode switches.
     window.addEventListener('popstate', () => {
-      const { seed, card } = readUrl();
-      if (seed) { state.seed = seed; state.card = card;
-        const pair = deal(state.data.species, makeRng(seed));
-        state.layout = pair[card - 1];
-        applySavedMarks(seed, card);
-        render();
-      }
+      const url = readUrl();
+      if (!url.seed) return;
+      state.mode = url.mode || 'bingo';
+      state.pattern = url.pattern || 'line';
+      applyCard(url.seed, url.card);
+      saveLast();
+      render();
     });
 
     // Seed resolution: an explicit URL seed wins; otherwise reopen the last
     // card you were on (so the installed app resumes offline); otherwise deal
-    // a fresh seed. Either way it is pushed into the URL so it is linkable.
+    // a fresh seed. Mode and pattern resolve the same way. Either way it is
+    // written into the URL so it is linkable.
     const url = readUrl();
+    const last = loadLast() || {};
+    state.mode = url.mode || (MODES.includes(last.mode) ? last.mode : 'bingo');
+    state.pattern = url.pattern || (Object.hasOwn(PATTERNS, last.pattern || '') ? last.pattern : 'line');
     if (url.seed) loadCard(url.seed, url.card, false);
-    else {
-      const last = loadLast();
-      if (last && last.seed) loadCard(last.seed, last.card === 2 ? 2 : 1, false);
-      else loadCard(randomSeed(), 1, false);
-    }
+    else if (last.seed) loadCard(last.seed, last.card === 2 ? 2 : 1, false);
+    else loadCard(randomSeed(), 1, false);
   }
 
   // ---- Service worker (offline is the whole point) -----------
