@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Species bingo mocks</title>
+  <script>
+    // Same pattern the plan specifies (D11): stored choice applied before paint.
+    try { const t = localStorage.getItem('species-bingo:theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch {}
+  </script>
+  <link rel="stylesheet" href="mocks.css">
+</head>
+<body>
+  <header class="stage-head">
+    <div>
+      <h1>Species bingo: UI mocks</h1>
+      <p>Static pictures of <a href="../UI-PLAN.md">docs/UI-PLAN.md</a> at 375px wide, built on the real tokens, fonts and photos. Each frame scrolls. The dashed red line marks the bottom of an 812px-tall phone screen with browser chrome. Use the switch to see light and dark.</p>
+    </div>
+    <div class="seg" role="group" aria-label="Theme" id="theme" style="width:240px">
+      <button type="button" data-t="light">Light</button>
+      <button type="button" data-t="dark">Dark</button>
+      <button type="button" data-t="auto">Auto</button>
+    </div>
+  </header>
+
+  <main class="stage">
+
+    <!-- S1 Hub -->
+    <section class="shot">
+      <p class="shot__label"><span>S1</span>Hub, returning player</p>
+      <div class="phone">
+        <header class="bar" style="--game-accent: var(--sage)"><h1 class="bar__title bar__title--site">Species <em>bingo.</em></h1></header>
+        <div class="body">
+          <p class="pitch">Bingo for the things you see outside. <em>Spot it, tap it</em>, get five in a row. Share the link and a friend plays the other card.</p>
+          <button class="continue" type="button">
+            <span><small>Continue</small><strong>Osa wildlife · card 2 · 9 of 24</strong></span><span aria-hidden="true">›</span>
+          </button>
+          <a class="gcard" style="--game-accent: var(--sun)" href="#">
+            <div class="gcard__strip" data-strip="osa"></div>
+            <div class="gcard__body">
+              <p class="gcard__name">Osa wildlife <em>bingo</em></p>
+              <p class="gcard__place">Corcovado and Golfo Dulce, Costa Rica</p>
+              <div class="gcard__tags"><span class="tag">48 species</span><span class="tag tag--ok">⦿ Works offline</span></div>
+            </div>
+          </a>
+          <a class="gcard" style="--game-accent: var(--sage)" href="#">
+            <div class="gcard__strip" data-strip="plants"></div>
+            <div class="gcard__body">
+              <p class="gcard__name">Plant <em>bingo</em></p>
+              <p class="gcard__place">A garden list (placeholder, open question 4)</p>
+              <div class="gcard__tags"><span class="tag">25 plants</span><span class="tag">Needs signal</span></div>
+            </div>
+          </a>
+          <footer class="foot" data-foot></footer>
+        </div>
+        <div class="fold" style="top:660px"></div>
+      </div>
+      <p class="shot__note">The Continue row appears only with a game in progress. The Wild &amp; Native lockup sits in the footer (D3).</p>
+    </section>
+
+    <!-- S2 + S6: first visit -->
+    <section class="shot">
+      <p class="shot__label"><span>S2 · S6</span>Game, first visit</p>
+      <div class="phone" style="--game-accent: var(--sun)">
+        <div data-bar="Osa wildlife"></div>
+        <div class="body">
+          <div data-modes="bingo"></div>
+          <div class="status"><span class="status__prog">0/24</span><span class="status__dot">·</span><button class="status__btn">Any line ▾</button><button class="status__btn status__btn--push">Card 1 ⇄</button></div>
+          <div class="howto">
+            <h2>How to play</h2>
+            <ol>
+              <li><b>1</b><span>Tap a photo when you spot it. Five in a row wins.</span></li>
+              <li><b>2</b><span><strong>ⓘ</strong> shows how to tell it apart.</span></li>
+              <li><b>3</b><span>Share the link from Actions: your friend gets card 2, with none of yours.</span></li>
+            </ol>
+            <p class="howto__off">⦿ Works offline once loaded. Add it to your home screen on wifi.</p>
+            <div class="howto__actions"><button class="btn btn--ghost">More</button><button class="btn">Got it</button></div>
+          </div>
+          <div class="grid" data-grid="osa" data-marked=""></div>
+        </div>
+        <div class="fold" style="top:660px"></div>
+      </div>
+      <p class="shot__note">The how-to card sits above the grid and never covers it. Step 3 appears only for games with a card pair.</p>
+    </section>
+
+    <!-- S2 + S5: in play, won -->
+    <section class="shot">
+      <p class="shot__label"><span>S2 · S5</span>Game, a line won</p>
+      <div class="phone" style="--game-accent: var(--sun)">
+        <div data-bar="Osa wildlife"></div>
+        <div class="body">
+          <div data-modes="bingo"></div>
+          <div class="status"><span class="status__prog">9/24</span><span class="status__dot">·</span><button class="status__btn">Any line ▾</button><button class="status__btn status__btn--push">Card 1 ⇄</button></div>
+          <p class="banner"><b>bingo.</b> That is a line. Bingo.</p>
+          <div class="grid" data-grid="osa" data-marked="1,3,10,11,13,14,7,17,22" data-line="10,11,12,13,14"></div>
+          <section class="slot">
+            <h3>Keep your distance</h3>
+            <p>These share the forest and the water. Look, log it in your head, and give it room.</p>
+            <ul>
+              <li><b>Fer-de-lance</b> · not on the card. The snake to know here. Watch your feet, and never step over a log blind.</li>
+              <li><b>American Crocodile</b> · on the card. Genuinely dangerous. Stay well back from any river or estuary edge.</li>
+            </ul>
+          </section>
+          <footer class="foot" data-foot data-game="osa"></footer>
+        </div>
+        <div class="fold" style="top:660px"></div>
+      </div>
+      <p class="shot__note">The card starts at about 22% of the screen, down from 40% today. Below the card sits Osa's one extra section (D5), shortened here.</p>
+    </section>
+
+    <!-- S3 pattern sheet -->
+    <section class="shot">
+      <p class="shot__label"><span>S3</span>Pattern sheet</p>
+      <div class="phone" style="--game-accent: var(--sun)">
+        <div data-bar="Osa wildlife"></div>
+        <div class="body">
+          <div data-modes="bingo"></div>
+          <div class="status"><span class="status__prog">9/24</span><span class="status__dot">·</span><button class="status__btn">Any line ▾</button><button class="status__btn status__btn--push">Card 1 ⇄</button></div>
+          <div class="grid" data-grid="osa" data-marked="1,3,10,11,13,14,7,17,22"></div>
+        </div>
+        <div class="scrim"></div>
+        <div class="sheet">
+          <div class="sheet__grab"></div>
+          <h2 class="sheet__title">Win pattern</h2>
+          <div data-patterns="line"></div>
+          <div style="height:20px"></div>
+        </div>
+      </div>
+      <p class="shot__note">This replaces the four chips and the hint line on the main screen. Each pattern shows its shape and the hint. Tapping one selects it and closes the sheet.</p>
+    </section>
+
+    <!-- Actions menu -->
+    <section class="shot">
+      <p class="shot__label"><span>S2</span>Actions menu</p>
+      <div class="phone" style="--game-accent: var(--sun)">
+        <div data-bar="Osa wildlife"></div>
+        <div class="body">
+          <div data-modes="bingo"></div>
+          <div class="status"><span class="status__prog">9/24</span><span class="status__dot">·</span><button class="status__btn">Any line ▾</button><button class="status__btn status__btn--push">Card 1 ⇄</button></div>
+          <div class="grid" data-grid="osa" data-marked="1,3,10,11,13,14,7,17,22"></div>
+        </div>
+        <div class="menu">
+          <button class="menu__share"><strong>Copy link to this card</strong><small>seed <code>k3f9q</code></small></button>
+          <button class="btn btn--block">New card</button>
+          <button class="btn btn--ghost btn--block">Reset marks</button>
+          <hr>
+          <button class="menu__link">How to play</button>
+          <p class="menu__lbl">Theme</p>
+          <div class="seg"><button>Light</button><button>Dark</button><button aria-pressed="true">Auto</button></div>
+        </div>
+      </div>
+      <p class="shot__note">Today's items keep their order. Below them come How to play (it reopens S6) and the site-wide theme switch (D11).</p>
+    </section>
+
+    <!-- S4 drawer -->
+    <section class="shot">
+      <p class="shot__label"><span>S4</span>Detail drawer</p>
+      <div class="phone" style="--game-accent: var(--sun)">
+        <div data-bar="Osa wildlife"></div>
+        <div class="body"><div data-modes="bingo"></div><div style="height:12px"></div><div class="grid" data-grid="osa" data-marked="1,3"></div></div>
+        <div class="scrim"></div>
+        <div class="sheet">
+          <button class="drawer__close" aria-label="Close">×</button>
+          <img class="drawer__photo" src="../../public/img/scarlet-macaw.webp" alt="Scarlet Macaw">
+          <div class="drawer__in">
+            <p class="drawer__cat">bird</p>
+            <h2 class="drawer__name">Scarlet Macaw</h2>
+            <p class="drawer__bino">Ara macao</p>
+            <p class="drawer__note">Look for the big unmistakable red body with yellow and blue across the wing, and listen first, because the raw scraping squawk usually reaches you before you find the pair crossing the canopy.</p>
+            <p class="drawer__fact">They mate for life and you almost always see them in twos, one bird waiting on a branch while the other feeds.</p>
+            <div style="height:16px"></div>
+            <button class="btn btn--block">Mark as spotted</button>
+            <p class="drawer__credit">Photo: Charles J. Sharp · CC BY-SA 4.0 · <a href="#">source</a></p>
+          </div>
+        </div>
+      </div>
+      <p class="shot__note">Unchanged apart from the theme tokens (D6).</p>
+    </section>
+
+    <!-- Hunt -->
+    <section class="shot">
+      <p class="shot__label"><span>S2 · S8</span>Hunt mode, empty</p>
+      <div class="phone" style="--game-accent: var(--sun)">
+        <div data-bar="Osa wildlife"></div>
+        <div class="body">
+          <div data-modes="hunt"></div>
+          <div class="status"><span class="status__prog">0 of 48 found</span></div>
+          <p class="note-line">Tap each species the first time you see it. This list runs the whole trip.</p>
+          <div class="chips"><button class="chip" aria-pressed="true">All<small>0/48</small></button><button class="chip">Birds<small>0/19</small></button><button class="chip">Mammals<small>0/13</small></button><button class="chip">Invertebrates<small>0/8</small></button><button class="chip">Reptiles<small>0/4</small></button></div>
+          <p class="hunt-h">Birds</p>
+          <div data-rows="osa"></div>
+        </div>
+      </div>
+      <p class="shot__note">In Hunt the status row shows progress only. The empty state is one line, not a blocking card.</p>
+    </section>
+
+    <!-- S7 loading -->
+    <section class="shot">
+      <p class="shot__label"><span>S7</span>Loading</p>
+      <div class="phone" style="--game-accent: var(--sun)">
+        <div data-bar="Osa wildlife"></div>
+        <div class="body">
+          <div data-modes="bingo"></div>
+          <div class="status"><span class="status__prog">Dealing your card…</span></div>
+          <div class="grid" data-skel></div>
+        </div>
+      </div>
+      <p class="shot__note">Squares in the card's exact shape, so nothing shifts when the photos land.</p>
+    </section>
+
+    <!-- S8 offline -->
+    <section class="shot">
+      <p class="shot__label"><span>S8</span>Offline, game not cached</p>
+      <div class="phone" style="--game-accent: var(--sun)">
+        <div data-bar="Osa wildlife"></div>
+        <div class="body">
+          <div class="errcard">
+            <div class="errcard__icon">no signal.</div>
+            <h2>Not saved to this phone yet</h2>
+            <p>Open this game once on wifi and it will work offline after that, even in airplane mode.</p>
+            <div class="errcard__acts"><button class="btn">Try again</button></div>
+          </div>
+          <footer class="foot" data-foot data-game="osa"></footer>
+        </div>
+      </div>
+      <p class="shot__note">Each case has one card and one button. Moplants offline adds "Go to Osa", and a bad link offers "All games".</p>
+    </section>
+
+    <!-- S8 storage + missing photo, Moplants, dark accent -->
+    <section class="shot">
+      <p class="shot__label"><span>S2 · S8</span>Plant bingo, private mode</p>
+      <div class="phone" style="--game-accent: var(--sage)">
+        <div data-bar="Plant bingo"></div>
+        <div class="body">
+          <div data-modes="bingo"></div>
+          <div class="status"><span class="status__prog">3/25</span><span class="status__dot">·</span><button class="status__btn">Any line ▾</button></div>
+          <p class="note-line">Private browsing: your marks won't be kept after you close this tab.</p>
+          <div class="grid" data-grid="plants" data-marked="0,6,18" data-noimg="9"></div>
+        </div>
+      </div>
+      <p class="shot__note">This game has no free centre and no card pair, so the card toggle is gone. The accent is sage. The fourth cell in row two shows a missing photo as the name on paper.</p>
+    </section>
+
+    <!-- S9 how to play page -->
+    <section class="shot">
+      <p class="shot__label"><span>S9</span>How to play page</p>
+      <div class="phone">
+        <header class="bar" style="--game-accent: var(--sage)"><button class="bar__back" aria-label="Back">‹</button><h1 class="bar__title">How to play</h1></header>
+        <div class="body page">
+          <h2>Three ways to play</h2>
+          <p><strong>Bingo.</strong> A 5×5 card. Tap a cell when you spot it. Pick a win pattern from the status row.</p>
+          <p><strong>Hunt.</strong> Every species on the list, one checklist for the whole trip.</p>
+          <p><strong>Race.</strong> Ten targets each. First to find all of theirs wins; compare finish times.</p>
+          <h2>Win patterns</h2>
+          <div data-patterns=""></div>
+          <h2>Playing with a friend</h2>
+          <p>Actions → Copy link. Same seed, same pair of cards: you hold card 1, they hold card 2, and no species is on both.</p>
+          <h2>Offline</h2>
+          <p>Open Osa once on wifi, then add it to your home screen (iPhone: Share → Add to Home Screen; Android: ⋮ → Install app).</p>
+          <footer class="foot" data-foot></footer>
+        </div>
+      </div>
+      <p class="shot__note">About, Credits and Privacy use this same page shell (S10–S12).</p>
+    </section>
+
+    <!-- S13 share preview -->
+    <section class="shot">
+      <p class="shot__label"><span>S13</span>Share preview in a chat</p>
+      <div class="phone phone--short" style="padding:16px; background:#ece5dd; height:auto">
+        <div class="bubble og">
+          <div class="og__img">
+            <div class="og__mosaic" data-og></div>
+            <div class="og__text"><b>Osa wildlife <em>bingo.</em></b><span>Corcovado, Costa Rica</span></div>
+          </div>
+          <div class="og__meta">
+            <strong>Osa wildlife bingo · Species bingo</strong>
+            <span>Join my card. Tap to play, works offline.</span>
+            <small>species-bingo.victorvaldez5.workers.dev</small>
+          </div>
+        </div>
+      </div>
+      <p class="shot__note">There is one static image per game, so every seed shows the same preview (D10).</p>
+    </section>
+
+  </main>
+
+  <script src="mocks.js"></script>
+</body>
+</html>
