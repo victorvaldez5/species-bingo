@@ -51,7 +51,7 @@
 
   for (const el of $$('[data-strip]')) {
     const list = el.dataset.strip === 'osa' ? [OSA[0], OSA[7], OSA[8], OSA[3], OSA[4]] : [PLANTS[18], PLANTS[0], PLANTS[22], PLANTS[1], PLANTS[11]];
-    el.innerHTML = list.map(([n, s]) => `<img src="${s}" alt="">`).join('');
+    el.innerHTML = list.map(([, s]) => `<img src="${s}" alt="">`).join('');
   }
   for (const el of $$('[data-og]')) {
     const pick = [OSA[0], OSA[8], OSA[7], OSA[3], null, OSA[4]];
@@ -91,7 +91,7 @@
   for (const el of $$('[data-foot]')) {
     const game = el.dataset.game;
     el.innerHTML = `<nav class="foot__links"><a href="#">How to play</a><a href="#">About</a>` +
-      `<a href="#">Credits${game ? '' : ''}</a><a href="#">Privacy</a>${game ? '<a href="#">All games</a>' : ''}</nav>` +
+      `<a href="#">Credits</a><a href="#">Privacy</a>${game ? '<a href="#">All games</a>' : ''}</nav>` +
       `<div class="foot__maker">made by<span class="wnd-logo" style="--logo-size: 18px" aria-label="Wild and Native Gardens">` +
       `<span class="wnd-logo__row">Wild <em>&amp;</em> Native</span><span class="wnd-logo__sub"><span>Gardens</span></span></span></div>`;
   }
