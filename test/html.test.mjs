@@ -52,21 +52,52 @@ for (const { built, game } of pages) {
     assert.ok(html.includes('<link rel="stylesheet" href="/core/styles.css">'), 'core stylesheet link');
     assert.ok(!/(?:src|href)="(?:app\.js|styles\.css)"/.test(html), 'a per-game app.js/styles.css is still referenced');
 
-    // Dark mode opt-out follows the config.
-    assert.equal(html.includes(`<html lang="en" data-scheme="${cfg.scheme}">`), Boolean(cfg.scheme));
-    assert.equal(html.includes('<meta name="color-scheme"'), Boolean(cfg.metaColorScheme));
+    // One theme site-wide (D11): no per-page opt-out, the accent on <html>,
+    // and the theme script in <head> ahead of the stylesheet.
+    assert.ok(!html.includes('data-scheme'), 'no light-only opt-out');
+    assert.ok(html.includes(`<html lang="en" style="--game-accent: ${cfg.hub.accent}">`), 'game accent on <html>');
+    assert.ok(html.includes('<meta name="color-scheme" content="light dark">'));
+    const head = html.slice(0, html.indexOf('</head>'));
+    assert.ok(head.includes("species-bingo:theme") && head.includes('data-theme'), 'theme script in <head>');
+    assert.ok(head.indexOf('species-bingo:theme') < head.indexOf('rel="stylesheet"'), 'theme script runs before the stylesheet');
+    for (const k of ['scheme', 'metaColorScheme', 'controlsLayout', 'masthead']) assert.ok(!(k in cfg), `${k} is gone from game.json`);
+
+    // The compact top bar (D4): back to the hub, the game's name, Actions.
+    assert.ok(/<header class="bar bar--game">\s*<a class="bar__back" href="\/" aria-label="All games">/.test(html), 'top bar back link');
+    assert.ok(html.includes('id="actions-menu"') && html.indexOf('id="actions-menu"') < html.indexOf('<main'), 'Actions lives in the bar');
+    assert.ok(!html.includes('class="wnd-logo wnd-logo--cream"') && !html.includes('masthead'), 'the lockup left the header');
+    for (const choice of ['light', 'dark', 'auto']) assert.ok(html.includes(`data-theme-set="${choice}"`), `theme toggle ${choice}`);
+    assert.ok(!html.includes('id="mode-hint"') && !html.includes('id="patterns"'), 'hint line and chips are gone');
+
+    // The status row and the pattern sheet (S2, S3): one row, a <dialog>
+    // with a button and a mini shape for each pattern, selected by default.
+    assert.ok(html.includes('id="pattern-open"') && html.includes('id="card-toggle"') && html.includes('id="progress"'));
+    assert.ok(/<dialog id="pattern-sheet"/.test(html), 'pattern dialog');
+    const sheet = html.slice(html.indexOf('<dialog id="pattern-sheet"'), html.indexOf('</dialog>', html.indexOf('<dialog id="pattern-sheet"')));
+    assert.equal((sheet.match(/class="pat__mini"/g) || []).length, cfg.patterns.length);
+    for (const p of cfg.patterns) assert.ok(sheet.includes(`data-pattern="${p.key}"`) && sheet.includes(p.hint), `pattern ${p.key}`);
+
+    // Loading (S7): a skeleton in the card's exact shape, in the page itself.
+    assert.equal((html.match(/class="cell cell--skel/g) || []).length, 25);
+    assert.equal(html.includes('cell--skel-free'), Boolean(cfg.freeCentre));
+    assert.ok(html.includes('Dealing your card'));
+
+    // Banner wording is data (S5), and so are the offline and empty-hunt lines.
+    for (const k of ['bingo', 'hunt', 'race']) assert.ok(cfg.words[k].stamp && (cfg.words[k].done || cfg.words[k].line));
+    assert.ok(cfg.errors.offline.title && cfg.errors.offline.body && cfg.messages.huntEmpty);
+    assert.ok(html.includes(cfg.messages.huntEmpty));
 
     // Every id the script looks up, plus the ones the config names.
     // (The hunt filters and the below-card list exist only in the games that use them.)
     const ids = new Set(looked);
     ids.add(cfg.detail.callout.id);
     if (cfg.hunt.groupBy !== 'category') ids.delete('hunt-filters');
+    ids.add('notice'); ids.add('state');
     if (!cfg.belowCard) ids.delete('safety-list');
     for (const id of ids) assert.ok(html.includes(`id="${id}"`), `missing id="${id}"`);
     if (!cfg.belowCard) assert.ok(!html.includes('id="safety-list"'));
     assert.equal(html.includes('id="hunt-filters"'), cfg.hunt.groupBy === 'category');
     for (const mode of cfg.modes) assert.ok(html.includes(`data-mode="${mode.id}"`));
-    for (const p of cfg.patterns) assert.ok(html.includes(`data-pattern="${p.key}"`));
 
     // The list is the size the settings expect.
     assert.equal(readJson(listFile(game)).species.length, cfg.list.expected);
@@ -117,6 +148,8 @@ test('The hub redirects old Osa links before paint and links every game', t => {
     assert.ok(html.includes(cfg.hub.name) && html.includes(cfg.hub.place.replace(/&/g, '&amp;')));
     assert.equal(cfg.hub.strip.length, 5);
   }
+  assert.ok(head.includes('species-bingo:theme') && head.indexOf('species-bingo:theme') < head.indexOf('rel="stylesheet"'), 'theme script before first paint');
+  for (const choice of ['light', 'dark', 'auto']) assert.ok(html.includes(`data-theme-set="${choice}"`), `footer toggle ${choice}`);
   assert.ok(html.includes('id="continue"') && html.includes('/core/deal.js'));
   for (const href of ['/how-to-play/', '/about/', '/credits/', '/privacy/']) assert.ok(html.includes(`<a href="${href}">`));
   assert.ok(html.includes("register('/sw.js')") && html.includes("register('/osa/sw.js', { scope: '/osa/' })"));

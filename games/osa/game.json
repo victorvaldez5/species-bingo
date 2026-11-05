@@ -26,12 +26,8 @@
     "image": "/og/osa.png"
   },
 
-  "masthead": { "lead": "Wildlife", "em": "bingo." },
   "offline": true,
   "worker": "sw.js",
-  "scheme": "light",
-  "metaColorScheme": null,
-  "controlsLayout": "flat",
 
   "list": { "file": "species.json", "expected": 48, "noun": "species" },
   "freeCentre": true,
@@ -106,12 +102,22 @@
   ],
   "noscript": "This bingo card needs JavaScript to deal the species and remember what you have spotted. It runs entirely in your browser and works offline once loaded.",
 
+  "words": {
+    "bingo": { "stamp": "bingo.", "line": "That is a line. Bingo.", "lines": "{n} full lines now.", "full": "Full card. Every cell on the board." },
+    "hunt": { "stamp": "found.", "done": "All {n} {noun} on the list. That is the whole peninsula." },
+    "race": { "stamp": "done.", "done": "All {raceSize} found at {time}. Compare times: the earlier finish wins." }
+  },
+
   "messages": {
-    "hintHunt": "Every species on the list, for the whole trip. Tap each one the first time you see it.",
-    "hintRace": "Two racers on the same seed get {raceSize} different targets each. First to find all of theirs wins.",
-    "huntDone": "All {n} {noun} on the list. That is the whole peninsula.",
-    "fullCard": "Full card. Every cell on the board.",
-    "resetCardBody": "This clears {what} on card {card}. You cannot undo it.",
-    "loadError": "Could not load the species list. If you are offline, open the app once on wifi first so it can cache."
+    "huntEmpty": "Tap each species the first time you see it. This list runs the whole trip.",
+    "resetCardBody": "This clears {what} on card {card}. You cannot undo it."
+  },
+
+  "errors": {
+    "offline": {
+      "title": "Not saved to this phone yet",
+      "body": "Open this game once on wifi and it will work offline after that.",
+      "alt": null
+    }
   }
 }
