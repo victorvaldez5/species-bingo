@@ -7,7 +7,7 @@
   // `run_worker_first`) so Workers Observability has a real invocation to log
   // + trace per page load — without routing every asset request through a
   // Worker (which would also bypass the `_headers` rules).
-  "name": "osa-bingo",
+  "name": "species-bingo",
   "main": "src/index.js",
   "compatibility_date": "2026-09-20",
   "assets": {
