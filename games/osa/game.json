@@ -6,6 +6,7 @@
   "description": "Offline field-spotting bingo for the wildlife of Corcovado and Golfo Dulce, Costa Rica.",
   "masthead": { "lead": "Wildlife", "em": "bingo." },
   "offline": true,
+  "worker": "sw.js",
   "scheme": "light",
   "metaColorScheme": null,
   "controlsLayout": "flat",

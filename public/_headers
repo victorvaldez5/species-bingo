@@ -8,6 +8,25 @@
 /manifest.webmanifest
   Cache-Control: no-cache
 
+# Plant bingo's own worker and data, same reasons as above. Its worker is
+# network-first, but it can only stay that way if it is itself re-fetched.
+/moplants/sw.js
+  Cache-Control: no-cache
+
+/moplants/species.json
+  Cache-Control: no-cache
+
+/moplants/manifest.webmanifest
+  Cache-Control: no-cache
+
+# The shared game code and tokens keep stable filenames and are loaded by both
+# games, so a deploy must reach clients on the next load, not after a year.
+/core/*
+  Cache-Control: no-cache
+
+/tokens.css
+  Cache-Control: no-cache
+
 /species.json
   Cache-Control: no-cache
 
@@ -18,6 +37,9 @@
 # real-photo deploy. Revalidate instead — Cloudflare's ETag makes an unchanged
 # asset a cheap 304, and offline is served from the service-worker cache anyway.
 /img/*
+  Cache-Control: no-cache
+
+/moplants/img/*
   Cache-Control: no-cache
 
 /fonts/*

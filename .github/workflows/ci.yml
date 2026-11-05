@@ -28,19 +28,18 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Build the site (Astro pages), validate Osa's data, regenerate
-          # sw.js, then regenerate the CREDITS files, and fail if they differ from what was committed. A
-          # stale precache list is how an asset quietly goes missing
-          # offline.
+          # Build the site (Astro pages), validate both games' data, then
+          # regenerate both service workers and the CREDITS files, and fail
+          # if they differ from what was committed. A stale precache list is
+          # how an asset quietly goes missing offline.
           - name: build
             run: |
               npm run build
-              npm run moplants:credits
-              git diff --exit-code -- public/sw.js CREDITS.md CREDITS-moplants.md
+              git diff --exit-code -- public/sw.js public/moplants/sw.js CREDITS.md CREDITS-moplants.md
           - name: lint
             run: npm run lint
           # Pins the seeded deal so shared links keep showing the same card,
-          # and checks the built pages match the pre-Astro HTML (so it
+          # and checks the built pages are structurally sound (so it
           # needs dist/ first).
           - name: test
             run: |

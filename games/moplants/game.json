@@ -6,6 +6,7 @@
   "description": "A 25-plant garden bingo card. Tap a plant when you spot it, and get five in a row.",
   "masthead": { "lead": "Plant", "em": "bingo." },
   "offline": false,
+  "worker": "sw.js",
   "scheme": null,
   "metaColorScheme": "light dark",
   "controlsLayout": "grouped",

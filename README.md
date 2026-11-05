@@ -19,7 +19,7 @@ and every photo are precached by the service worker.
 npm install          # sharp, subset-font, wrangler (dev only)
 npm run fonts        # TTF -> subset woff2  (needs fonts-src/, see Fonts)
 npm run images       # optimize photos + generate PWA icons + placeholders
-npm run build        # Astro pages -> dist/, then validate, rewrite the sw.js precache, write CREDITS.md
+npm run build        # Astro pages -> dist/, then validate both games, stamp both service workers, write the CREDITS files
 npm run dev          # build, then wrangler dev — closest to production
 npm run dev:astro    # Astro dev server (no service worker or _headers)
 npm run ci           # lint, build, tests, data checks (CI runs these as build, lint, test)
@@ -57,7 +57,7 @@ public/                 plain files, copied into dist/ unchanged
   core/bingo.js         the game: one script runs any game from its inline config
   core/styles.css       imports tokens.css, then the shared styles (light and dark)
   tokens.css            WFG design tokens (verbatim copy; only @font-face swapped)
-  sw.js                 hand-rolled service worker (precache list is generated)
+  sw.js                 Osa's hand-rolled service worker (precache list is generated)
   manifest.webmanifest
   species.json          all 48 species + safety callouts — the single source
   _headers              Cloudflare cache rules (the /sw.js no-cache rule matters)
@@ -66,8 +66,10 @@ public/                 plain files, copied into dist/ unchanged
 scripts/
   optimize-images.mjs   sharp: raw -> webp + jpg, icons, placeholders
   build-fonts.mjs       subset-font: TTF -> Latin woff2
-  build-manifest.mjs    validate + rewrite sw.js precache + write CREDITS.md
-                        (hashes dist/index.html, so run it via npm run build)
+  build-games.mjs       for every game in games/games.json: validate its list,
+                        write its CREDITS file, stamp its worker (Osa's also gets
+                        the precache list). Hashes dist/ pages, so run it via
+                        npm run build
 img-raw/                git-ignored, raw photo downloads (never deployed)
 fonts-src/              git-ignored, brand variable TTFs (never deployed)
 wrangler.jsonc
@@ -92,7 +94,8 @@ Both games run the same code. `public/core/bingo.js` is a plain classic script
 checks a game id: if two games differ, the difference is a key in `game.json`.
 
 `game.json` holds the page text (title, masthead, colophon, credits wording,
-noscript), `offline` (only an offline game registers a service worker), the list
+noscript), `offline` and `worker` (the service worker file the page registers,
+relative to the page: Osa's offline worker, Plant bingo's network-first one), the list
 file with its expected count and noun, `freeCentre`, `cardPair`, the deal and
 race strategy names (`stratified-pair`, `shuffle-all`, `shuffle-split`, all in
 `core/deal.js`), the modes and win patterns with their wording, how marks are
@@ -189,7 +192,7 @@ To swap or add a photo later:
    CC-BY site, and it renders in the app and in `CREDITS.md`.
 4. `npm run images && npm run build`.
 
-`build-manifest` hard-fails if a real (non-placeholder) photo is missing its
+`build-games` hard-fails if a real (non-placeholder) photo is missing its
 credit. If no decently licensed photo exists for a species, **flag it rather
 than substituting a lookalike** — a mislabeled fer-de-lance is a safety problem,
 not a cosmetic one.
@@ -217,7 +220,7 @@ TTFs there, or point `FONTS_SRC` at the design system's `fonts/` directory.
 must stay debuggable:
 
 - Versioned cache `osa-bingo-<major>-<hash>`. The hash is a fingerprint of every
-  precached file, written by `build-manifest`, so any changed asset makes a new
+  precached file, written by `build-games`, so any changed asset makes a new
   cache and the update actually lands; `<major>` is a manual bump for worker-logic
   changes. `activate` purges old caches.
 - On install it precaches the shell, `species.json`, all fonts, all icons and
@@ -318,12 +321,19 @@ list's owner are in `MOPLANTS.md`). It shares the core, `tokens.css` and
   copied link reproduces the card. Spotted plant ids persist per seed in
   `localStorage` under `moplants-bingo:v2:<seed>`, last seed under
   `moplants-bingo:v2:last`. "New card" is a new seed, so it needs no confirm.
-- **Online only, no service worker.** The Osa `sw.js` is scoped to `/`, so it
-  explicitly returns early for `/moplants` and `/moplants/*`. Without that,
-  a navigation there could fall back to the cached Osa `index.html`.
-  `build-manifest.mjs` only reads `public/img/` and the Osa `species.json`,
-  so `/moplants` never enters the precache. (The shared `/core/*` files are in the
-  Osa precache, because the Osa page needs them offline.)
+- **Online only, with its own network-first worker.** `public/moplants/sw.js`
+  (scope `/moplants/`) fetches the network first for its pages, data, images and
+  the shared `/core/*`, `/tokens.css` and `/fonts/*`, caching each good response
+  only as a fallback; offline with no cached page it shows a small "needs a
+  connection" page (503). Its cache is `moplants-bingo-<hash>`; `activate`
+  deletes older ones with that prefix and never touches Osa's `osa-bingo-*`.
+  It exists because the Osa worker (scope `/`) is cache-first: with only that
+  worker, a deploy gave Plant bingo new HTML but old cached core files. The
+  longest scope wins, so once registered this worker controls `/moplants/`.
+  For the very first visit, before it registers, the Osa worker also steps
+  aside for `/moplants` pages and for any request whose referrer is under
+  `/moplants/`. `build-games.mjs` stamps the worker's hash and commits it like
+  Osa's, and CI diffs it. Nothing under `/moplants/` enters Osa's precache.
 - Each plant's fun fact is paraphrased from the URLs in its `sources` array.
   `uncertain` holds a name question still open with the list's owner, and
   `photo_note` says when the photo shows the species or a relative, not the
@@ -331,8 +341,8 @@ list's owner are in `MOPLANTS.md`). It shares the core, `tokens.css` and
 
 ```bash
 npm run moplants:images    # img-raw/moplants/<id>.jpg -> public/moplants/img/ (full + 300x300 grid thumbs) + icons
-npm run moplants:credits   # validate species.json, write CREDITS-moplants.md
-npm run moplants:check     # validate only (part of `npm run deploy`)
+npm run build              # validates the list, writes CREDITS-moplants.md, stamps the worker
+npm run check              # validate only, both games (part of `npm run deploy`)
 ```
 
 ---

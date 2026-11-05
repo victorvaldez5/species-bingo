@@ -796,10 +796,12 @@
     else loadCard(randomSeed(), 1, false);
   }
 
-  // ---- Service worker (offline games only) -------------------
-  if (cfg.offline && 'serviceWorker' in navigator) {
+  // ---- Service worker (each game registers its own) ----------
+  // cfg.worker is a file next to the page (Osa: the offline worker; Plant
+  // bingo: a network-first one that keeps the Osa worker off its pages).
+  if (cfg.worker && 'serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').catch(() => { /* still works online */ });
+      navigator.serviceWorker.register(cfg.worker).catch(() => { /* still works online */ });
     });
   }
 
