@@ -11,6 +11,9 @@
    species.json: the deal also depends on the list's order and
    categories, and data edits are a separate decision from code.
 
+   The race deals are pinned too ("race" in the golden file). They were
+   first generated from the pre-refactor code, not from public/core/deal.js.
+
    To regenerate after an intentional, versioned change:
      node test/deal.test.mjs --update
    ============================================================= */
@@ -24,15 +27,14 @@ const root = new URL('../', import.meta.url);
 const read = p => readFileSync(new URL(p, root), 'utf8');
 const readJson = p => JSON.parse(read(p));
 
-// Each app.js is an IIFE with no exports, so evaluate the real source
-// of its PRNG + deal section (from xmur3 up to the winning lines) in a
-// sandbox. This tests the shipped code, not a copy of it.
-function loadDeal(appPath) {
-  const src = read(appPath);
-  const start = src.indexOf('function xmur3');
-  const end = src.indexOf('// Winning lines');
-  assert.ok(start > 0 && end > start, `deal section not found in ${appPath}`);
-  return vm.runInNewContext(`${src.slice(start, end)}; ({ makeRng, deal })`);
+// public/core/deal.js is a classic script that sets globalThis.BingoDeal, so
+// run the real shipped file in a sandbox and read it back. This tests the
+// shipped code, not a copy of it.
+function loadDeal() {
+  const sandbox = {};
+  vm.runInNewContext(read('public/core/deal.js'), sandbox);
+  assert.ok(sandbox.BingoDeal, 'deal.js did not define BingoDeal');
+  return sandbox.BingoDeal;
 }
 // Arrays built in the sandbox have its own Array prototype, which strict
 // deep-equal rejects; round-trip to plain arrays of this realm.
@@ -42,21 +44,37 @@ const SEEDS = ['a3f2', '0000', 'zzzz', 'k9q1x', 'trip', 'Osa 2026', '1', 'Ã±andÃ
 
 // Osa: one seed -> a complementary pair of 24-species cards.
 function osaCards(seed) {
-  const { makeRng, deal } = loadDeal('public/app.js');
+  const { deal } = loadDeal();
   const species = readJson('test/fixtures/osa-species.json');
-  return plain(deal(species, makeRng(seed)).map(card => card.map(s => s.id)));
+  return plain(deal['stratified-pair'](species, seed).map(card => card.map(s => s.id)));
 }
 // Moplants: one seed -> one card holding every plant.
 function moplantsCard(seed) {
-  const { deal } = loadDeal('public/moplants/app.js');
+  const { deal } = loadDeal();
   const plants = readJson('test/fixtures/moplants-species.json');
-  return plain(deal(plants, seed).map(p => p.id));
+  return plain(deal['shuffle-all'](plants, seed)[0].map(p => p.id));
+}
+// Race: each racer's 10 targets, by game and seed.
+const RACE_SIZE = 10;
+function osaRace(seed) {
+  const { race } = loadDeal();
+  const species = readJson('test/fixtures/osa-species.json');
+  return plain(race['stratified-pair'](species, seed, RACE_SIZE).map(card => card.map(s => s.id)));
+}
+function moplantsRace(seed) {
+  const { race } = loadDeal();
+  const plants = readJson('test/fixtures/moplants-species.json');
+  return plain(race['shuffle-split'](plants, seed, RACE_SIZE).map(card => card.map(p => p.id)));
 }
 
 function compute() {
   return {
     osa: Object.fromEntries(SEEDS.map(s => [s, osaCards(s)])),
     moplants: Object.fromEntries(SEEDS.map(s => [s, moplantsCard(s)])),
+    race: {
+      osa: Object.fromEntries(SEEDS.map(s => [s, osaRace(s)])),
+      moplants: Object.fromEntries(SEEDS.map(s => [s, moplantsRace(s)])),
+    },
   };
 }
 
@@ -83,6 +101,24 @@ if (process.argv.includes('--update')) {
 
   test('Moplants deal matches the pinned card for every seed', () => {
     for (const seed of SEEDS) assert.deepEqual(moplantsCard(seed), golden.moplants[seed], `seed ${seed}`);
+  });
+
+  test('Osa race deal matches the pinned targets for every seed', () => {
+    for (const seed of SEEDS) assert.deepEqual(osaRace(seed), golden.race.osa[seed], `seed ${seed}`);
+  });
+
+  test('Moplants race deal matches the pinned targets for every seed', () => {
+    for (const seed of SEEDS) assert.deepEqual(moplantsRace(seed), golden.race.moplants[seed], `seed ${seed}`);
+  });
+
+  test('Race racers get 10 targets each and never share one', () => {
+    for (const seed of SEEDS) {
+      for (const [a, b] of [osaRace(seed), moplantsRace(seed)]) {
+        assert.equal(a.length, RACE_SIZE);
+        assert.equal(b.length, RACE_SIZE);
+        assert.equal(new Set([...a, ...b]).size, 2 * RACE_SIZE, `seed ${seed}`);
+      }
+    }
   });
 
   test('Live species lists still match the frozen fixtures', () => {

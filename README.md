@@ -42,15 +42,21 @@ the install prompt misbehaves, retest with `wrangler dev` or `serve`.
 ## Layout
 
 ```
-src/pages/              the two HTML pages (Astro): index.astro, moplants/index.astro
-src/layouts/Page.astro  head, masthead and noscript shared by both pages
+games/                  one folder of settings per game, plus the list of games
+  games.json            id, path and name of every game (Osa, then Plant bingo)
+  osa/game.json         everything that makes Osa Osa (see "One core, a settings file per game")
+  moplants/game.json    the same for Plant bingo
+src/pages/              the two HTML pages (Astro): thin wrappers that pass a game.json to Game.astro
+src/components/Game.astro  renders one game from its game.json, inline config included
+src/layouts/Page.astro  head, masthead and noscript shared by every game
 worker/index.js         the thin Cloudflare Worker (page-view logging)
 astro.config.mjs        static output, no bundling of CSS or JS
 dist/                   build output, git-ignored: this is what is deployed
 public/                 plain files, copied into dist/ unchanged
-  styles.css            imports tokens.css, then app styles
+  core/deal.js          the seeded deal, storage keys and URL rules (also loaded by the tests)
+  core/bingo.js         the game: one script runs any game from its inline config
+  core/styles.css       imports tokens.css, then the shared styles (light and dark)
   tokens.css            WFG design tokens (verbatim copy; only @font-face swapped)
-  app.js                card generation, marking, offline registration
   sw.js                 hand-rolled service worker (precache list is generated)
   manifest.webmanifest
   species.json          all 48 species + safety callouts — the single source
@@ -69,9 +75,42 @@ CREDITS.md              generated from species.json
 ```
 
 `node_modules/`, `scripts/`, `img-raw/` and `fonts-src/` stay out of the upload
-because only `dist/` is uploaded. Every `<script>` in the pages is `is:inline` and
-every URL stays relative, so Astro bundles nothing and no URL changes;
-`test/html.test.mjs` checks the built pages against the pre-Astro HTML.
+because only `dist/` is uploaded. Every `<script>` in the pages is `is:inline`, so
+Astro bundles nothing. A game's own files (`species.json`, `img/`, `sw.js`,
+manifest) are relative URLs; the shared core (`/core/*`) and `/tokens.css` are
+root-absolute. `test/html.test.mjs` checks that each built page carries its
+inline config, loads the core and contains every element id `bingo.js` looks up.
+
+---
+
+## One core, a settings file per game
+
+Both games run the same code. `public/core/bingo.js` is a plain classic script
+(no modules, no bundler) that reads the game's `games/<id>/game.json`, which
+`src/components/Game.astro` inlines into the page as
+`<script type="application/json" id="game-config">`. Nothing in the core
+checks a game id: if two games differ, the difference is a key in `game.json`.
+
+`game.json` holds the page text (title, masthead, colophon, credits wording,
+noscript), `offline` (only an offline game registers a service worker), the list
+file with its expected count and noun, `freeCentre`, `cardPair`, the deal and
+race strategy names (`stratified-pair`, `shuffle-all`, `shuffle-split`, all in
+`core/deal.js`), the modes and win patterns with their wording, how marks are
+stored (`storage.marks`: `cells` or `ids`) and when the card number rides in
+the link (`urlCard`: `always` or `race`), which photo the grid shows, how Hunt
+groups the list, which fields the detail sheet reads, the optional section under
+the card (`belowCard`, Osa's "Keep your distance") and the colour scheme
+(`scheme: "light"` opts a page out of dark mode).
+
+**To add a game:** add `games/<id>/game.json`, an entry in `games/games.json`, a
+page that renders `<Game game={...} />`, and the game's own `species.json`,
+`img/` and `manifest.webmanifest`.
+
+**Do not change the deal or the storage rules.** A shared link is only a seed,
+and what is saved on a phone is keyed by the namespace and mark format in
+`game.json`. `test/deal.test.mjs` pins the cards and race targets, and
+`test/storage.test.mjs` pins the keys and query strings. Changing any of them
+needs a versioned migration, not an edit.
 
 ---
 
@@ -263,17 +302,17 @@ the design system's `contrast_check.html`; all pass AA, most AAA.
 
 ## Plant Bingo at `/moplants`
 
-A second, separate game lives in `public/moplants/` (its page is `src/pages/moplants/index.astro`; plain-English notes for
-the plant list's owner are in `MOPLANTS.md`). It shares only `tokens.css` and
-`fonts/` with the Osa app, by relative path, and is otherwise self-contained:
-its own page (`src/pages/moplants/index.astro`), `app.js`, `styles.css`, `species.json`, `img/` and
+A second game lives in `public/moplants/` (its page is `src/pages/moplants/index.astro`,
+its settings `games/moplants/game.json`; plain-English notes for the plant
+list's owner are in `MOPLANTS.md`). It shares the core, `tokens.css` and
+`fonts/` with Osa, and owns its `species.json`, `img/` and
 `manifest.webmanifest` (scope `/moplants/`).
 
-- **Same UX as Osa.** `styles.css` and `app.js` are ports of the root files
-  (masthead lockup, Actions menu with copy-link, square cells, banner, drawer,
-  reset confirm, colophon), so mirror component changes in both. Light mode
-  is identical; surfaces and text go through semantic tokens so it also has
-  a system-driven dark mode.
+- **Same UX as Osa, same code.** It runs the shared core (`/core/bingo.js`,
+  `/core/styles.css`) with its own `games/moplants/game.json`, so a component
+  change lands in both games. Surfaces and text go through semantic tokens, so
+  Plant bingo also has a system-driven dark mode; Osa is pinned to light
+  (`"scheme": "light"`) for now.
 - 25 plants, 5 x 5, **no free space**, no card pair. A seed (`?s=`, same
   xmur3 + mulberry32 deal as Osa) puts all 25 in a deterministic order, so a
   copied link reproduces the card. Spotted plant ids persist per seed in
@@ -283,7 +322,8 @@ its own page (`src/pages/moplants/index.astro`), `app.js`, `styles.css`, `specie
   explicitly returns early for `/moplants` and `/moplants/*`. Without that,
   a navigation there could fall back to the cached Osa `index.html`.
   `build-manifest.mjs` only reads `public/img/` and the Osa `species.json`,
-  so `/moplants` never enters the precache.
+  so `/moplants` never enters the precache. (The shared `/core/*` files are in the
+  Osa precache, because the Osa page needs them offline.)
 - Each plant's fun fact is paraphrased from the URLs in its `sources` array.
   `uncertain` holds a name question still open with the list's owner, and
   `photo_note` says when the photo shows the species or a relative, not the

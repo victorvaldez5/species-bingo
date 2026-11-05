@@ -1,18 +1,23 @@
 ---
-// Shared page skeleton for both games. Only what is identical in the two
-// pages lives here; everything else stays inline in each page. Every URL is
-// relative on purpose (the games sit at / and /moplants/), and every script
-// is is:inline so Astro never bundles, hashes or hoists it.
+// Shared page skeleton for every game. A game's own files (manifest, icons,
+// species.json, images, sw.js) are relative URLs because the games sit at
+// different paths (/ and /moplants/). The shared core (/core/*) and the
+// tokens are root-absolute. Every script is is:inline so Astro never bundles,
+// hashes or hoists it.
 interface Props {
   title: string;
   description: string;
   appTitle: string;
-  colorScheme?: string;
+  colorScheme?: string | null;   // <meta name="color-scheme">; none when null
+  scheme?: string | null;        // <html data-scheme>; "light" opts out of dark mode
+  config: string;                // the game's game.json, serialised
 }
-const { title, description, appTitle, colorScheme } = Astro.props;
+const { title, description, appTitle, colorScheme, scheme, config } = Astro.props;
+// Safe inside a <script>: no "</script" or "<!--" can appear in the JSON.
+const configJson = config.replace(/</g, '\\u003c');
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" data-scheme={scheme ?? undefined}>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -30,7 +35,7 @@ const { title, description, appTitle, colorScheme } = Astro.props;
   <meta name="apple-mobile-web-app-title" content={appTitle}>
   <meta name="mobile-web-app-capable" content="yes">
 
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/core/styles.css">
 </head>
 <body>
   <a class="skip-link" href="#play">Skip to the game</a>
@@ -54,6 +59,8 @@ const { title, description, appTitle, colorScheme } = Astro.props;
     </p>
   </noscript>
 
-  <script is:inline src="app.js"></script>
+  <script is:inline type="application/json" id="game-config" set:html={configJson}></script>
+  <script is:inline src="/core/deal.js"></script>
+  <script is:inline src="/core/bingo.js"></script>
 </body>
 </html>

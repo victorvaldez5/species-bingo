@@ -129,9 +129,10 @@ const photoFiles = species.flatMap(s => [`${s.photo}.webp`, `${s.photo}.jpg`]).s
 const precache = [
   './',
   'index.html',
-  'styles.css',
+  'core/deal.js',
+  'core/bingo.js',
+  'core/styles.css',
   'tokens.css',
-  'app.js',
   'species.json',
   'manifest.webmanifest',
   ...fontFiles,

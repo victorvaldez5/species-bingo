@@ -1,27 +1,76 @@
 /* =============================================================
-   Osa Peninsula Wildlife Bingo — app styles
-   Design system tokens come from tokens.css (imported first,
-   a verbatim copy of Wild & Native Gardens colors_and_type.css).
-   This file is the app layer only.
+   Bingo core styles, shared by every game (Osa, Plant bingo, ...).
+   Design system tokens come from tokens.css (imported first, a
+   verbatim copy of Wild & Native Gardens colors_and_type.css).
 
-   Legibility override: this card is read one-handed in direct
+   Surfaces and text go through the semantic tokens below so the
+   card has a dark mode. In light mode every token resolves to the
+   exact value each game used before they shared this file. A page
+   opts out of dark with <html data-scheme="light"> (Osa for now).
+
+   Legibility rules: this card is read one-handed in direct
    equatorial sun, so where brand aesthetics and legibility
    conflict, legibility wins. Marked cells use a solid --forest
-   fill with a cream mark, never a tint or hue alone. Small or
+   fill with a cream mark, never a tint or hue alone, and small or
    load-bearing text uses --terracotta-deep (7.6:1), never plain
    --terracotta (3.66:1, AA-Large only).
    ============================================================= */
 
-@import "tokens.css";
+@import "../tokens.css";   /* /core/styles.css -> /tokens.css (fonts resolve from there) */
+
+/* ---- Theme tokens ------------------------------------------ */
+:root {
+  color-scheme: light;
+  --bg:            var(--cream);
+  --surface:       var(--paper);
+  --surface-deep:  var(--paper-deep);
+  --text:          var(--ink);
+  --text-soft:     var(--ink-soft);
+  --text-mute:     var(--ink-mute);
+  --accent-text:   var(--terracotta-deep);
+  --brand-text:    var(--forest);
+  --ghost-line:    var(--bark);
+  --hover:         var(--sage-pale);
+  --banner-bg:     var(--sage-pale);
+  --banner-line:   var(--sage);
+  --banner-text:   var(--forest-deep);
+  --ghost-hover:   var(--forest);
+}
+/* Osa is light-only for now and its ghost buttons darken to --forest-deep on
+   hover; the Plant game's use --forest. Drop this when the themes merge. */
+:root[data-scheme="light"] { --ghost-hover: var(--forest-deep); }
+/* Dark: same greens and warm accents on a deep canopy ground. Text
+   pairings stay AA or better (--text-mute 8.3:1, --accent-text 9.6:1). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-scheme="light"]) {
+    color-scheme: dark;
+    --bg:            #141a12;
+    --surface:       #1f281c;
+    --surface-deep:  #34412f;
+    --text:          #f5efe3;
+    --text-soft:     #ddd5c5;
+    --text-mute:     #b9b1a2;
+    --accent-text:   #eab27c;
+    --brand-text:    #c6d4a6;
+    --ghost-line:    #c6d4a6;
+    --hover:         #2b3727;
+    --banner-bg:     #26331f;
+    --banner-line:   #4a5a3e;
+    --banner-text:   #e3ead0;
+    --ghost-hover:   #c6d4a6;
+  }
+}
 
 /* ---- Reset-ish --------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }   /* beats component display rules */
-html { -webkit-text-size-adjust: 100%; }
+/* tokens.css paints html cream; follow the theme so a short page (the
+   race board) has no cream band under it in dark mode. */
+html { -webkit-text-size-adjust: 100%; background: var(--bg); }
 body {
   margin: 0;
-  background: var(--cream);
-  color: var(--ink);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--font-body);
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
@@ -37,7 +86,7 @@ button { font: inherit; color: inherit; }
 .skip-link:focus { left: 0; }
 
 :where(button, a, summary):focus-visible {
-  outline: 3px solid var(--terracotta-deep);
+  outline: 3px solid var(--accent-text);
   outline-offset: 2px;
 }
 
@@ -81,9 +130,9 @@ button { font: inherit; color: inherit; }
   display: flex; align-items: center; justify-content: space-between;
   gap: var(--sp-3); flex-wrap: wrap;
 }
-/* Actions menu: New card / Reset marks are destructive, so they live behind a
-   tap instead of sitting exposed where a stray touch fires them. Sharing the
-   card (copy link) lives here too. */
+/* Actions menu: New card / Reset marks live behind a tap instead of
+   sitting exposed where a stray touch fires them. Sharing the card
+   (copy link) lives here too. */
 .menu { position: relative; }
 .menu__trigger {
   list-style: none;
@@ -102,68 +151,69 @@ button { font: inherit; color: inherit; }
   position: absolute; top: calc(100% + var(--sp-2)); right: 0; z-index: 10;
   display: flex; flex-direction: column; gap: var(--sp-2);
   min-width: 208px; padding: var(--sp-3);
-  background: var(--cream);
-  border: 1px solid var(--paper-deep);
+  background: var(--bg);
+  border: 1px solid var(--surface-deep);
   border-radius: var(--r-md);
   box-shadow: var(--shadow-lg);
 }
 .menu__item { width: 100%; }
-/* Copy-link / share row at the top of the menu */
 .menu__share {
   display: flex; flex-direction: column; align-items: flex-start; gap: 1px;
   width: 100%; min-height: 44px; text-align: left; cursor: pointer;
   padding: var(--sp-2) var(--sp-3);
-  background: var(--paper); color: inherit;
-  border: 1px solid var(--paper-deep); border-radius: var(--r-sm);
+  background: var(--surface); color: inherit;
+  border: 1px solid var(--surface-deep); border-radius: var(--r-sm);
   appearance: none;
   transition: background var(--dur-fast) var(--ease-soft);
 }
-.menu__share:hover { background: var(--sage-pale); }
-.menu__share-head { font-weight: 700; font-size: var(--t-small); color: var(--forest); }
+.menu__share:hover { background: var(--hover); }
+.menu__share-head { font-weight: 700; font-size: var(--t-small); color: var(--brand-text); }
 .menu__share-sub {
   font-family: var(--font-body); font-weight: 700; font-size: 10px;
-  text-transform: uppercase; letter-spacing: .16em; color: var(--ink-soft);
+  text-transform: uppercase; letter-spacing: .16em; color: var(--text-soft);
 }
 .menu__share-sub #seed {
   font-family: var(--font-mono); text-transform: none; letter-spacing: .04em;
-  color: var(--terracotta-deep);
+  color: var(--accent-text);
 }
 /* Game switch: Bingo / Hunt / Race */
 .modes {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
   padding: 4px;
-  background: var(--paper);
-  border: 1px solid var(--paper-deep);
+  background: var(--surface);
+  border: 1px solid var(--surface-deep);
   border-radius: var(--r-pill);
 }
 .modes__btn {
   appearance: none; cursor: pointer;
   min-height: 44px; padding: 0 var(--sp-3);
   border: 0; border-radius: var(--r-pill);
-  background: none; color: var(--forest);
+  background: none; color: var(--brand-text);
   font-family: var(--font-body); font-weight: 700; font-size: var(--t-small);
 }
 /* No transition: the page can open straight into Hunt or Race, and a fade
-   would flash Bingo as selected on load. */
-.modes__btn[aria-pressed="true"] { background: var(--forest); color: var(--cream); }
+   would flash Bingo as selected on load. --brand-text / --bg is forest on
+   cream in light, sage on canopy in dark. */
+.modes__btn[aria-pressed="true"] { background: var(--brand-text); color: var(--bg); }
 /* Pattern picker and hunt filters */
 .chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
 .chip {
   appearance: none; cursor: pointer;
   min-height: 40px; padding: 0 var(--sp-3);
-  border: 1.5px solid var(--bark); border-radius: var(--r-pill);
-  background: transparent; color: var(--forest);
+  border: 1.5px solid var(--ghost-line); border-radius: var(--r-pill);
+  background: transparent; color: var(--brand-text);
   font-family: var(--font-body); font-weight: 700; font-size: var(--t-caption);
   white-space: nowrap;
 }
 .chip[aria-pressed="true"] { background: var(--terracotta-deep); border-color: var(--terracotta-deep); color: var(--cream); }
 .chip__count { margin-left: 6px; font-family: var(--font-mono); font-weight: 400; }
-.mode-hint { margin: 0; font-size: var(--t-small); line-height: 1.45; color: var(--ink-soft); }
+.mode-hint { margin: 0; font-size: var(--t-small); line-height: 1.45; color: var(--text-soft); }
+.controls__actions { display: flex; align-items: center; gap: var(--sp-2); }
 .progress {
   margin: 0;
   font-family: var(--font-mono);
   font-size: var(--t-small);
-  color: var(--ink-soft);
+  color: var(--text-soft);
 }
 
 .btn {
@@ -180,26 +230,26 @@ button { font: inherit; color: inherit; }
 .btn:hover { background: var(--forest-deep); border-color: var(--forest-deep); }
 .btn:active { transform: scale(.97); }
 .btn--ghost {
-  background: transparent; color: var(--forest); border-color: var(--bark);
+  background: transparent; color: var(--brand-text); border-color: var(--ghost-line);
 }
-.btn--ghost:hover { background: var(--paper); color: var(--forest-deep); }
+.btn--ghost:hover { background: var(--surface); color: var(--ghost-hover); }
 
 /* ---- Bingo banner ------------------------------------------ */
 .bingo-banner {
   display: flex; align-items: center; gap: var(--sp-3);
   margin: 0 0 var(--sp-4);
   padding: var(--sp-3) var(--sp-4);
-  background: var(--sage-pale);
-  border: 1px solid var(--sage);
-  border-left: 5px solid var(--terracotta-deep);
+  background: var(--banner-bg);
+  border: 1px solid var(--banner-line);
+  border-left: 5px solid var(--accent-text);
   border-radius: var(--r-md);
-  color: var(--forest-deep);
+  color: var(--banner-text);
   font-size: var(--t-body); font-weight: 600;
 }
 .bingo-banner__stamp {
   font-family: var(--font-hand); font-weight: 700;
   font-size: 30px; line-height: 1;
-  color: var(--terracotta-deep);
+  color: var(--accent-text);
   transform: rotate(-4deg);
 }
 
@@ -217,7 +267,7 @@ button { font: inherit; color: inherit; }
   aspect-ratio: 1 / 1;
   border-radius: var(--r-sm);
   overflow: hidden;
-  background: var(--paper);
+  background: var(--surface);
   box-shadow: var(--shadow-sm);
   isolation: isolate;
 }
@@ -240,15 +290,15 @@ button { font: inherit; color: inherit; }
   position: absolute; left: 0; right: 0; bottom: 0;
   z-index: 2;
   margin: 0; padding: 3px 3px 4px;
-  background: var(--cream);
-  color: var(--ink);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--font-body); font-weight: 700;
   font-size: clamp(8px, 2.4vw, 11px); line-height: 1.1;
   letter-spacing: -.015em;
   text-align: center;
   display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;
   overflow: hidden;
-  border-top: 1px solid var(--paper-deep);
+  border-top: 1px solid var(--surface-deep);
 }
 
 /* Marked: solid forest wash + big cream check. Not a tint. */
@@ -278,7 +328,7 @@ button { font: inherit; color: inherit; }
 /* Completed-line ring: redundant cue on top of the fill. */
 .cell.is-line { box-shadow: 0 0 0 3px var(--sun), var(--shadow-md); }
 /* Cells that make up the chosen pattern (four corners, big X). */
-.cell.is-target { outline: 3px dashed var(--terracotta-deep); outline-offset: 1px; }
+.cell.is-target { outline: 3px dashed var(--accent-text); outline-offset: 1px; }
 .cell.is-target.is-line { outline-color: var(--sun); }
 
 /* Info button (secondary action) */
@@ -330,7 +380,7 @@ button { font: inherit; color: inherit; }
 .hunt__heading {
   margin: var(--sp-5) 0 var(--sp-2);
   font-family: var(--font-body); font-weight: 800; text-transform: uppercase;
-  letter-spacing: .18em; font-size: var(--t-overline); color: var(--terracotta-deep);
+  letter-spacing: .18em; font-size: var(--t-overline); color: var(--accent-text);
 }
 .hunt__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-2); }
 .hunt__item { display: flex; align-items: center; gap: var(--sp-2); }
@@ -340,19 +390,20 @@ button { font: inherit; color: inherit; }
   display: flex; align-items: center; gap: var(--sp-3);
   min-height: 64px; padding: var(--sp-2) var(--sp-3) var(--sp-2) var(--sp-2);
   text-align: left;
-  background: var(--paper); color: var(--ink);
-  border: 1px solid var(--paper-deep); border-radius: var(--r-md);
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--surface-deep); border-radius: var(--r-md);
   transition: background var(--dur-fast) var(--ease-soft);
 }
 .hunt__mark picture { flex: none; }
 .hunt__thumb { width: 52px; height: 52px; object-fit: cover; border-radius: var(--r-sm); }
 .hunt__text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .hunt__name { font-weight: 700; font-size: var(--t-body); line-height: 1.2; }
-.hunt__bino { font-style: italic; font-size: var(--t-caption); color: var(--ink-mute); }
+.hunt__bino { font-style: italic; font-size: var(--t-caption); color: var(--text-mute); }
+.hunt__bino--plain { font-style: normal; }
 .hunt__box {
   flex: none; width: 32px; height: 32px;
   display: grid; place-items: center;
-  border: 2px solid var(--bark); border-radius: var(--r-pill);
+  border: 2px solid var(--ghost-line); border-radius: var(--r-pill);
   color: var(--forest);
 }
 .hunt__check { width: 18px; height: 18px; opacity: 0; }
@@ -360,8 +411,8 @@ button { font: inherit; color: inherit; }
   appearance: none; cursor: pointer;
   flex: none; width: 44px; height: 44px; padding: 0;
   display: grid; place-items: center;
-  border: 1.5px solid var(--forest); border-radius: var(--r-pill);
-  background: transparent; color: var(--forest);
+  border: 1.5px solid var(--brand-text); border-radius: var(--r-pill);
+  background: transparent; color: var(--brand-text);
   font-family: var(--font-display); font-style: italic; font-weight: 700; font-size: 17px;
 }
 /* Found: the same solid forest fill as a marked cell, never a tint. */
@@ -374,65 +425,66 @@ button { font: inherit; color: inherit; }
 /* The race board reuses .grid / .cell: RACE_SIZE cells, two rows of five. */
 .grid--race { margin-top: var(--sp-1); }
 
-/* ---- Safety ------------------------------------------------ */
+/* ---- Safety (the optional below-card section) ------------- */
 .safety {
   margin-top: var(--sp-7);
   padding: var(--sp-5);
-  background: var(--paper);
-  border: 1px solid var(--paper-deep);
+  background: var(--surface);
+  border: 1px solid var(--surface-deep);
   border-radius: var(--r-lg);
 }
 .safety__lead {
   margin: 0 0 var(--sp-4);
-  font-size: var(--t-small); line-height: 1.55; color: var(--ink-soft);
+  font-size: var(--t-small); line-height: 1.55; color: var(--text-soft);
 }
 .safety__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-3); }
 .safety__item {
   padding: var(--sp-3) var(--sp-4);
-  background: var(--cream);
-  border: 1px solid var(--paper-deep);
-  border-left: 4px solid var(--terracotta-deep);
+  background: var(--bg);
+  border: 1px solid var(--surface-deep);
+  border-left: 4px solid var(--accent-text);
   border-radius: var(--r-sm);
 }
 .safety__name {
   margin: 0 0 var(--sp-1);
-  font-weight: 800; font-size: var(--t-small); color: var(--ink);
+  font-weight: 800; font-size: var(--t-small); color: var(--text);
 }
-.safety__name em { font-style: italic; color: var(--ink-mute); font-weight: 600; }
-.safety__note { margin: 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-soft); }
+.safety__name em { font-style: italic; color: var(--text-mute); font-weight: 600; }
+.safety__note { margin: 0; font-size: var(--t-small); line-height: 1.5; color: var(--text-soft); }
 .safety__tag {
   display: inline-block; vertical-align: middle;
   margin-left: var(--sp-1);
   font-family: var(--font-body); font-weight: 800;
   font-size: 9px; letter-spacing: .12em; text-transform: uppercase;
-  color: var(--ink-soft);
-  background: var(--paper); border: 1px solid var(--paper-deep);
+  color: var(--text-soft);
+  background: var(--surface); border: 1px solid var(--surface-deep);
   border-radius: var(--r-pill); padding: 2px 7px;
 }
-.safety__tag--card { color: var(--forest); border-color: var(--sage); background: var(--sage-pale); }
+.safety__tag--card { color: var(--brand-text); border-color: var(--banner-line); background: var(--banner-bg); }
 
 /* ---- Credits ----------------------------------------------- */
-.credits { margin-top: var(--sp-5); }
+.credits { margin-top: var(--sp-7); }
+.safety + .credits { margin-top: var(--sp-5); }
 .credits__summary {
-  cursor: pointer; font-weight: 700; color: var(--forest);
+  cursor: pointer; font-weight: 700; color: var(--brand-text);
   padding: var(--sp-3) 0; font-size: var(--t-small);
 }
-.credits__intro { font-size: var(--t-caption); color: var(--ink-mute); margin: 0 0 var(--sp-3); }
-.credits__intro code { font-family: var(--font-mono); font-size: 11px; background: var(--paper); padding: 1px 5px; border-radius: 4px; }
+.credits__intro { font-size: var(--t-caption); color: var(--text-mute); margin: 0 0 var(--sp-3); }
+.credits__intro code { font-family: var(--font-mono); font-size: 11px; background: var(--surface); padding: 1px 5px; border-radius: 4px; }
 .credits__list {
   list-style: none; margin: 0; padding: 0;
-  font-size: var(--t-caption); line-height: 1.5; color: var(--ink-soft);
+  font-size: var(--t-caption); line-height: 1.5; color: var(--text-soft);
   display: grid; gap: var(--sp-2);
 }
-.credits__list a { color: var(--terracotta-deep); }
-.credits__sp { font-weight: 700; color: var(--ink); }
-.sheet__credit--pending, .credits .sheet__credit--pending { color: var(--terracotta-deep); font-style: italic; }
+.credits__list a { color: var(--accent-text); }
+.credits__sp { font-weight: 700; color: var(--text); }
+.sheet__credit--pending, .credits .sheet__credit--pending { color: var(--accent-text); font-style: italic; }
 
 /* ---- Colophon ---------------------------------------------- */
 .colophon {
   margin-top: var(--sp-6); padding-top: var(--sp-4);
-  border-top: var(--hair-soft);
-  font-size: var(--t-caption); color: var(--ink-mute); line-height: 1.5;
+  border-top: 1px solid var(--surface-deep);
+  font-size: var(--t-caption); color: var(--text-mute); line-height: 1.5;
 }
 .colophon p { margin: 0 0 var(--sp-1); font-size: inherit; }
 .colophon__seed { font-family: var(--font-mono); }
@@ -448,8 +500,8 @@ button { font: inherit; color: inherit; }
   max-height: 90vh;
   padding: 0; border: none;
   border-radius: var(--r-lg) var(--r-lg) 0 0;
-  background: var(--cream);
-  color: var(--ink);
+  background: var(--bg);
+  color: var(--text);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   transform: translateY(100%);
@@ -487,38 +539,41 @@ button { font: inherit; color: inherit; }
   display: grid; place-items: center;
 }
 .sheet__body { overflow-y: auto; max-height: 90vh; padding-bottom: calc(var(--sp-5) + env(safe-area-inset-bottom)); }
-.sheet__photo { display: block; background: var(--paper); }
+.sheet__photo { display: block; background: var(--surface); }
 /* Full frame, never a crop: fit the whole photo, letterboxing tall ones. */
-.sheet__photo img { width: 100%; height: auto; max-height: 52vh; object-fit: contain; background: var(--paper); }
+.sheet__photo img { width: 100%; height: auto; max-height: 52vh; object-fit: contain; background: var(--surface); }
 .sheet__category {
   margin: var(--sp-4) var(--sp-5) 0;
   font-family: var(--font-body); font-weight: 800; text-transform: uppercase;
-  letter-spacing: .18em; font-size: var(--t-overline); color: var(--terracotta-deep);
+  letter-spacing: .18em; font-size: var(--t-overline); color: var(--accent-text);
 }
 .sheet__name {
   margin: var(--sp-1) var(--sp-5) 0;
   font-family: var(--font-display); font-style: italic; font-weight: 700;
-  font-size: var(--t-h1); line-height: 1.05; color: var(--forest);
+  font-size: var(--t-h1); line-height: 1.05; color: var(--brand-text);
 }
 .sheet__binomial {
   margin: var(--sp-1) var(--sp-5) 0;
-  font-style: italic; color: var(--ink-mute); font-size: var(--t-small);
+  font-style: italic; color: var(--text-mute); font-size: var(--t-small);
 }
+.sheet__binomial .sheet__plain { font-style: normal; }
 .sheet__note {
   margin: var(--sp-4) var(--sp-5) 0;
-  font-size: var(--t-body-lg); line-height: 1.55; color: var(--ink);
+  font-size: var(--t-body-lg); line-height: 1.55; color: var(--text);
 }
 .sheet__fact {
   margin: var(--sp-3) var(--sp-5) 0;
-  font-size: var(--t-body); line-height: 1.55; color: var(--ink-soft);
+  font-size: var(--t-body); line-height: 1.55; color: var(--text-soft);
 }
+.sheet__fact a { color: var(--accent-text); }
+/* The Osa safety callout, reused here for "name not confirmed". */
 .sheet__safety {
   margin: var(--sp-4) var(--sp-5) 0;
   padding: var(--sp-3) var(--sp-4);
-  background: var(--paper);
-  border-left: 4px solid var(--terracotta-deep);
+  background: var(--surface);
+  border-left: 4px solid var(--accent-text);
   border-radius: var(--r-sm);
-  font-size: var(--t-small); line-height: 1.5; color: var(--terracotta-deep); font-weight: 600;
+  font-size: var(--t-small); line-height: 1.5; color: var(--accent-text); font-weight: 600;
 }
 .btn--mark {
   display: block; width: calc(100% - 2 * var(--sp-5));
@@ -528,25 +583,25 @@ button { font: inherit; color: inherit; }
 .btn--mark.is-marked { background: var(--terracotta-deep); border-color: var(--terracotta-deep); }
 .sheet__credit {
   margin: var(--sp-4) var(--sp-5) 0;
-  font-size: var(--t-caption); color: var(--ink-mute); line-height: 1.5;
+  font-size: var(--t-caption); color: var(--text-mute); line-height: 1.5;
 }
-.sheet__credit a { color: var(--terracotta-deep); }
+.sheet__credit a { color: var(--accent-text); }
 
 /* ---- Reset confirmation ------------------------------------ */
 .confirm {
   width: min(360px, calc(100vw - 2 * var(--sp-4)));
   padding: var(--sp-5);
   border: none; border-radius: var(--r-lg);
-  background: var(--cream); color: var(--ink);
+  background: var(--bg); color: var(--text);
   box-shadow: var(--shadow-lg);
 }
 .confirm::backdrop { background: rgba(31, 44, 28, .55); backdrop-filter: blur(2px); }
 .confirm__title {
   margin: 0 0 var(--sp-2);
   font-family: var(--font-display); font-style: italic; font-weight: 700;
-  font-size: var(--t-h2); color: var(--terracotta-deep);
+  font-size: var(--t-h2); color: var(--accent-text);
 }
-.confirm__body { margin: 0 0 var(--sp-5); font-size: var(--t-body); line-height: 1.5; color: var(--ink-soft); }
+.confirm__body { margin: 0 0 var(--sp-5); font-size: var(--t-body); line-height: 1.5; color: var(--text-soft); }
 .confirm__actions { display: flex; gap: var(--sp-2); }
 .confirm__actions .btn { flex: 1 1 0; }
 .btn--danger { background: var(--terracotta-deep); border-color: var(--terracotta-deep); color: var(--cream); }
@@ -561,13 +616,14 @@ button { font: inherit; color: inherit; }
 /* ---- Print: dead-battery backup ---------------------------- */
 @media print {
   @page { margin: 12mm; }
-  body { background: #fff; }
+  body { background: #fff; color: #000; }
   .masthead { background: none; color: #000; padding: 0 0 8mm; }
   .masthead .wnd-logo { display: none; }
   .masthead__title { color: #000; font-size: 28pt; }
   .masthead__title em { color: #000; }
   .menu, .cell__info, .credits, .colophon, .skip-link, .bingo-banner,
   .modes, .chips, .mode-hint, .hunt__info { display: none !important; }
+  .controls__actions #card-toggle { display: none !important; }   /* the racer flip (Plant bingo); Osa keeps its card number */
   .controls { display: block; margin-bottom: 4mm; }
   .grid { gap: 2mm; }
   .cell {

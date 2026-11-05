@@ -1,0 +1,85 @@
+{
+  "id": "moplants",
+  "path": "/moplants/",
+  "title": "Plant Bingo",
+  "appTitle": "Plant Bingo",
+  "description": "A 25-plant garden bingo card. Tap a plant when you spot it, and get five in a row.",
+  "masthead": { "lead": "Plant", "em": "bingo." },
+  "offline": false,
+  "scheme": null,
+  "metaColorScheme": "light dark",
+  "controlsLayout": "grouped",
+
+  "list": { "file": "species.json", "expected": 25, "noun": "plants" },
+  "freeCentre": false,
+  "cardPair": false,
+  "dealStrategy": "shuffle-all",
+  "raceStrategy": "shuffle-split",
+  "raceSize": 10,
+
+  "modes": [
+    { "id": "bingo", "label": "Bingo" },
+    { "id": "hunt", "label": "Hunt" },
+    { "id": "race", "label": "Race" }
+  ],
+  "patterns": [
+    { "key": "line", "label": "Any line", "shape": "line", "hint": "Fill any row, column or diagonal." },
+    { "key": "corners", "label": "Four corners", "shape": "corners", "targets": true,
+      "hint": "Spot the four plants in the corners.", "win": "All four corners. Bingo." },
+    { "key": "x", "label": "Big X", "shape": "x", "targets": true,
+      "hint": "Fill both diagonals.", "win": "The X is complete. Bingo." },
+    { "key": "blackout", "label": "Blackout", "shape": "blackout",
+      "hint": "Spot all 25 plants on the card.", "win": "Full card. Every plant on the board." }
+  ],
+
+  "storage": { "ns": "moplants-bingo:v2", "marks": "ids", "legacyLast": true },
+  "urlCard": "race",
+
+  "gridPhoto": { "variant": "thumb", "dir": "img/thumb/" },
+  "labelField": "short",
+
+  "hunt": {
+    "groupBy": null,
+    "sortBy": "name",
+    "comment": "Hunt: every plant, one checklist across cards",
+    "subtitle": { "field": "botanical", "optional": false, "plainFlag": "various" },
+    "categoryLabels": {}
+  },
+
+  "detail": {
+    "ariaLabel": "Plant detail",
+    "comment": "Plant detail sheet",
+    "order": ["category", "name", "binomial", "callout", "note", "fact"],
+    "category": "kind",
+    "binomial": { "field": "botanical", "hideEmpty": false, "plainFlag": "various", "altField": "alt_botanical" },
+    "note": { "field": "fun_fact" },
+    "fact": { "sources": true, "extraLink": { "field": "plantfinder", "label": "Missouri Botanical Garden Plant Finder" } },
+    "callout": { "id": "detail-flag", "field": "uncertain", "prefix": "Name not confirmed. " },
+    "creditNote": "photo_note"
+  },
+
+  "belowCard": null,
+
+  "credits": {
+    "summary": "Photo credits & sources",
+    "intro": "Every image ships with its author, license and source, and every fun fact with where it came from. Full list also in",
+    "file": "CREDITS-moplants.md",
+    "pending": "no-author",
+    "withSources": true
+  },
+
+  "colophon": [
+    "All 25 plants on every card, in a fresh order each time. Needs a connection.",
+    "Same seed, same card, on any phone."
+  ],
+  "noscript": "This bingo card needs JavaScript to deal the plants and remember what you have spotted.",
+
+  "messages": {
+    "hintHunt": "All 25 plants as one checklist that carries across cards. Tap each one the first time you see it.",
+    "hintRace": "Two racers on the same seed get {raceSize} different plants each. First to find all of theirs wins.",
+    "huntDone": "All {n} {noun} on the list.",
+    "fullCard": "Full card. Every plant on the board.",
+    "resetCardBody": "This clears {what} on this card. You cannot undo it.",
+    "loadError": "Could not load the plant list. Check your connection and reload."
+  }
+}

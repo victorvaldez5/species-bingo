@@ -1,0 +1,94 @@
+{
+  "id": "osa",
+  "path": "/",
+  "title": "Osa Peninsula Wildlife Bingo",
+  "appTitle": "Osa Bingo",
+  "description": "Offline field-spotting bingo for the wildlife of Corcovado and Golfo Dulce, Costa Rica.",
+  "masthead": { "lead": "Wildlife", "em": "bingo." },
+  "offline": true,
+  "scheme": "light",
+  "metaColorScheme": null,
+  "controlsLayout": "flat",
+
+  "list": { "file": "species.json", "expected": 48, "noun": "species" },
+  "freeCentre": true,
+  "cardPair": true,
+  "dealStrategy": "stratified-pair",
+  "raceStrategy": "stratified-pair",
+  "raceSize": 10,
+
+  "modes": [
+    { "id": "bingo", "label": "Bingo" },
+    { "id": "hunt", "label": "Hunt" },
+    { "id": "race", "label": "Race" }
+  ],
+  "patterns": [
+    { "key": "line", "label": "Any line", "shape": "line", "hint": "Fill any row, column or diagonal." },
+    { "key": "corners", "label": "Four corners", "shape": "corners", "targets": true,
+      "hint": "Spot the four species in the corners.", "win": "All four corners. Bingo." },
+    { "key": "x", "label": "Big X", "shape": "x", "targets": true,
+      "hint": "Fill both diagonals.", "win": "The X is complete. Bingo." },
+    { "key": "blackout", "label": "Blackout", "shape": "blackout",
+      "hint": "Spot all 24 species on your card.", "win": "Full card. Every cell on the board." }
+  ],
+
+  "storage": { "ns": "osa-bingo:v1", "marks": "cells", "legacyLast": false },
+  "urlCard": "always",
+
+  "gridPhoto": { "variant": "full" },
+  "labelField": null,
+
+  "hunt": {
+    "groupBy": "category",
+    "sortBy": null,
+    "comment": "Hunt: every species, one checklist for the trip",
+    "subtitle": { "field": "binomial", "optional": true, "plainFlag": null },
+    "categoryLabels": {
+      "bird": "Birds", "mammal": "Mammals", "reptile": "Reptiles", "amphibian": "Amphibians",
+      "invertebrate": "Invertebrates", "marine": "Marine life", "plant": "Plants"
+    }
+  },
+
+  "detail": {
+    "ariaLabel": "Species detail",
+    "comment": "Species detail sheet",
+    "order": ["category", "name", "binomial", "note", "fact", "callout"],
+    "category": "category",
+    "binomial": { "field": "binomial", "hideEmpty": true },
+    "note": { "field": "id_note" },
+    "fact": { "field": "fun_fact" },
+    "callout": { "id": "detail-safety", "field": "safety", "prefix": "" },
+    "creditNote": null
+  },
+
+  "belowCard": {
+    "type": "safety",
+    "ariaLabel": "Keep your distance",
+    "lead": "These share the forest and the water. Two of them never belong on a bingo cell, so they live here instead. Look, log it in your head, and give it room.",
+    "tagIn": "on the card",
+    "tagOut": "not on the card"
+  },
+
+  "credits": {
+    "summary": "Photo credits & licenses",
+    "intro": "Every image ships with its author, license and source. Full list also in",
+    "file": "CREDITS.md",
+    "pending": "no-author-or-source",
+    "withSources": false
+  },
+
+  "colophon": [
+    "Works offline. Add to your home screen on wifi, then it runs in airplane mode.",
+    "Same seed, same pair of cards, on any phone."
+  ],
+  "noscript": "This bingo card needs JavaScript to deal the species and remember what you have spotted. It runs entirely in your browser and works offline once loaded.",
+
+  "messages": {
+    "hintHunt": "Every species on the list, for the whole trip. Tap each one the first time you see it.",
+    "hintRace": "Two racers on the same seed get {raceSize} different targets each. First to find all of theirs wins.",
+    "huntDone": "All {n} {noun} on the list. That is the whole peninsula.",
+    "fullCard": "Full card. Every cell on the board.",
+    "resetCardBody": "This clears {what} on card {card}. You cannot undo it.",
+    "loadError": "Could not load the species list. If you are offline, open the app once on wifi first so it can cache."
+  }
+}
