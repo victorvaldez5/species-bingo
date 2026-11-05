@@ -8,7 +8,9 @@
    offline. The games own their own workers and caches:
      /osa/sw.js       scope /osa/       cache osa-bingo-v3-*
      /moplants/sw.js  scope /moplants/  network-first, no precache
-   This worker steps aside for both games entirely.
+   This worker steps aside for both games, with two exceptions:
+   the hub's own strip photos (they sit under the game folders),
+   and Osa before its own worker is installed (see below).
 
    - BUILD is a content hash written by scripts/build-games.mjs, so
      any changed asset yields a new cache name and the update lands.
@@ -16,15 +18,18 @@
      same script from what dist/ actually contains.
    - Strategy: stale-while-revalidate for pages (falling back to the
      cached hub when offline); cache-first for everything else on
-     this origin (this is what keeps the hub's photo strip offline).
+     this origin, including the precached hub strip photos.
 
    This file is served from /sw.js, the URL the old root-scoped Osa
-   worker used. Browsers that had that worker update into this one,
-   and activate below deletes its old cache (osa-bingo-v2-*).
+   worker used. Browsers that had that worker update into this one.
+   Its cache (osa-bingo-v2-*) is the only offline copy of Osa until
+   /osa/sw.js has installed, so it is kept until then: offline, Osa
+   requests are answered from it, and it is deleted only once an
+   osa-bingo-v3-* cache exists (by this worker or by /osa/sw.js).
    ============================================================= */
 
 const VERSION = 'v1';                                       // manual major
-const BUILD = '262b0b7f77';                                 // BUILD (rewritten by build-games)
+const BUILD = '18c22fd248';                                 // BUILD (rewritten by build-games)
 const PREFIX = 'species-bingo-root-';
 const CACHE = `${PREFIX}${VERSION}-${BUILD}`;
 
@@ -32,6 +37,10 @@ const CACHE = `${PREFIX}${VERSION}-${BUILD}`;
 const GAME_PATHS = ['/osa/', '/moplants/'];
 const isGamePath = pathname =>
   GAME_PATHS.some(p => pathname === p.slice(0, -1) || pathname.startsWith(p));
+
+// Osa's caches: v2 from the old root-scoped worker, v3 from /osa/sw.js.
+const OLD_OSA = 'osa-bingo-v2-';
+const NEW_OSA = 'osa-bingo-v3-';
 
 const PRECACHE = [
   // BEGIN-PRECACHE
@@ -52,6 +61,26 @@ const PRECACHE = [
   'fonts/NunitoSans.woff2',
   'fonts/PlayfairDisplay-italic.woff2',
   'fonts/PlayfairDisplay-roman.woff2',
+  'osa/img/scarlet-macaw.webp',
+  'osa/img/scarlet-macaw.jpg',
+  'osa/img/blue-morpho-butterfly.webp',
+  'osa/img/blue-morpho-butterfly.jpg',
+  'osa/img/red-eyed-tree-frog.webp',
+  'osa/img/red-eyed-tree-frog.jpg',
+  'osa/img/three-toed-sloth.webp',
+  'osa/img/three-toed-sloth.jpg',
+  'osa/img/chestnut-mandibled-toucan.webp',
+  'osa/img/chestnut-mandibled-toucan.jpg',
+  'moplants/img/thumb/cardinal-flower.webp',
+  'moplants/img/thumb/cardinal-flower.jpg',
+  'moplants/img/thumb/pink-lemonade.webp',
+  'moplants/img/thumb/pink-lemonade.jpg',
+  'moplants/img/thumb/storm-cloud-amsonia.webp',
+  'moplants/img/thumb/storm-cloud-amsonia.jpg',
+  'moplants/img/thumb/bottlebrush-buckeye.webp',
+  'moplants/img/thumb/bottlebrush-buckeye.jpg',
+  'moplants/img/thumb/lipstick-hosta.webp',
+  'moplants/img/thumb/lipstick-hosta.jpg',
   // END-PRECACHE
 ];
 
@@ -72,14 +101,13 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
+    // The old Osa cache goes only once the new one exists; until then it is
+    // the phone's only offline copy of Osa (see fromOldOsa).
+    const osaMoved = keys.some(k => k.startsWith(NEW_OSA));
     await Promise.all(
       keys.filter(k =>
-        // Our own older caches.
         (k.startsWith(PREFIX) && k !== CACHE) ||
-        // The old Osa cache, from when Osa's worker was scoped to /. Osa now
-        // caches as osa-bingo-v3-* from /osa/sw.js, which this never touches
-        // (nor moplants-bingo-*).
-        k.startsWith('osa-bingo-v2-')
+        (osaMoved && k.startsWith(OLD_OSA))
       ).map(k => caches.delete(k))
     );
     await self.clients.claim();
@@ -111,6 +139,23 @@ async function cacheFirst(request) {
   }
 }
 
+// Offline Osa before /osa/sw.js has installed. This worker only sees /osa/
+// requests while no Osa worker exists, which on a phone that had the old app
+// means the update to this worker landed but Osa has not been opened online
+// since. The old cache still holds the old Osa app, keyed at the site root,
+// and its page uses relative URLs, so /osa/<file> maps to /<file> there.
+async function fromOldOsa(request, url) {
+  const name = (await caches.keys()).find(k => k.startsWith(OLD_OSA));
+  if (name) {
+    const cache = await caches.open(name);
+    const path = url.pathname.slice('/osa'.length);      // "/osa/img/x.webp" -> "/img/x.webp"
+    const hit = (await cache.match(path, { ignoreSearch: true })) ||
+                (request.mode === 'navigate' ? await cache.match('/', { ignoreSearch: true }) : undefined);
+    if (hit) return hit;
+  }
+  return Response.error();
+}
+
 self.addEventListener('fetch', event => {
   const { request } = event;
   if (request.method !== 'GET') return;
@@ -119,17 +164,28 @@ self.addEventListener('fetch', event => {
   if (url.origin !== self.location.origin) return;   // don't touch cross-origin
 
   // The games share this origin and have their own workers, but on a first
-  // visit this worker (scope "/") can still see their requests, so step aside
-  // entirely: otherwise a navigation there could be answered with the cached
-  // hub, and the game's assets would pile up in this cache. The first check
-  // covers the pages and anything under them; the second covers shared files
-  // such as /core/bingo.js and /tokens.css, whose request referrer is a game
-  // page.
-  if (isGamePath(url.pathname)) return;
+  // visit this worker (scope "/") can still see their requests, so step aside:
+  // otherwise a navigation there could be answered with the cached hub, and
+  // the game's assets would pile up in this cache. The first check covers the
+  // pages and anything under them; the second covers shared files such as
+  // /core/bingo.js and /tokens.css, whose request referrer is a game page.
+  const fromGame = Boolean(request.referrer) && isGamePath(new URL(request.referrer).pathname);
+  if (isGamePath(url.pathname)) {
+    // The hub's strip photos live in the game folders; they are precached
+    // here so the hub looks right offline.
+    if (request.mode !== 'navigate' && !fromGame) {
+      event.respondWith(cacheFirst(request));
+      return;
+    }
+    // Osa with no Osa worker yet: the network, else the old Osa cache.
+    if (url.pathname === '/osa' || url.pathname.startsWith('/osa/')) {
+      event.respondWith(fetch(request).catch(() => fromOldOsa(request, url)));
+    }
+    return;
+  }
   // (Navigations are exempt from the referrer test: a link from a game page to
   // the hub or a site page is ours to answer, offline included.)
-  if (request.mode !== 'navigate' && request.referrer &&
-      isGamePath(new URL(request.referrer).pathname)) return;
+  if (request.mode !== 'navigate' && fromGame) return;
 
   // Pages: fresh when possible, cached when not.
   if (request.mode === 'navigate') {

@@ -15,7 +15,7 @@
      stale-while-revalidate for the HTML shell and species.json.
    ============================================================= */
 
-const VERSION = 'v3';                                       // manual major — v3: Osa moved from / to /osa/ (the old root-scoped v2 cache is deleted by the root worker)
+const VERSION = 'v3';                                       // manual major — v3: Osa moved from / to /osa/ (the old root-scoped v2 cache is deleted on activate below)
 const BUILD = 'db8df6745b';                                 // BUILD (rewritten by build-games)
 const CACHE = `osa-bingo-${VERSION}-${BUILD}`;
 
@@ -158,7 +158,9 @@ self.addEventListener('activate', event => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
     await Promise.all(
-      keys.filter(k => k.startsWith('osa-bingo-v3-') && k !== CACHE)
+      // Also the old v2 cache from the root-scoped worker: the root worker
+      // keeps it as Osa's offline copy until this worker has installed.
+      keys.filter(k => (k.startsWith('osa-bingo-v3-') && k !== CACHE) || k.startsWith('osa-bingo-v2-'))
           .map(k => caches.delete(k))
     );
     await self.clients.claim();
