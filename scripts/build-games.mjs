@@ -383,7 +383,7 @@ for (const { g, species, placeholders, dir } of results) {
     : [];
   const precache = [
     ...pages.map(page => page || './'),
-    'core/styles.css', 'tokens.css', 'manifest.webmanifest',
+    'core/deal.js', 'core/styles.css', 'tokens.css', 'manifest.webmanifest',
     ...iconFiles, ...fontFiles,
   ];
   const h = createHash('sha256');

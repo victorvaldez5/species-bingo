@@ -24,7 +24,7 @@
    ============================================================= */
 
 const VERSION = 'v1';                                       // manual major
-const BUILD = 'ef181e160c';                                 // BUILD (rewritten by build-games)
+const BUILD = '9a5d8bfbce';                                 // BUILD (rewritten by build-games)
 const PREFIX = 'species-bingo-root-';
 const CACHE = `${PREFIX}${VERSION}-${BUILD}`;
 
@@ -36,6 +36,11 @@ const isGamePath = pathname =>
 const PRECACHE = [
   // BEGIN-PRECACHE
   './',
+  'how-to-play/',
+  'about/',
+  'credits/',
+  'privacy/',
+  'core/deal.js',
   'core/styles.css',
   'tokens.css',
   'manifest.webmanifest',
