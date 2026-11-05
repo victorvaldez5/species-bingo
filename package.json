@@ -9,16 +9,19 @@
     "fonts": "node scripts/build-fonts.mjs",
     "manifest": "node scripts/build-manifest.mjs",
     "check": "node scripts/build-manifest.mjs --dry-run",
-    "dev": "wrangler dev",
+    "build": "astro build && node scripts/build-manifest.mjs",
+    "dev": "npm run build && wrangler dev",
+    "dev:astro": "astro dev",
     "deploy": "npm run ci && wrangler deploy",
     "moplants:images": "node scripts/moplants-images.mjs",
     "moplants:credits": "node scripts/moplants-check.mjs",
     "moplants:check": "node scripts/moplants-check.mjs --dry-run",
     "test": "node --test 'test/*.test.mjs'",
     "lint": "oxlint --deny-warnings",
-    "ci": "npm run lint && npm test && npm run check && npm run moplants:check"
+    "ci": "npm run lint && npm run build && npm test && npm run check && npm run moplants:check"
   },
   "devDependencies": {
+    "astro": "7.4.2",
     "oxlint": "^1.91.0",
     "sharp": "^0.35.5",
     "subset-font": "^2.9.0",

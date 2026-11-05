@@ -8,20 +8,29 @@
    that stops you adding a species, forgetting its photo, and
    finding out while offline in a rainforest.
 
+   The two HTML entries ('./' and index.html) are hashed from the
+   built dist/index.html (Astro output); everything else is read
+   from public/. Run `astro build` first (npm run build does).
+   After rewriting public/sw.js the script copies it to dist/sw.js.
+
    Flags:
-     --dry-run   validate + report only, write nothing (npm run check)
+     --dry-run   validate data only, write nothing, needs no dist/
+                 (npm run check)
    ============================================================= */
 
-import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync, copyFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC = join(ROOT, 'public');
+const DIST = join(ROOT, 'dist');
+const DIST_INDEX = join(DIST, 'index.html');
 const IMG = join(PUBLIC, 'img');
 const FONTS = join(PUBLIC, 'fonts');
 const SW = join(PUBLIC, 'sw.js');
+const DIST_SW = join(DIST, 'sw.js');
 const SPECIES = join(PUBLIC, 'species.json');
 
 const DRY = process.argv.includes('--dry-run');
@@ -132,10 +141,15 @@ const precache = [
 
 // BUILD hash: fingerprint of every precached file's bytes, so any
 // asset change yields a new cache name and the SW update lands.
+// The HTML entry comes from the Astro build, the rest from public/.
+if (!DRY && !existsSync(DIST_INDEX)) {
+  console.error('✗ dist/index.html not found. Run `npm run build` (astro build first), not this script alone.');
+  process.exit(1);
+}
 const hash = createHash('sha256');
 for (const rel of precache) {
   if (rel === './') continue;
-  const p = join(PUBLIC, rel);
+  const p = rel === 'index.html' ? DIST_INDEX : join(PUBLIC, rel);
   if (existsSync(p)) hash.update(rel).update(readFileSync(p));
 }
 const build = hash.digest('hex').slice(0, 10);
@@ -157,6 +171,7 @@ const next = sw
   .replace(/const BUILD = '[^']*';/, `const BUILD = '${build}';`);
 
 const changed = next !== sw;
+const VERSION = (sw.match(/const VERSION = '([^']*)'/) || [])[1] || '?';
 
 console.log(`  precache entries: ${precache.length}  ·  build hash: ${build}${changed ? '' : ' (unchanged)'}`);
 
@@ -207,7 +222,10 @@ writeCredits();
 console.log(`  ✓ wrote CREDITS.md`);
 if (changed) {
   writeFileSync(SW, next);
-  console.log(`  ✓ wrote public/sw.js (cache osa-bingo-${'v1'}-${build})\n`);
+  console.log(`  ✓ wrote public/sw.js (cache osa-bingo-${VERSION}-${build})`);
 } else {
-  console.log(`  ✓ public/sw.js already current\n`);
+  console.log(`  ✓ public/sw.js already current`);
 }
+// Ship the same bytes: dist/sw.js is what Cloudflare serves.
+copyFileSync(SW, DIST_SW);
+console.log(`  ✓ copied to dist/sw.js\n`);

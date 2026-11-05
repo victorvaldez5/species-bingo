@@ -1,0 +1,59 @@
+---
+// Shared page skeleton for both games. Only what is identical in the two
+// pages lives here; everything else stays inline in each page. Every URL is
+// relative on purpose (the games sit at / and /moplants/), and every script
+// is is:inline so Astro never bundles, hashes or hoists it.
+interface Props {
+  title: string;
+  description: string;
+  appTitle: string;
+  colorScheme?: string;
+}
+const { title, description, appTitle, colorScheme } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <slot name="head-start" />
+  <title>{title}</title>
+  <meta name="description" content={description}>
+
+  <meta name="theme-color" content="#36492e">
+  {colorScheme && <meta name="color-scheme" content={colorScheme}>}
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="img/icons/icon-192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="img/icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content={appTitle}>
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#play">Skip to the game</a>
+
+  <header class="masthead paper-grain">
+    <div class="masthead__inner">
+      <span class="wnd-logo wnd-logo--cream" style="--logo-size: 20px" aria-hidden="true">
+        <span class="wnd-logo__row">Wild <em>&amp;</em> Native</span>
+        <span class="wnd-logo__sub"><span>Gardens</span></span>
+      </span>
+
+      <h1 class="masthead__title"><slot name="title" /></h1>
+    </div>
+  </header>
+
+  <slot />
+
+  <noscript>
+    <p style="padding:24px;max-width:36rem;margin:0 auto;font-family:system-ui">
+      <slot name="noscript" />
+    </p>
+  </noscript>
+
+  <script is:inline src="app.js"></script>
+</body>
+</html>

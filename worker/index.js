@@ -1,7 +1,7 @@
 /**
  * Cloudflare Worker entry point for Osa Bingo.
  *
- * This is an assets-first PWA: everything in ./public is served directly by
+ * This is an assets-first PWA: everything in ./dist (built from ./public and src/pages) is served directly by
  * Cloudflare's edge (see wrangler.jsonc `assets`), which keeps the `_headers`
  * cache rules in effect and asset delivery free + fast.
  *

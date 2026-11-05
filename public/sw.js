@@ -14,7 +14,7 @@
    ============================================================= */
 
 const VERSION = 'v2';                                       // manual major — bumped to purge the pre-reload immutable-poisoned cache
-const BUILD = '7e02931105';                                 // BUILD (rewritten by build-manifest)
+const BUILD = 'f2b54ea769';                                 // BUILD (rewritten by build-manifest)
 const CACHE = `osa-bingo-${VERSION}-${BUILD}`;
 // Path of the sibling plant game, derived from the scope so it still works
 // if the site is ever served from a subpath.

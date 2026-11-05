@@ -1,0 +1,121 @@
+---
+import Page from '../../layouts/Page.astro';
+---
+<Page
+  title="Plant Bingo"
+  description="A 25-plant garden bingo card. Tap a plant when you spot it, and get five in a row."
+  appTitle="Plant Bingo"
+  colorScheme="light dark"
+>
+  <Fragment slot="head-start">
+  <Fragment set:html={`<!-- Relative URLs below need the trailing slash; /moplants -> /moplants/ -->`} />
+  <script is:inline>if (/\/moplants$/.test(location.pathname)) location.replace(location.pathname + '/' + location.search + location.hash);</script>
+  </Fragment>
+  <Fragment slot="title">Plant <em>bingo.</em></Fragment>
+
+  <main class="wrap">
+    <!-- Control strip -->
+    <section class="controls" aria-label="Card controls">
+      <div id="modes" class="modes" role="group" aria-label="Game">
+        <button class="modes__btn" type="button" data-mode="bingo" aria-pressed="true">Bingo</button>
+        <button class="modes__btn" type="button" data-mode="hunt" aria-pressed="false">Hunt</button>
+        <button class="modes__btn" type="button" data-mode="race" aria-pressed="false">Race</button>
+      </div>
+      <div id="patterns" class="chips" role="group" aria-label="Win pattern">
+        <button class="chip" type="button" data-pattern="line" aria-pressed="true">Any line</button>
+        <button class="chip" type="button" data-pattern="corners" aria-pressed="false">Four corners</button>
+        <button class="chip" type="button" data-pattern="x" aria-pressed="false">Big X</button>
+        <button class="chip" type="button" data-pattern="blackout" aria-pressed="false">Blackout</button>
+      </div>
+      <p id="mode-hint" class="mode-hint" aria-live="polite"></p>
+      <div class="controls__meta">
+        <p id="progress" class="progress" aria-live="polite">0 of 25 spotted</p>
+        <div class="controls__actions">
+          <button id="card-toggle" class="btn btn--ghost" type="button" aria-live="polite" hidden>Racer 1 of 2</button>
+          <details class="menu" id="actions-menu">
+            <summary class="menu__trigger btn btn--ghost">Actions</summary>
+            <div class="menu__panel" aria-label="Card actions">
+              <button id="copy-link" class="menu__share" type="button">
+                <span class="menu__share-head">Copy link to this card</span>
+                <span class="menu__share-sub">seed <span id="seed">----</span></span>
+              </button>
+              <button id="new-card" class="btn menu__item" type="button">New card</button>
+              <button id="reset" class="btn btn--ghost menu__item" type="button">Reset marks</button>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bingo announcement -->
+    <p id="bingo-banner" class="bingo-banner" role="status" aria-live="polite" hidden></p>
+
+    <div id="play" tabindex="-1">
+      <!-- The card -->
+      <section
+        id="grid"
+        class="grid"
+        aria-label="Bingo card, 5 by 5">
+        <!-- cells injected by app.js -->
+      </section>
+
+      <!-- Hunt: every plant, one checklist across cards -->
+      <section id="hunt" class="hunt" aria-label="Hunt list" hidden>
+        <ul id="hunt-list" class="hunt__list"></ul>
+      </section>
+
+      <!-- Race: this racer's targets -->
+      <section id="race" class="grid grid--race" aria-label="Race targets" hidden></section>
+    </div>
+
+    <!-- Credits -->
+    <section class="credits">
+      <details id="credits">
+        <summary class="credits__summary">Photo credits &amp; sources</summary>
+        <p class="credits__intro">Every image ships with its author, license and source, and every fun fact with where it came from. Full list also in <code>CREDITS-moplants.md</code>.</p>
+        <ul id="credits-list" class="credits__list">
+          <!-- injected by app.js -->
+        </ul>
+      </details>
+    </section>
+
+    <footer class="colophon">
+      <p>All 25 plants on every card, in a fresh order each time. Needs a connection.</p>
+      <p class="colophon__seed">Same seed, same card, on any phone.</p>
+    </footer>
+  </main>
+
+  <Fragment set:html={`<!-- Plant detail sheet -->`} />
+  <dialog id="detail" class="sheet" aria-label="Plant detail">
+    <form method="dialog" class="sheet__form">
+      <button class="sheet__close" value="close" aria-label="Close">&times;</button>
+    </form>
+    <div class="sheet__body">
+      <picture id="detail-picture" class="sheet__photo">
+        <img id="detail-img" alt="" decoding="async">
+      </picture>
+      <p id="detail-category" class="sheet__category">&nbsp;</p>
+      <h2 id="detail-name" class="sheet__name">&nbsp;</h2>
+      <p id="detail-binomial" class="sheet__binomial"></p>
+      <p id="detail-flag" class="sheet__safety" hidden></p>
+      <p id="detail-note" class="sheet__note"></p>
+      <p id="detail-fact" class="sheet__fact"></p>
+      <button id="detail-mark" class="btn btn--mark" type="button">Mark as spotted</button>
+      <p id="detail-credit" class="sheet__credit"></p>
+    </div>
+  </dialog>
+
+  <Fragment set:html={`<!-- Reset confirmation -->`} />
+  <dialog id="confirm-reset" class="confirm" aria-labelledby="confirm-title">
+    <h2 id="confirm-title" class="confirm__title">Reset this card?</h2>
+    <p id="confirm-body" class="confirm__body">This clears everything on this card. You cannot undo it.</p>
+    <div class="confirm__actions">
+      <button id="confirm-cancel" class="btn btn--ghost" type="button" autofocus>Keep them</button>
+      <button id="confirm-yes" class="btn btn--danger" type="button">Reset marks</button>
+    </div>
+  </dialog>
+
+  <Fragment slot="noscript">
+      This bingo card needs JavaScript to deal the plants and remember what you have spotted.
+  </Fragment>
+</Page>

@@ -2,7 +2,8 @@
 
 An offline-capable wildlife bingo web app for field spotting in Corcovado and
 Golfo Dulce, Costa Rica. Two players load the same seed and hold complementary
-cards. Built as a plain static site (no framework, no bundler) and deployed to
+cards. Built as a static site: Astro generates the two HTML pages and everything
+else (JS, CSS, service worker, data, images) is plain files, no bundler. Deployed to
 **Cloudflare Workers Static Assets**.
 
 **Corcovado has essentially no cell coverage, so offline is the core
@@ -18,16 +19,17 @@ and every photo are precached by the service worker.
 npm install          # sharp, subset-font, wrangler (dev only)
 npm run fonts        # TTF -> subset woff2  (needs fonts-src/, see Fonts)
 npm run images       # optimize photos + generate PWA icons + placeholders
-npm run manifest     # validate, rewrite the sw.js precache, write CREDITS.md
-npm run dev          # wrangler dev — closest to production
-npm run ci           # lint, deal tests, data checks (CI runs these as build, lint, test)
+npm run build        # Astro pages -> dist/, then validate, rewrite the sw.js precache, write CREDITS.md
+npm run dev          # build, then wrangler dev — closest to production
+npm run dev:astro    # Astro dev server (no service worker or _headers)
+npm run ci           # lint, build, tests, data checks (CI runs these as build, lint, test)
 ```
 
-Then open the printed `http://127.0.0.1:8788`. Other ways to serve `public/`:
+Then open the printed `http://127.0.0.1:8788`. Other ways to serve the built `dist/`:
 
 ```bash
-npx serve public                                   # npx ships with Node
-python3 -m http.server 8000 --directory public     # no Node needed
+npx serve dist                                     # npx ships with Node
+python3 -m http.server 8000 --directory dist       # no Node needed
 ```
 
 Service workers only register on a secure context. `http://localhost` and
@@ -40,8 +42,12 @@ the install prompt misbehaves, retest with `wrangler dev` or `serve`.
 ## Layout
 
 ```
-public/                 the deployed directory — nothing else ships
-  index.html
+src/pages/              the two HTML pages (Astro): index.astro, moplants/index.astro
+src/layouts/Page.astro  head, masthead and noscript shared by both pages
+worker/index.js         the thin Cloudflare Worker (page-view logging)
+astro.config.mjs        static output, no bundling of CSS or JS
+dist/                   build output, git-ignored: this is what is deployed
+public/                 plain files, copied into dist/ unchanged
   styles.css            imports tokens.css, then app styles
   tokens.css            WFG design tokens (verbatim copy; only @font-face swapped)
   app.js                card generation, marking, offline registration
@@ -55,6 +61,7 @@ scripts/
   optimize-images.mjs   sharp: raw -> webp + jpg, icons, placeholders
   build-fonts.mjs       subset-font: TTF -> Latin woff2
   build-manifest.mjs    validate + rewrite sw.js precache + write CREDITS.md
+                        (hashes dist/index.html, so run it via npm run build)
 img-raw/                git-ignored, raw photo downloads (never deployed)
 fonts-src/              git-ignored, brand variable TTFs (never deployed)
 wrangler.jsonc
@@ -62,7 +69,9 @@ CREDITS.md              generated from species.json
 ```
 
 `node_modules/`, `scripts/`, `img-raw/` and `fonts-src/` stay out of the upload
-because the site lives in `public/`, not the repo root.
+because only `dist/` is uploaded. Every `<script>` in the pages is `is:inline` and
+every URL stays relative, so Astro bundles nothing and no URL changes;
+`test/html.test.mjs` checks the built pages against the pre-Astro HTML.
 
 ---
 
@@ -86,7 +95,7 @@ Nothing about a species lives in the markup or JS. Each entry:
 - `photo` is the extensionless stem; the app appends `.webp` / `.jpg` for `<picture>`.
 - Categories: `mammal`, `bird`, `reptile`, `amphibian`, `invertebrate`, `plant`, `marine`.
 - **To add or swap a species:** edit `species.json`, drop a photo into `img-raw/`
-  named `<id>.jpg` (or `.png`/`.webp`), then `npm run images && npm run manifest`.
+  named `<id>.jpg` (or `.png`/`.webp`), then `npm run images && npm run build`.
   Nothing else.
 
 `species.json` also holds a `safety` array (see Safety below).
@@ -139,7 +148,7 @@ To swap or add a photo later:
 3. Fill that species' `credit` block in `species.json` (`author`, `license`,
    `source`; remove `status`). Attribution is a **legal requirement** on a public
    CC-BY site, and it renders in the app and in `CREDITS.md`.
-4. `npm run images && npm run manifest`.
+4. `npm run images && npm run build`.
 
 `build-manifest` hard-fails if a real (non-placeholder) photo is missing its
 credit. If no decently licensed photo exists for a species, **flag it rather
@@ -207,14 +216,14 @@ so treat step 4 as required, outdoors, not just on a desk.
 
 **Merging to `main` deploys.** The CI workflow (`.github/workflows/ci.yml`)
 runs build, lint and test on every PR and push; on `main` only, a deploy job
-runs `wrangler deploy` once all three pass. It needs the repo secrets
+runs `npm run build` and `wrangler deploy` once all three pass. It needs the repo secrets
 `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. GitHub Actions is the only
 deployer: Cloudflare Workers Builds must not also deploy `main`.
 
 By hand, as a fallback:
 
 ```bash
-npm run deploy       # runs `npm run ci` (lint, tests, data checks), then `wrangler deploy`
+npm run deploy       # runs `npm run ci` (lint, build, tests, data checks), then `wrangler deploy`
 ```
 
 Both paths gate on the data checks, so a species missing its photo fails the
@@ -254,10 +263,10 @@ the design system's `contrast_check.html`; all pass AA, most AAA.
 
 ## Plant Bingo at `/moplants`
 
-A second, separate game lives in `public/moplants/` (plain-English notes for
+A second, separate game lives in `public/moplants/` (its page is `src/pages/moplants/index.astro`; plain-English notes for
 the plant list's owner are in `MOPLANTS.md`). It shares only `tokens.css` and
 `fonts/` with the Osa app, by relative path, and is otherwise self-contained:
-its own `index.html`, `app.js`, `styles.css`, `species.json`, `img/` and
+its own page (`src/pages/moplants/index.astro`), `app.js`, `styles.css`, `species.json`, `img/` and
 `manifest.webmanifest` (scope `/moplants/`).
 
 - **Same UX as Osa.** `styles.css` and `app.js` are ports of the root files

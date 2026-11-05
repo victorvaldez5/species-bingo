@@ -2,6 +2,8 @@ node_modules/
 img-raw/
 fonts-src/
 .wrangler/
+dist/
+.astro/
 .claude/worktrees/
 
 # OS / editor cruft
