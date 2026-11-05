@@ -1,0 +1,33 @@
+# Runs on every PR and on main. Nothing here needs `npm install`: the
+# tests and data checks use only Node built-ins.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # Pins the seeded deal so shared links keep showing the same card.
+      - run: npm test
+
+      # Species data, photo credits and structure, for both games.
+      - run: npm run check
+      - run: npm run moplants:check
+
+      # Regenerate sw.js and the CREDITS files, then fail if they differ
+      # from what was committed. A stale precache list is how an asset
+      # quietly goes missing offline.
+      - name: Generated files are up to date
+        run: |
+          npm run manifest
+          npm run moplants:credits
+          git diff --exit-code -- public/sw.js CREDITS.md CREDITS-moplants.md
