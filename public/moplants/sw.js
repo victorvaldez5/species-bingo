@@ -64,7 +64,7 @@ async function networkFirst(request) {
     if (res && res.ok) cache.put(request, res.clone());
     return res;
   } catch (err) {
-    const cached = await cache.match(request);
+    const cached = await cache.match(request, { ignoreSearch: request.mode === 'navigate' });
     if (cached) return cached;
     if (request.mode === 'navigate') {
       return new Response(OFFLINE_PAGE, {

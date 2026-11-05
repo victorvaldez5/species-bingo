@@ -162,7 +162,7 @@ function osaCredits(species, placeholders) {
 Every photo on this public site must carry its author, license and source.
 CC-BY and CC-BY-SA are attribution licenses, so this is a legal requirement,
 not a courtesy. This file is generated from \`public/species.json\` by
-\`scripts/build-manifest.mjs\` — edit the \`credit\` block there, not here.
+\`scripts/build-games.mjs\` — edit the \`credit\` block there, not here.
 
 **Status: ${species.length - pending} of ${species.length} sourced, ${pending} pending.**
 Photos are public-domain or CC-licensed only (Wikimedia Commons, iNaturalist
@@ -194,7 +194,7 @@ function moplantsCredits(species, placeholders) {
     `| ${cell(s.name)} | ${s.sources.map(x => `[${cell(x.label)}](${x.url})`).join('<br>')} |`).join('\n');
   return `# MO plants bingo: credits
 
-Generated from \`public/moplants/species.json\` by \`scripts/moplants-check.mjs\`.
+Generated from \`public/moplants/species.json\` by \`scripts/build-games.mjs\`.
 Edit the \`credit\` and \`sources\` blocks there, not here.
 
 ## Photos

@@ -3,7 +3,7 @@
 Every photo on this public site must carry its author, license and source.
 CC-BY and CC-BY-SA are attribution licenses, so this is a legal requirement,
 not a courtesy. This file is generated from `public/species.json` by
-`scripts/build-manifest.mjs` — edit the `credit` block there, not here.
+`scripts/build-games.mjs` — edit the `credit` block there, not here.
 
 **Status: 48 of 48 sourced, 0 pending.**
 Photos are public-domain or CC-licensed only (Wikimedia Commons, iNaturalist
