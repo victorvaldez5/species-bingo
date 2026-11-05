@@ -20,7 +20,7 @@ npm run fonts        # TTF -> subset woff2  (needs fonts-src/, see Fonts)
 npm run images       # optimize photos + generate PWA icons + placeholders
 npm run manifest     # validate, rewrite the sw.js precache, write CREDITS.md
 npm run dev          # wrangler dev — closest to production
-npm run ci           # lint, deal tests, data checks — exactly what CI runs
+npm run ci           # lint, deal tests, data checks (CI runs these as build, lint, test)
 ```
 
 Then open the printed `http://127.0.0.1:8788`. Other ways to serve `public/`:

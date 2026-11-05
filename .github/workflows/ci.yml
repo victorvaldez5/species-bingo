@@ -1,6 +1,7 @@
-# One job, two steps. Everything it checks lives in `npm run ci`, so a
-# passing run is reproducible locally with the same command, and adding
-# a check means editing package.json, not this file.
+# Three checks on every PR: build, lint, test. They share one job
+# definition (the matrix below), so setup changes happen in one place.
+# Each command is also runnable locally; `npm run ci` runs lint, test
+# and the data checks together.
 # Deploys are Cloudflare Workers Builds' job, not this workflow's.
 name: CI
 
@@ -19,26 +20,34 @@ concurrency:
 
 jobs:
   check:
+    name: ${{ matrix.name }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Validate both games' data, regenerate sw.js and the CREDITS
+          # files, and fail if they differ from what was committed. A
+          # stale precache list is how an asset quietly goes missing
+          # offline.
+          - name: build
+            run: |
+              npm run manifest
+              npm run moplants:credits
+              git diff --exit-code -- public/sw.js CREDITS.md CREDITS-moplants.md
+          - name: lint
+            run: npm run lint
+          # Pins the seeded deal so shared links keep showing the same card.
+          - name: test
+            run: npm test
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
-      # --ignore-scripts: lint and tests need none of sharp's or
-      # wrangler's install steps.
+      # --ignore-scripts: none of these need sharp's or wrangler's
+      # install steps.
       - run: npm ci --ignore-scripts
-
-      # Lint, deal tests, and the data checks for both games.
-      - run: npm run ci
-
-      # Regenerate sw.js and the CREDITS files, then fail if they differ
-      # from what was committed. A stale precache list is how an asset
-      # quietly goes missing offline.
-      - name: Generated files are up to date
-        run: |
-          npm run manifest
-          npm run moplants:credits
-          git diff --exit-code -- public/sw.js CREDITS.md CREDITS-moplants.md
+      - run: ${{ matrix.run }}
