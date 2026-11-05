@@ -365,8 +365,9 @@ for (const { g, species, placeholders, dir } of results) {
 
 // ---- Root (hub) worker -------------------------------------
 // public/sw.js, scope "/". Precaches the hub and the site pages that exist in
-// dist/, plus the shared styles, fonts, manifest and icons. Hub photos are not
-// listed: the worker caches them at runtime.
+// dist/, plus the shared styles, fonts, manifest and icons, and each game's
+// hub strip photos (they live in the game's folder, which the game's own
+// worker does not serve to the hub).
 {
   const SITE_PAGES = ['', 'how-to-play/', 'about/', 'credits/', 'privacy/'];
   const pageFile = page => join(DIST, page, 'index.html');
@@ -381,10 +382,17 @@ for (const { g, species, placeholders, dir } of results) {
   const iconFiles = existsSync(join(PUBLIC, 'icons'))
     ? readdirSync(join(PUBLIC, 'icons')).filter(f => /\.png$/i.test(f)).sort().map(f => `icons/${f}`)
     : [];
+  // The same stem src/lib/games.ts gives the hub page, relative to the root.
+  const stripFiles = results.flatMap(({ g }) => {
+    const dir = g.hub.stripDir || (g.gridPhoto.variant === 'thumb' ? g.gridPhoto.dir : 'img/');
+    return g.hub.strip.flatMap(id => ['webp', 'jpg'].map(ext => `${pathDir(g)}/${dir}${id}.${ext}`));
+  });
+  for (const f of stripFiles) if (!existsSync(join(PUBLIC, f))) fail('Root worker', [`hub strip photo missing on disk: public/${f}`]);
+  if (failed) process.exit(1);
   const precache = [
     ...pages.map(page => page || './'),
     'core/deal.js', 'core/styles.css', 'tokens.css', 'manifest.webmanifest',
-    ...iconFiles, ...fontFiles,
+    ...iconFiles, ...fontFiles, ...stripFiles,
   ];
   const h = createHash('sha256');
   for (const rel of precache) {
