@@ -589,7 +589,7 @@
     renderBingo(true);
   }
 
-  // ---- Below-card section + credits (static per data) --------
+  // ---- Below-card section (static per data) ------------------
   function renderSafety() {
     const below = cfg.belowCard;
     $('#safety-list').innerHTML = state.data.safety.map(item => {
@@ -602,11 +602,6 @@
         `<p class="safety__note">${esc(item.note)}</p>` +
         `</li>`;
     }).join('');
-  }
-  function renderCredits() {
-    $('#credits-list').innerHTML = state.data.species.map(s =>
-      `<li><span class="credits__sp">${esc(s.name)}</span> ${creditLine(s)}${cfg.credits.withSources ? ` ${sourceLine(s)}` : ''}</li>`
-    ).join('');
   }
 
   // ---- Wiring a card -----------------------------------------
@@ -680,6 +675,27 @@
     render();
   }
 
+  // ---- How-to card (first visit) -----------------------------
+  // Shown until "Got it"; Actions -> How to play brings it back. Whether it
+  // was dismissed lives under its own key, outside the game's storage
+  // namespace. Blocked storage just means the card shows each visit.
+  const HOWTO_KEY = `species-bingo:howto-seen:${cfg.id}`;
+  function howtoSeen() {
+    try { return localStorage.getItem(HOWTO_KEY) === '1'; } catch { return false; }
+  }
+  function initHowto() {
+    const card = $('#howto');
+    card.hidden = howtoSeen();
+    $('#howto-dismiss').addEventListener('click', () => {
+      card.hidden = true;
+      try { localStorage.setItem(HOWTO_KEY, '1'); } catch { /* ignore */ }
+    });
+    $('#howto-open').addEventListener('click', () => {
+      card.hidden = false;
+      card.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    });
+  }
+
   // ---- Init --------------------------------------------------
   async function init() {
     try {
@@ -691,7 +707,7 @@
     }
 
     if (cfg.belowCard) renderSafety();
-    renderCredits();
+    initHowto();
     state.found = loadIds(HUNT_KEY);
 
     // Event delegation on the grid.

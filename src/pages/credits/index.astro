@@ -1,0 +1,42 @@
+---
+// Photo credits and fact sources, generated at build from each game's own
+// list, one section per game (#osa, #moplants). The repo copies
+// (CREDITS.md, CREDITS-moplants.md) are still written by scripts/build-games.mjs.
+import Site from '../../layouts/Site.astro';
+import { loadGames, creditPending } from '../../lib/games';
+
+const sections = loadGames().map(({ game, items }) => ({
+  game,
+  rows: items.map(item => ({
+    item,
+    pending: creditPending(game, item),
+    sources: game.credits.withSources ? (item.sources ?? []) : [],
+  })),
+}));
+---
+<Site title="Credits · Species bingo" description="Who took every photo, under which licence, and where each fun fact came from." heading="Credits" path="/credits/">
+  <div class="site__body prose credits-page">
+    <p>Every photo is shown with its author, licence and source. Where a photo is still a placeholder, it says so.</p>
+
+    {sections.map(({ game, rows }) => (
+    <section id={game.id} class="credits-sec" aria-labelledby={`${game.id}-h`}>
+      <h2 id={`${game.id}-h`}>{game.hub.name}</h2>
+      <ul class="credits-list">
+        {rows.map(({ item, pending, sources }) => (
+        <li id={`${game.id}-${item.id}`}>
+          <span class="credits-list__name">{item.name}</span>
+          {pending ? (
+            <span class="credits-list__pending"> Photo credit pending. This image is a placeholder until a properly licensed photo is sourced.</span>
+          ) : (
+            <span> Photo: {[item.credit.author, item.credit.license].filter(Boolean).join(' · ')}{item.credit.source && <Fragment> · <a href={item.credit.source} target="_blank" rel="noopener">source</a></Fragment>}.{game.detail.creditNote && item[game.detail.creditNote] ? ` ${item[game.detail.creditNote]}` : ''}</span>
+          )}
+          {sources.length > 0 && (
+            <span> Fact: {sources.map((s: { url: string; label: string }, i: number) => <Fragment>{i > 0 && ' · '}<a href={s.url} target="_blank" rel="noopener">{s.label}</a></Fragment>)}</span>
+          )}
+        </li>
+        ))}
+      </ul>
+    </section>
+    ))}
+  </div>
+</Site>

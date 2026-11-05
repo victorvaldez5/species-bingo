@@ -1,9 +1,31 @@
 {
   "id": "osa",
-  "path": "/",
+  "path": "/osa/",
   "title": "Osa Peninsula Wildlife Bingo",
   "appTitle": "Osa Bingo",
   "description": "Offline field-spotting bingo for the wildlife of Corcovado and Golfo Dulce, Costa Rica.",
+
+  "hub": {
+    "name": "Osa wildlife bingo",
+    "place": "Corcovado & Golfo Dulce, Costa Rica",
+    "accent": "var(--sun)",
+    "strip": ["scarlet-macaw", "blue-morpho-butterfly", "red-eyed-tree-frog", "three-toed-sloth", "chestnut-mandibled-toucan"],
+    "tag": "offline"
+  },
+  "howto": {
+    "steps": [
+      "Tap a photo when you spot it. Five in a row wins.",
+      "Tap the i on a photo to see how to tell it apart.",
+      "Share the link from Actions: your friend gets card 2, with none of yours."
+    ],
+    "offlineLine": "Works offline once loaded. Add it to your home screen on wifi."
+  },
+  "og": {
+    "title": "Osa wildlife bingo · Species bingo",
+    "description": "Join my card. Tap to play, works offline.",
+    "image": "/og/osa.png"
+  },
+
   "masthead": { "lead": "Wildlife", "em": "bingo." },
   "offline": true,
   "worker": "sw.js",

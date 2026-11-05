@@ -4,6 +4,26 @@
   "title": "Plant Bingo",
   "appTitle": "Plant Bingo",
   "description": "A 25-plant garden bingo card. Tap a plant when you spot it, and get five in a row.",
+
+  "hub": {
+    "name": "Plant bingo",
+    "place": "A garden list",
+    "accent": "var(--sage)",
+    "strip": ["cardinal-flower", "pink-lemonade", "storm-cloud-amsonia", "bottlebrush-buckeye", "lipstick-hosta"],
+    "tag": "online"
+  },
+  "howto": {
+    "steps": [
+      "Tap a plant when you spot it. Five in a row wins.",
+      "Tap the i on a plant for a fun fact and where it comes from."
+    ],
+    "offlineLine": null
+  },
+  "og": {
+    "title": "Plant bingo · Species bingo",
+    "description": "Join my card. Tap to play.",
+    "image": "/og/moplants.png"
+  },
   "masthead": { "lead": "Plant", "em": "bingo." },
   "offline": false,
   "worker": "sw.js",

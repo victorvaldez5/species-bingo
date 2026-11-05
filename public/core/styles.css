@@ -35,6 +35,7 @@
   --banner-line:   var(--sage);
   --banner-text:   var(--forest-deep);
   --ghost-hover:   var(--forest);
+  --bar-bg:        var(--forest);   /* the hub and text-page top bar */
 }
 /* Osa is light-only for now and its ghost buttons darken to --forest-deep on
    hover; the Plant game's use --forest. Drop this when the themes merge. */
@@ -58,6 +59,7 @@
     --banner-line:   #4a5a3e;
     --banner-text:   #e3ead0;
     --ghost-hover:   #c6d4a6;
+    --bar-bg:        #1f2c1c;
   }
 }
 
@@ -462,23 +464,8 @@ button { font: inherit; color: inherit; }
 }
 .safety__tag--card { color: var(--brand-text); border-color: var(--banner-line); background: var(--banner-bg); }
 
-/* ---- Credits ----------------------------------------------- */
-.credits { margin-top: var(--sp-7); }
-.safety + .credits { margin-top: var(--sp-5); }
-.credits__summary {
-  cursor: pointer; font-weight: 700; color: var(--brand-text);
-  padding: var(--sp-3) 0; font-size: var(--t-small);
-}
-.credits__intro { font-size: var(--t-caption); color: var(--text-mute); margin: 0 0 var(--sp-3); }
-.credits__intro code { font-family: var(--font-mono); font-size: 11px; background: var(--surface); padding: 1px 5px; border-radius: 4px; }
-.credits__list {
-  list-style: none; margin: 0; padding: 0;
-  font-size: var(--t-caption); line-height: 1.5; color: var(--text-soft);
-  display: grid; gap: var(--sp-2);
-}
-.credits__list a { color: var(--accent-text); }
-.credits__sp { font-weight: 700; color: var(--text); }
-.sheet__credit--pending, .credits .sheet__credit--pending { color: var(--accent-text); font-style: italic; }
+/* A pending photo credit, in a detail sheet or on the credits page. */
+.sheet__credit--pending { color: var(--accent-text); font-style: italic; }
 
 /* ---- Colophon ---------------------------------------------- */
 .colophon {
@@ -607,6 +594,148 @@ button { font: inherit; color: inherit; }
 .btn--danger { background: var(--terracotta-deep); border-color: var(--terracotta-deep); color: var(--cream); }
 .btn--danger:hover { background: #6a3319; border-color: #6a3319; }
 
+
+/* =============================================================
+   Front door: the hub, the text pages, the shared footer and the
+   how-to card. Semantic tokens only, so light and dark both work.
+   ============================================================= */
+
+/* ---- Top bar (hub and text pages) -------------------------- */
+.bar {
+  position: sticky; top: 0; z-index: 8;
+  display: flex; align-items: center; gap: var(--sp-2);
+  min-height: 56px;
+  padding: calc(var(--sp-2) + env(safe-area-inset-top)) var(--sp-4) var(--sp-2) var(--sp-1);
+  background: var(--bar-bg); color: var(--cream);
+  border-bottom: 2px solid var(--sun);
+}
+.bar__back {
+  flex: none; width: 44px; height: 44px;
+  display: grid; place-items: center;
+  color: var(--cream); text-decoration: none;
+  font-size: 30px; line-height: 1;
+}
+.bar a:focus-visible { outline-color: var(--cream); }
+.bar__title {
+  flex: 1; margin: 0;
+  font-family: var(--font-display); font-weight: 700; font-size: 22px;
+  letter-spacing: -.01em; color: var(--cream);
+}
+.bar__title em { font-style: italic; color: var(--sun); }
+.bar__title--site { padding-left: var(--sp-3); font-size: 28px; }
+
+.site { display: block; }
+.site__body {
+  max-width: 560px; margin: 0 auto;
+  padding: var(--sp-4) var(--sp-4) var(--sp-2);
+}
+
+/* ---- Hub ---------------------------------------------------- */
+.pitch { margin: var(--sp-1) 0 var(--sp-4); font-size: 18px; line-height: 1.5; color: var(--text); }
+.pitch em { font-family: var(--font-display); font-weight: 700; color: var(--brand-text); }
+.continues { display: grid; gap: var(--sp-2); margin-bottom: var(--sp-4); }
+.continue {
+  display: flex; align-items: center; gap: var(--sp-3);
+  min-height: 56px; padding: var(--sp-2) var(--sp-4);
+  background: var(--forest); color: var(--cream);
+  border-radius: var(--r-md); text-decoration: none;
+}
+.continue:focus-visible { outline-color: var(--sun); }
+.continue small { display: block; font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; opacity: .85; }
+.continue strong { display: block; font-size: 16px; }
+.continue > span:last-child { margin-left: auto; font-size: 26px; }
+.gcard {
+  display: block; margin-bottom: var(--sp-4); overflow: hidden;
+  background: var(--surface); color: inherit; text-decoration: none;
+  border: 1px solid var(--surface-deep); border-top: 4px solid var(--game-accent, var(--sun));
+  border-radius: var(--r-lg);
+}
+.gcard__strip { display: grid; grid-template-columns: repeat(5, 1fr); height: 72px; }
+.gcard__strip picture { display: block; min-width: 0; }
+.gcard__strip img { width: 100%; height: 72px; object-fit: cover; }
+.gcard__body { padding: var(--sp-3) var(--sp-4) var(--sp-4); }
+.gcard__name { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 24px; color: var(--brand-text); }
+.gcard__place { margin: 2px 0 var(--sp-2); font-size: var(--t-small); color: var(--text-soft); }
+.gcard__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag {
+  padding: 3px 10px; border-radius: var(--r-pill);
+  font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--text-soft); background: var(--bg); border: 1px solid var(--surface-deep);
+}
+.tag--ok { color: var(--cream); background: var(--forest); border-color: var(--forest); }
+
+/* ---- Text pages --------------------------------------------- */
+.prose h2 {
+  margin: var(--sp-5) 0 var(--sp-2);
+  font-family: var(--font-display); font-style: italic; font-weight: 700;
+  font-size: 24px; line-height: 1.15; color: var(--brand-text);
+}
+.prose h2:first-child, .prose > p:first-child + h2 { margin-top: var(--sp-2); }
+.prose p, .prose li { font-size: var(--t-body); line-height: 1.6; color: var(--text); }
+.prose p { margin: 0 0 var(--sp-2); }
+.prose a { color: var(--accent-text); }
+.prose__note { color: var(--text-soft); }
+.shapes { list-style: none; margin: 0 0 var(--sp-2); padding: 0; display: grid; gap: var(--sp-3); }
+.shape { display: flex; align-items: center; gap: var(--sp-4); }
+.shape__mini { flex: none; display: grid; grid-template-columns: repeat(5, 9px); gap: 2px; }
+.shape__mini i { width: 9px; height: 9px; border-radius: 1px; background: var(--surface-deep); }
+.shape__mini i.on { background: var(--brand-text); }
+.shape__mini i.fr { background: var(--terracotta-deep); }
+.shape strong { display: block; font-size: var(--t-body); color: var(--text); }
+.shape span > span { font-size: var(--t-small); color: var(--text-soft); }
+
+.credits-sec { scroll-margin-top: 72px; }
+.credits-list {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; gap: var(--sp-3);
+}
+.credits-list li { font-size: var(--t-small); line-height: 1.5; color: var(--text-soft); }
+.credits-list li span { font-size: inherit; }
+.credits-list__name { font-weight: 700; color: var(--text); }
+.credits-list__pending { color: var(--accent-text); font-style: italic; }
+
+/* ---- Shared footer (every page, D3) ------------------------- */
+.site-foot {
+  max-width: 560px; margin: var(--sp-5) auto 0;
+  padding: var(--sp-4) var(--sp-4) calc(var(--sp-6) + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--surface-deep);
+  text-align: center;
+}
+.site-foot__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 var(--sp-3); }
+.site-foot__links a {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--sp-1);
+  font-size: var(--t-small); font-weight: 700; color: var(--brand-text); text-decoration: none;
+}
+.site-foot__links a:hover { text-decoration: underline; }
+.site-foot__maker {
+  margin: var(--sp-3) 0 0;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  font-size: 11px; color: var(--text-mute); letter-spacing: .08em; text-transform: uppercase;
+}
+.site-foot .wnd-logo { --logo-fg: var(--brand-text); --logo-ac: var(--accent-text); }
+
+/* ---- How-to card (first visit, between the controls and the card) */
+.howto {
+  margin: 0 0 var(--sp-4); padding: var(--sp-4) var(--sp-4) var(--sp-3);
+  background: var(--surface); border: 1px solid var(--surface-deep);
+  border-left: 5px solid var(--sun); border-radius: var(--r-md);
+}
+.howto__title {
+  margin: 0 0 var(--sp-2);
+  font-family: var(--font-display); font-style: italic; font-weight: 700;
+  font-size: 22px; color: var(--brand-text);
+}
+.howto__steps { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--sp-2); }
+.howto__steps li { display: flex; gap: var(--sp-3); font-size: var(--t-small); line-height: 1.45; color: var(--text); }
+.howto__steps b {
+  flex: none; width: 22px; height: 22px; display: grid; place-items: center;
+  border-radius: var(--r-pill); background: var(--forest); color: var(--cream);
+  font-size: 12px; margin-top: 1px;
+}
+.howto__off { margin: var(--sp-2) 0 0; font-size: var(--t-caption); color: var(--text-soft); }
+.howto__actions { display: flex; justify-content: flex-end; gap: var(--sp-2); margin-top: var(--sp-3); }
+.howto__actions .btn { display: inline-flex; align-items: center; text-decoration: none; }
+
 /* ---- Motion / a11y ----------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
@@ -621,7 +750,7 @@ button { font: inherit; color: inherit; }
   .masthead .wnd-logo { display: none; }
   .masthead__title { color: #000; font-size: 28pt; }
   .masthead__title em { color: #000; }
-  .menu, .cell__info, .credits, .colophon, .skip-link, .bingo-banner,
+  .menu, .cell__info, .howto, .site-foot, .colophon, .skip-link, .bingo-banner,
   .modes, .chips, .mode-hint, .hunt__info { display: none !important; }
   .controls__actions #card-toggle { display: none !important; }   /* the racer flip (Plant bingo); Osa keeps its card number */
   .controls { display: block; margin-bottom: 4mm; }

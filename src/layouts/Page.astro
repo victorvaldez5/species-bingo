@@ -1,7 +1,8 @@
 ---
+import Share from '../components/Share.astro';
 // Shared page skeleton for every game. A game's own files (manifest, icons,
 // species.json, images, sw.js) are relative URLs because the games sit at
-// different paths (/ and /moplants/). The shared core (/core/*) and the
+// different paths (/osa/ and /moplants/). The shared core (/core/*) and the
 // tokens are root-absolute. Every script is is:inline so Astro never bundles,
 // hashes or hoists it.
 interface Props {
@@ -11,8 +12,10 @@ interface Props {
   colorScheme?: string | null;   // <meta name="color-scheme">; none when null
   scheme?: string | null;        // <html data-scheme>; "light" opts out of dark mode
   config: string;                // the game's game.json, serialised
+  og: { title: string; description: string; image: string };   // share preview (S13)
+  path: string;                  // the game's URL path, for og:url
 }
-const { title, description, appTitle, colorScheme, scheme, config } = Astro.props;
+const { title, description, appTitle, colorScheme, scheme, config, og, path } = Astro.props;
 // Safe inside a <script>: no "</script" or "<!--" can appear in the JSON.
 const configJson = config.replace(/</g, '\\u003c');
 ---
@@ -24,6 +27,7 @@ const configJson = config.replace(/</g, '\\u003c');
   <slot name="head-start" />
   <title>{title}</title>
   <meta name="description" content={description}>
+  <Share title={og.title} description={og.description} image={og.image} path={path} />
 
   <meta name="theme-color" content="#36492e">
   {colorScheme && <meta name="color-scheme" content={colorScheme}>}

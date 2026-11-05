@@ -1,0 +1,60 @@
+---
+// Shell for the hub and the four text pages: a top bar with only the
+// product or page name (the maker's mark lives in the footer, D3), the
+// page, then the shared footer. Everything is root-absolute because these
+// pages sit at the site root. Scripts are is:inline so nothing is bundled.
+import Share from '../components/Share.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  heading?: string;       // the bar's title; the hub shows the product name instead
+  home?: boolean;         // the hub: product name in the bar, no back link
+  path: string;           // for og:url
+  og?: { title: string; description: string; image: string };
+}
+const { title, description, heading, home = false, path, og } = Astro.props;
+const share = og ?? { title, description, image: '/og/hub.png' };
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <slot name="head-start" />
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <Share title={share.title} description={share.description} image={share.image} path={path} />
+
+  <meta name="theme-color" content="#36492e">
+  <meta name="color-scheme" content="light dark">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icons/icon-192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Species bingo">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <link rel="stylesheet" href="/core/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the content</a>
+
+  <header class="bar">
+    {!home && <a class="bar__back" href="/" aria-label="All games">&lsaquo;</a>}
+    <h1 class={`bar__title${home ? ' bar__title--site' : ''}`}>
+      {home ? <Fragment>Species <em>bingo.</em></Fragment> : heading}
+    </h1>
+  </header>
+
+  <main id="main" class="site">
+    <slot />
+  </main>
+
+  <SiteFooter />
+
+  <slot name="scripts" />
+</body>
+</html>
