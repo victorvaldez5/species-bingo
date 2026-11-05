@@ -33,13 +33,9 @@ Then open <http://localhost:8787/moplants/> in a browser.
 
 ## How to put it live
 
-Ask Victor to run:
-
-```bash
-npm run deploy
-```
-
-This checks both games first and only publishes if everything passes. After
+Once a change is merged into the main branch on GitHub, it goes live by
+itself. GitHub checks both games first and only publishes if everything
+passes. After
 that the game is at the site's address with `/moplants` on the end.
 
 If you used the Osa game on a phone before, the very first visit to /moplants
