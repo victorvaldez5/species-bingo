@@ -33,7 +33,10 @@ const redirect = `(function () {
   var q = location.search, p = new URLSearchParams(q);
   if (['s', 'c', 'm', 'p'].some(function (k) { return p.has(k); })) { location.replace('/osa/' + q); return; }
   var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
-  if (q === '' && standalone) location.replace('/osa/');
+  // Only a launch from an old Osa icon: it opens "/" with no query and no
+  // referrer. The in-app "All games" links also open "/" with no query, but
+  // they carry the game page as referrer, so the hub stays reachable.
+  if (q === '' && standalone && !document.referrer) location.replace('/osa/');
 })();`;
 
 const homeScript = `(function () {
