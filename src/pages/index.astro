@@ -3,7 +3,7 @@
 // `hub` block; a small inline script then adds the Continue row (from the
 // same storage keys the games write, via BingoKeys) and the offline tag.
 import Site from '../layouts/Site.astro';
-import { loadGames, photoStem } from '../lib/games';
+import { loadGames, stripStem } from '../lib/games';
 
 const games = loadGames();
 
@@ -12,7 +12,7 @@ const cards = games.map(({ game, items }) => {
   const strip = game.hub.strip.map((id: string) => {
     const item = byId.get(id);
     if (!item) throw new Error(`${game.id}: hub strip item "${id}" is not in the list`);
-    return photoStem(game, item);
+    return stripStem(game, item);
   });
   return { game, strip };
 });

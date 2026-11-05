@@ -24,7 +24,7 @@
    ============================================================= */
 
 const VERSION = 'v1';                                       // manual major
-const BUILD = '262b0b7f77';                                 // BUILD (rewritten by build-games)
+const BUILD = '844462493e';                                 // BUILD (rewritten by build-games)
 const PREFIX = 'species-bingo-root-';
 const CACHE = `${PREFIX}${VERSION}-${BUILD}`;
 
