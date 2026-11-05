@@ -49,7 +49,7 @@ games/                  one folder of settings per game, plus the list of games
 src/pages/              the two HTML pages (Astro): thin wrappers that pass a game.json to Game.astro
 src/components/Game.astro  renders one game from its game.json, inline config included
 src/layouts/Page.astro  head, masthead and noscript shared by every game
-worker/index.js         the thin Cloudflare Worker (page-view logging)
+worker/index.js         the thin Cloudflare Worker: redirects old Osa links, logs page views (see Routing)
 astro.config.mjs        static output, no bundling of CSS or JS
 dist/                   build output, git-ignored: this is what is deployed
 public/                 plain files, copied into dist/ unchanged
@@ -57,23 +57,32 @@ public/                 plain files, copied into dist/ unchanged
   core/bingo.js         the game: one script runs any game from its inline config
   core/styles.css       imports tokens.css, then the shared styles (light and dark)
   tokens.css            WFG design tokens (verbatim copy; only @font-face swapped)
-  sw.js                 Osa's hand-rolled service worker (precache list is generated)
-  manifest.webmanifest
-  species.json          all 48 species + safety callouts — the single source
-  _headers              Cloudflare cache rules (the /sw.js no-cache rule matters)
+  sw.js                 the ROOT (hub) service worker, scope / (precache list is generated)
+  manifest.webmanifest  the hub's manifest (start_url /?home)
+  icons/                hub icons (copies of Osa's for now)
+  og/                   1200x630 share images, made by `npm run og` and committed
+  osa/                  Osa's own files, served at /osa/
+    sw.js               Osa's hand-rolled offline worker, scope /osa/ (precache list is generated)
+    manifest.webmanifest  id and scope /osa/
+    species.json        all 48 species + safety callouts — the single source
+    img/                48 species x (webp + jpg), plus img/icons/
+  moplants/             Plant bingo's own files, served at /moplants/
+  _headers              Cloudflare cache rules (the no-cache rules on the workers matter)
+  _redirects            old /species.json and /img/* URLs -> /osa/
   fonts/                subsetted woff2
-  img/                  48 species x (webp + jpg), plus img/icons/
 scripts/
   optimize-images.mjs   sharp: raw -> webp + jpg, icons, placeholders
   build-fonts.mjs       subset-font: TTF -> Latin woff2
   build-games.mjs       for every game in games/games.json: validate its list,
                         write its CREDITS file, stamp its worker (Osa's also gets
-                        the precache list). Hashes dist/ pages, so run it via
-                        npm run build
+                        the precache list); also stamps the root worker with the
+                        hub and site pages found in dist/. Hashes dist/ pages, so
+                        run it via npm run build
+  build-og.mjs          sharp: the share images in public/og/ (local only, not in CI)
 img-raw/                git-ignored, raw photo downloads (never deployed)
 fonts-src/              git-ignored, brand variable TTFs (never deployed)
 wrangler.jsonc
-CREDITS.md              generated from species.json
+CREDITS.md              generated from osa/species.json
 ```
 
 `node_modules/`, `scripts/`, `img-raw/` and `fonts-src/` stay out of the upload
@@ -117,7 +126,7 @@ needs a versioned migration, not an edit.
 
 ---
 
-## Data-driven: `public/species.json`
+## Data-driven: `public/osa/species.json`
 
 Nothing about a species lives in the markup or JS. Each entry:
 
@@ -170,7 +179,7 @@ Nothing about a species lives in the markup or JS. Each entry:
 sourced from Wikimedia Commons (including Commons-hosted iNaturalist and Flickr
 uploads) under a public-domain, CC0, CC BY or CC BY-SA license, matched to the
 species by **binomial** and verified by eye against the field-ID notes, with extra
-care on the look-alike pairs. No placeholders remain (`public/img/.placeholders.json`
+care on the look-alike pairs. No placeholders remain (`public/osa/img/.placeholders.json`
 is empty). Per-photo attribution lives in each species' `credit` block in
 `species.json` and is regenerated into `CREDITS.md`.
 
@@ -214,32 +223,70 @@ TTFs there, or point `FONTS_SRC` at the design system's `fonts/` directory.
 
 ---
 
+## Routing
+
+| URL | What |
+|---|---|
+| `/` | the hub (game picker) |
+| `/osa/`, `/moplants/` | the two games |
+| `/how-to-play/`, `/about/`, `/credits/`, `/privacy/` | site pages |
+
+Osa used to live at `/`, so every link ever shared looks like `/?s=trip&c=2`
+(keys `s`, `c`, `m`, `p`). Those still work, twice over:
+
+- **At the edge**, `worker/index.js` (it runs only for `/` and `/index.html`)
+  answers any request carrying one of those keys with a `302` to `/osa/` plus
+  the original query string, untouched.
+- **In the browser**, the hub page does the same in an inline script before it
+  paints, which covers the offline and cached case, and also sends an installed
+  old Osa icon (launches at `/` in standalone mode) on to `/osa/`.
+- `public/_redirects` sends the old `/species.json` and `/img/*` to `/osa/...`
+  for any old cached page that is still online.
+
+The hub's manifest starts at `/?home`, which is deliberately not redirected, so
+an installed hub opens the hub.
+
+---
+
 ## Offline / PWA
 
-`sw.js` is hand-rolled (~40 lines of logic) because offline *is* the feature and
-must stay debuggable:
+There are three hand-rolled workers (kept readable because offline *is* the
+feature and must stay debuggable). Each stamps its own `BUILD` content hash via
+`build-games`, so any changed asset makes a new cache and the update lands;
+`VERSION` in each file is a manual bump for worker-logic changes.
 
-- Versioned cache `osa-bingo-<major>-<hash>`. The hash is a fingerprint of every
-  precached file, written by `build-games`, so any changed asset makes a new
-  cache and the update actually lands; `<major>` is a manual bump for worker-logic
-  changes. `activate` purges old caches.
-- On install it precaches the shell, `species.json`, all fonts, all icons and
-  **both** formats of all 48 photos (a missing font or format is a silently ugly
-  or broken card offline). The precache fetches with `cache: 'reload'` so it
-  always stores the current bytes from the network, never a stale copy the
-  browser is still holding for that URL (see the immutable trap below).
-- Strategy: **cache-first** for images/fonts/static assets, **stale-while-
-  revalidate** for the HTML shell and `species.json`.
-- `_headers` sets `/sw.js` to `no-cache`. This is not optional: Cloudflare
-  edge-caches service workers, and without it clients keep the old worker after
-  a deploy and never get new assets.
-- `_headers` must **not** mark `/img/*` or `/fonts/*` `immutable`. These
+- **`/osa/sw.js`** (scope `/osa/`, cache `osa-bingo-v3-<hash>`) is Osa's offline
+  worker. On install it precaches the page, `species.json`, its manifest and
+  icons, **both** formats of all 48 photos, and the shared core, tokens and
+  fonts as root-absolute URLs (a missing font or format is a silently ugly or
+  broken card offline). The precache fetches with `cache: 'reload'` so it always
+  stores the current bytes from the network, never a stale copy the browser is
+  still holding for that URL (see the immutable trap below). Strategy:
+  **cache-first** for images/fonts/static assets, **stale-while-revalidate** for
+  the page and `species.json`. `activate` purges older `osa-bingo-v3-*` caches.
+- **`/sw.js`** (scope `/`, cache `species-bingo-root-<major>-<hash>`) is the
+  hub's worker. It precaches the hub and the site pages that exist in `dist/`,
+  the shared styles, fonts, manifest and icons; pages are stale-while-revalidate
+  (falling back to the cached hub), other same-origin GETs are cache-first at
+  runtime (the hub's photo strip). It steps aside for anything under `/osa/` or
+  `/moplants/`, and for sub-requests made by those pages. This is the same URL
+  the old root-scoped Osa worker had, so installed copies update into it, and its
+  `activate` deletes the old `osa-bingo-v2-*` cache. The hub registers
+  `/osa/sw.js` itself when it sees a returning Osa player, so they keep offline
+  play after that cleanup.
+- **`/moplants/sw.js`** is Plant bingo's network-first worker (no precache).
+- `_headers` sets every worker (`/sw.js`, `/osa/sw.js`, `/moplants/sw.js`) to
+  `no-cache`. This is not optional: Cloudflare edge-caches service workers, and
+  without it clients keep the old worker after a deploy and never get new assets.
+- `_headers` must **not** mark `/osa/img/*` or `/fonts/*` `immutable`. These
   filenames are stable but their bytes are overwritten in place when a photo is
   swapped, and `immutable` tells the browser to reuse a cached response for a
   year with no revalidation — which stranded old placeholder photos in browsers
   that had visited an earlier deploy (a normal reload showed placeholders; only
   a hard reload, which bypasses the HTTP cache, showed the real photos). They use
   `no-cache` so an unchanged asset costs a 304 and a changed one is picked up.
+- Share images (`public/og/*.png`) are generated locally with `npm run og`
+  (needs sharp) and committed; CI does not run it.
 
 ### Verify offline for real (do this on a phone before the trip)
 

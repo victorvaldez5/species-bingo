@@ -9,10 +9,15 @@
        `list.expected`, required fields, photos on disk, credits),
      - writes the game's credits file (game.json `credits.file`),
      - stamps the game's service worker with a content-hash BUILD.
-   Osa's worker (public/sw.js) also gets its precache list
+   Osa's worker (public/osa/sw.js) also gets its precache list
    rewritten; Plant bingo's (public/moplants/sw.js) precaches
-   nothing, only its cache name changes. Workers are then copied
-   into dist/ so Cloudflare serves the same bytes.
+   nothing, only its cache name changes.
+   The hub's root worker (public/sw.js) gets its own precache list
+   from the hub and site pages that exist in dist/, plus the shared
+   CSS, fonts, manifest and icons. A page that is not built yet is
+   skipped with a warning, never a failure.
+   Workers are then copied into dist/ so Cloudflare serves the same
+   bytes.
 
    Exits non-zero on any structural failure. This is what stops you
    adding a species, forgetting its photo, and finding out while
@@ -42,9 +47,16 @@ const games = readJson(join(ROOT, 'games', 'games.json')).map(g => ({
   ...readJson(join(ROOT, 'games', g.id, 'game.json')),
 }));
 
-// A game's files live under public/<path>; Osa is at "/", so public/ itself.
-const appDir = g => join(PUBLIC, g.path.replace(/^\/|\/$/g, ''));
-const distDir = g => join(DIST, g.path.replace(/^\/|\/$/g, ''));
+// A game's page is built to dist/<path>; its own files (list, photos, manifest,
+// worker) live under public/<path>, e.g. Osa at "/osa/" is public/osa/. If the
+// list file is not there (a path that has not moved yet), fall back to
+// public/<id>/ so the script still finds the game's files.
+const pathDir = g => g.path.replace(/^\/|\/$/g, '');
+const distDir = g => join(DIST, pathDir(g));
+const appDir = g => {
+  const byPath = join(PUBLIC, pathDir(g));
+  return existsSync(join(byPath, g.list.file)) ? byPath : join(PUBLIC, g.id);
+};
 const placeholdersOf = dir => {
   const f = join(dir, 'img', '.placeholders.json');
   if (!existsSync(f)) return new Set();
@@ -161,7 +173,7 @@ function osaCredits(species, placeholders) {
 
 Every photo on this public site must carry its author, license and source.
 CC-BY and CC-BY-SA are attribution licenses, so this is a legal requirement,
-not a courtesy. This file is generated from \`public/species.json\` by
+not a courtesy. This file is generated from \`public/osa/species.json\` by
 \`scripts/build-games.mjs\` — edit the \`credit\` block there, not here.
 
 **Status: ${species.length - pending} of ${species.length} sourced, ${pending} pending.**
@@ -295,18 +307,21 @@ for (const { g, species, placeholders, dir } of results) {
   let build, precache = null;
 
   if (g.offline) {
-    // Osa: precache the shell, shared core, data, fonts, icons and every photo.
+    // Osa: precache the shell, data, fonts, icons and every photo. Its own
+    // files are relative to its folder; the shared core, tokens and fonts live
+    // at the site root, so they are root-absolute.
     const fontFiles = existsSync(join(PUBLIC, 'fonts'))
-      ? readdirSync(join(PUBLIC, 'fonts')).filter(f => /\.(woff2|woff|ttf)$/i.test(f)).sort().map(f => `fonts/${f}`)
+      ? readdirSync(join(PUBLIC, 'fonts')).filter(f => /\.(woff2|woff|ttf)$/i.test(f)).sort().map(f => `/fonts/${f}`)
       : [];
     const iconFiles = ['img/icons/icon-192.png', 'img/icons/icon-512.png', 'img/icons/icon-maskable-512.png']
       .filter(p => existsSync(join(dir, p)));
     const photoFiles = species.flatMap(s => [`${s.photo}.webp`, `${s.photo}.jpg`]).sort();
     precache = [
       './', 'index.html',
-      'core/deal.js', 'core/bingo.js', 'core/styles.css', 'tokens.css',
       g.list.file, 'manifest.webmanifest',
-      ...fontFiles, ...iconFiles, ...photoFiles,
+      ...iconFiles, ...photoFiles,
+      '/core/deal.js', '/core/bingo.js', '/core/styles.css', '/tokens.css',
+      ...fontFiles,
     ];
     if (fontFiles.length === 0) warn.push('no font files found in public/fonts — run `npm run fonts`.');
     if (iconFiles.length < 3) warn.push(`only ${iconFiles.length}/3 PWA icons present — run \`npm run images\`.`);
@@ -315,8 +330,8 @@ for (const { g, species, placeholders, dir } of results) {
     const h = createHash('sha256');
     for (const rel of precache) {
       if (rel === './') continue;
-      const p = rel === 'index.html' ? htmlFile : join(PUBLIC, rel);
-      if (existsSync(p)) h.update(rel).update(readFileSync(p));
+      const p = rel === 'index.html' ? htmlFile : rel.startsWith('/') ? join(PUBLIC, rel) : join(dir, rel);
+      if (p && existsSync(p)) h.update(rel).update(readFileSync(p));
     }
     build = h.digest('hex').slice(0, 10);
   } else {
@@ -341,10 +356,54 @@ for (const { g, species, placeholders, dir } of results) {
   if (changed) { writeFileSync(swFile, next); console.log(`  ✓ wrote ${swRel}`); }
   else console.log(`  ✓ ${swRel} already current`);
   // Ship the same bytes: dist/ is what Cloudflare serves.
-  const out = join(distDir(g), g.worker);
+  // The worker sits in the game's asset folder, so it ships there too.
+  const out = join(DIST, dir.slice(PUBLIC.length + 1), g.worker);
   mkdirSync(dirname(out), { recursive: true });
   copyFileSync(swFile, out);
   console.log(`  ✓ copied to ${out.slice(ROOT.length + 1)}`);
+}
+
+// ---- Root (hub) worker -------------------------------------
+// public/sw.js, scope "/". Precaches the hub and the site pages that exist in
+// dist/, plus the shared styles, fonts, manifest and icons. Hub photos are not
+// listed: the worker caches them at runtime.
+{
+  const SITE_PAGES = ['', 'how-to-play/', 'about/', 'credits/', 'privacy/'];
+  const pageFile = page => join(DIST, page, 'index.html');
+  const pages = [];
+  for (const page of SITE_PAGES) {
+    if (DRY || existsSync(pageFile(page))) pages.push(page);
+    else warn.push(`root worker: dist/${page}index.html not built yet, not precached.`);
+  }
+  const fontFiles = existsSync(join(PUBLIC, 'fonts'))
+    ? readdirSync(join(PUBLIC, 'fonts')).filter(f => /\.(woff2|woff|ttf)$/i.test(f)).sort().map(f => `fonts/${f}`)
+    : [];
+  const iconFiles = existsSync(join(PUBLIC, 'icons'))
+    ? readdirSync(join(PUBLIC, 'icons')).filter(f => /\.png$/i.test(f)).sort().map(f => `icons/${f}`)
+    : [];
+  const precache = [
+    ...pages.map(page => page || './'),
+    'core/styles.css', 'tokens.css', 'manifest.webmanifest',
+    ...iconFiles, ...fontFiles,
+  ];
+  const h = createHash('sha256');
+  for (const rel of precache) {
+    const p = rel === './' ? pageFile('') : rel.endsWith('/') ? pageFile(rel) : join(PUBLIC, rel);
+    if (existsSync(p)) h.update(rel).update(readFileSync(p));
+  }
+  const build = h.digest('hex').slice(0, 10);
+  const swFile = join(PUBLIC, 'sw.js');
+  const { next, changed } = stampWorker(swFile, build, precache);
+  console.log('\nRoot (hub) worker');
+  console.log(`  precache entries: ${precache.length}`);
+  console.log(`  build hash: ${build}${changed ? '' : ' (unchanged)'}`);
+  if (!DRY) {
+    if (changed) { writeFileSync(swFile, next); console.log('  ✓ wrote public/sw.js'); }
+    else console.log('  ✓ public/sw.js already current');
+    mkdirSync(DIST, { recursive: true });
+    copyFileSync(swFile, join(DIST, 'sw.js'));
+    console.log('  ✓ copied to dist/sw.js');
+  }
 }
 for (const w of warn) console.log(`  ! ${w}`);
 console.log(DRY ? '\n  ✓ dry-run, nothing written\n' : '');

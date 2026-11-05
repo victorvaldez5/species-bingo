@@ -1,8 +1,8 @@
 {
   // Cloudflare Workers Static Assets — assets-first, with a thin Worker.
   //
-  // ./dist (the Astro build: the two HTML pages plus a verbatim copy of
-  // ./public) is served straight from Cloudflare's edge, so the `_headers`
+  // ./dist (the Astro build: the hub, both games and the site pages, plus a
+  // verbatim copy of ./public) is served straight from Cloudflare's edge, so the `_headers`
   // cache rules stay in effect and asset delivery is free + fast. Run
   // `npm run build` before deploying. The Worker at ./worker/index.js runs ONLY for the app-open navigation (see
   // `run_worker_first`) so Workers Observability has a real invocation to log
@@ -15,9 +15,11 @@
     "directory": "./dist",
     "binding": "ASSETS",
     "not_found_handling": "404-page",
-    // Worker-first only for the navigation entry points; every other path
-    // (img/*, fonts/*, *.css, *.js, species.json, the manifest, sw.js) is
-    // served directly as a static asset with its `_headers` rules applied.
+    // Worker-first only for the front door, where old Osa links
+    // ("/?s=...") are redirected to /osa/ and each open is logged; every other
+    // path (/osa/, /moplants/, img/*, fonts/*, *.css, *.js, the manifests, the
+    // workers) is served directly as a static asset with its `_headers` rules
+    // applied.
     "run_worker_first": ["/", "/index.html"]
   },
   // Observability captures logs + traces from Worker invocations. Each app

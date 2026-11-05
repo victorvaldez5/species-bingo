@@ -5,11 +5,11 @@
    it on Cloudflare.
 
    - Reads raw downloads from img-raw/ (git-ignored, never deployed)
-   - Emits public/img/<id>.webp (q82, ~800px long edge) + .jpg fallback
+   - Emits public/osa/img/<id>.webp (q82, ~800px long edge) + .jpg fallback
    - Skips already-processed, unchanged files (cheap reruns)
    - For any species with no raw source yet, writes a clearly-marked
      BRANDED PLACEHOLDER so the app runs and precaches offline. Every
-     placeholder id is recorded in public/img/.placeholders.json so the
+     placeholder id is recorded in public/osa/img/.placeholders.json so the
      validator can tell a placeholder from a real, credited photo.
    - Renders the PWA icons (192 / 512 / maskable)
    - Prints the before/after photo payload — the photos are the budget
@@ -22,7 +22,8 @@ import { dirname, join } from 'node:path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC = join(ROOT, 'public');
-const IMG = join(PUBLIC, 'img');
+const OSA = join(PUBLIC, 'osa');
+const IMG = join(OSA, 'img');
 const ICONS = join(IMG, 'icons');
 const RAW = join(ROOT, 'img-raw');
 
@@ -49,7 +50,7 @@ const CAT_FG = {
   invertebrate: C.ink, plant: C.ink, marine: C.cream,
 };
 
-const species = JSON.parse(readFileSync(join(PUBLIC, 'species.json'), 'utf8')).species;
+const species = JSON.parse(readFileSync(join(OSA, 'species.json'), 'utf8')).species;
 
 function findRaw(id) {
   for (const ext of RAW_EXT) {

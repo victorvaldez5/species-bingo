@@ -126,7 +126,7 @@ if (process.argv.includes('--update')) {
     // card. If this fails, the data change needs the same care as a code
     // change: version it, then refresh the fixtures on purpose.
     const pick = list => list.map(({ id, category }) => ({ id, category: category ?? null }));
-    assert.deepEqual(pick(readJson('public/species.json').species), readJson('test/fixtures/osa-species.json'));
+    assert.deepEqual(pick(readJson('public/osa/species.json').species), readJson('test/fixtures/osa-species.json'));
     assert.deepEqual(pick(readJson('public/moplants/species.json').species), readJson('test/fixtures/moplants-species.json'));
   });
 }
