@@ -2,7 +2,7 @@
 # definition (the matrix below), so setup changes happen in one place.
 # Each command is also runnable locally; `npm run ci` runs lint, test
 # and the data checks together.
-# Deploys are Cloudflare Workers Builds' job, not this workflow's.
+# On main only, a fourth job deploys once all three pass.
 name: CI
 
 on:
@@ -13,10 +13,11 @@ on:
 permissions:
   contents: read
 
-# A new push to the same branch cancels the run it replaces.
+# A new push to a PR branch cancels the run it replaces. On main, runs
+# queue instead, so a deploy is never cut off halfway.
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   check:
@@ -51,3 +52,25 @@ jobs:
       # install steps.
       - run: npm ci --ignore-scripts
       - run: ${{ matrix.run }}
+
+  deploy:
+    needs: check
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Add protection rules (required reviewer, wait timer) to this
+    # environment in the repo settings if deploys should need approval.
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      # The checks above already ran, so call wrangler directly rather
+      # than `npm run deploy`, which would run them all again.
+      - run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
