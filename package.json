@@ -16,8 +16,8 @@
     "moplants:check": "node scripts/moplants-check.mjs --dry-run"
   },
   "devDependencies": {
-    "sharp": "^0.33.5",
-    "subset-font": "^2.4.0",
-    "wrangler": "^4.20.0"
+    "sharp": "^0.35.5",
+    "subset-font": "^2.9.0",
+    "wrangler": "^4.157.0"
   }
 }
