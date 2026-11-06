@@ -15,7 +15,7 @@
     ['Halloween Moon Crab', 'halloween-moon-crab'], ['Bare-throated Tiger-Heron', 'bare-throated-tiger-heron'],
   ].map(([n, id]) => [n, `../../public/osa/img/${id}.webp`]);
   const PLANTS = [
-    ['Pink Lemonade', 'pink-lemonade'], ['Bottlebrush Buckeye', 'bottlebrush-buckeye'], ['St. Johnswort', 'st-johnwort'],
+    ['Pink Lemonade', 'pink-lemonade'], ['Bottlebrush Buckeye', 'bottlebrush-buckeye'], ['Groundcover St. Johnswort', 'st-johnwort'],
     ['Pretty in Pink Epimedium', 'pretty-in-pink-epimedium'], ['Korean Feather Reed Grass', 'korean-feather-reed-grass'],
     ['New Jersey Tea', 'new-jersey-tea'], ['Girard Azalea', 'girard-azalea'], ['Hillside Black Beauty Bugbane', 'hillside-black-beauty-actaea'],
     ['Sugar Shack Buttonbush', 'sugar-shack-buttonbush'], ['Sweet Woodruff', 'sweet-woodruff'], ['Emerald Spreader Yew', 'emerald-spreader-yew'],

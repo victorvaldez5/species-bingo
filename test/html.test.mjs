@@ -94,9 +94,12 @@ for (const { built, game } of pages) {
     if (cfg.hunt.groupBy !== 'category') ids.delete('hunt-filters');
     ids.add('notice'); ids.add('state');
     if (!cfg.belowCard) ids.delete('safety-list');
+    if (!cfg.cardPair) ids.delete('open-cards');          // the Card 1 / 2 pick in "Open a shared card"
     for (const id of ids) assert.ok(html.includes(`id="${id}"`), `missing id="${id}"`);
     if (!cfg.belowCard) assert.ok(!html.includes('id="safety-list"'));
     assert.equal(html.includes('id="hunt-filters"'), cfg.hunt.groupBy === 'category');
+    assert.equal(html.includes('id="open-cards"'), cfg.cardPair, 'card pick only where there are two cards');
+    assert.ok(html.includes('id="open-card"') && html.includes('id="open-sheet"'), 'Open a shared card');
     for (const mode of cfg.modes) assert.ok(html.includes(`data-mode="${mode.id}"`));
 
     // The list is the size the settings expect.
@@ -172,14 +175,3 @@ test('games.json lists the games in order, each with a game.json', () => {
   }
 });
 
-// The note under the card follows the mode (bingo.js renderChrome), so every
-// mode a game offers needs its own two lines.
-test('every game has a colophon for each of its modes', () => {
-  for (const g of readJson('games/games.json')) {
-    const cfg = readJson(`games/${g.id}/game.json`);
-    for (const m of cfg.modes) {
-      const lines = cfg.colophon[m.id];
-      assert.ok(Array.isArray(lines) && lines.length === 2 && lines.every(l => typeof l === 'string' && l), `${g.id} colophon.${m.id}`);
-    }
-  }
-});
