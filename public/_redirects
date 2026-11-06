@@ -1,0 +1,4 @@
+# Osa moved from the site root to /osa/. An old cached Osa page that is still
+# online asks for its data and photos at the old URLs; send them to the new ones.
+/species.json /osa/species.json 301
+/img/* /osa/img/:splat 301

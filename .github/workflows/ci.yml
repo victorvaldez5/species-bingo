@@ -1,7 +1,7 @@
 # Three checks on every PR: build, lint, test. They share one job
 # definition (the matrix below), so setup changes happen in one place.
-# Each command is also runnable locally; `npm run ci` runs lint, test
-# and the data checks together.
+# Each command is also runnable locally; `npm run ci` runs lint, build,
+# test and the data checks together.
 # On main only, a fourth job deploys once all three pass.
 name: CI
 
@@ -28,20 +28,23 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Validate both games' data, regenerate sw.js and the CREDITS
-          # files, and fail if they differ from what was committed. A
-          # stale precache list is how an asset quietly goes missing
-          # offline.
+          # Build the site (Astro pages), validate both games' data, then
+          # regenerate the three service workers (root, Osa, Plant bingo) and
+          # the CREDITS files, and fail if they differ from what was committed.
+          # A stale precache list is how an asset quietly goes missing offline.
           - name: build
             run: |
-              npm run manifest
-              npm run moplants:credits
-              git diff --exit-code -- public/sw.js CREDITS.md CREDITS-moplants.md
+              npm run build
+              git diff --exit-code -- public/sw.js public/osa/sw.js public/moplants/sw.js CREDITS.md CREDITS-moplants.md
           - name: lint
             run: npm run lint
-          # Pins the seeded deal so shared links keep showing the same card.
+          # Pins the seeded deal so shared links keep showing the same card,
+          # and checks the built pages are structurally sound (so it
+          # needs dist/ first).
           - name: test
-            run: npm test
+            run: |
+              npm run build
+              npm test
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -68,8 +71,10 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      # The checks above already ran, so call wrangler directly rather
-      # than `npm run deploy`, which would run them all again.
+      # The checks above already ran, so build and call wrangler directly
+      # rather than `npm run deploy`, which would run them all again.
+      # wrangler serves ./dist, so the build must come first.
+      - run: npm run build
       - run: npx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

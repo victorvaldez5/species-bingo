@@ -1,6 +1,6 @@
 # MO plants bingo: credits
 
-Generated from `public/moplants/species.json` by `scripts/moplants-check.mjs`.
+Generated from `public/moplants/species.json` by `scripts/build-games.mjs`.
 Edit the `credit` and `sources` blocks there, not here.
 
 ## Photos

@@ -1,0 +1,68 @@
+---
+import Share from '../components/Share.astro';
+import { themeScript } from '../lib/theme';
+// Shared page skeleton for every game: head, the compact top bar (back to the
+// hub, game name, Actions) and noscript. A game's own files (manifest, icons,
+// species.json, images, sw.js) are relative URLs because the games sit at
+// different paths (/osa/ and /moplants/). The shared core (/core/*) and the
+// tokens are root-absolute. Every script is is:inline so Astro never bundles,
+// hashes or hoists it.
+interface Props {
+  title: string;
+  description: string;
+  appTitle: string;
+  accent: string;                // --game-accent: the line under the top bar (decoration only)
+  config: string;                // the game's game.json, serialised
+  og: { title: string; description: string; image: string };   // share preview (S13)
+  path: string;                  // the game's URL path, for og:url
+}
+const { title, description, appTitle, accent, config, og, path } = Astro.props;
+// Safe inside a <script>: no "</script" or "<!--" can appear in the JSON.
+const configJson = config.replace(/</g, '\\u003c');
+---
+<!doctype html>
+<html lang="en" style={`--game-accent: ${accent}`}>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <slot name="head-start" />
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <Share title={og.title} description={og.description} image={og.image} path={path} />
+
+  <meta name="theme-color" content="#36492e">
+  <meta name="color-scheme" content="light dark">
+  <script is:inline set:html={themeScript}></script>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="img/icons/icon-192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="img/icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content={appTitle}>
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <link rel="stylesheet" href="/core/styles.css">
+  <noscript><style>.status, #grid { display: none; }</style></noscript>
+</head>
+<body>
+  <a class="skip-link" href="#play">Skip to the game</a>
+
+  <header class="bar bar--game">
+    <a class="bar__back" href="/" aria-label="All games">&lsaquo;</a>
+    <h1 class="bar__title"><slot name="title" /></h1>
+    <slot name="bar-end" />
+  </header>
+
+  <slot />
+
+  <noscript>
+    <p style="padding:24px;max-width:36rem;margin:0 auto;font-family:system-ui">
+      <slot name="noscript" />
+    </p>
+  </noscript>
+
+  <script is:inline type="application/json" id="game-config" set:html={configJson}></script>
+  <script is:inline src="/core/deal.js"></script>
+  <script is:inline src="/core/bingo.js"></script>
+</body>
+</html>

@@ -6,19 +6,20 @@
   "description": "Offline-capable wildlife bingo for the Osa Peninsula, Costa Rica.",
   "scripts": {
     "images": "node scripts/optimize-images.mjs",
-    "fonts": "node scripts/build-fonts.mjs",
-    "manifest": "node scripts/build-manifest.mjs",
-    "check": "node scripts/build-manifest.mjs --dry-run",
-    "dev": "wrangler dev",
-    "deploy": "npm run ci && wrangler deploy",
     "moplants:images": "node scripts/moplants-images.mjs",
-    "moplants:credits": "node scripts/moplants-check.mjs",
-    "moplants:check": "node scripts/moplants-check.mjs --dry-run",
+    "fonts": "node scripts/build-fonts.mjs",
+    "og": "node scripts/build-og.mjs",
+    "check": "node scripts/build-games.mjs --dry-run",
+    "build": "astro build && node scripts/build-games.mjs",
+    "dev": "npm run build && wrangler dev",
+    "dev:astro": "astro dev",
+    "deploy": "npm run ci && wrangler deploy",
     "test": "node --test 'test/*.test.mjs'",
     "lint": "oxlint --deny-warnings",
-    "ci": "npm run lint && npm test && npm run check && npm run moplants:check"
+    "ci": "npm run lint && npm run build && npm test && npm run check"
   },
   "devDependencies": {
+    "astro": "7.4.2",
     "oxlint": "^1.91.0",
     "sharp": "^0.35.5",
     "subset-font": "^2.9.0",

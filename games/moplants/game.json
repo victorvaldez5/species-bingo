@@ -1,0 +1,113 @@
+{
+  "id": "moplants",
+  "path": "/moplants/",
+  "title": "Plant Bingo",
+  "appTitle": "Plant Bingo",
+  "description": "A 25-plant garden bingo card. Tap a plant when you spot it, and get five in a row.",
+
+  "hub": {
+    "name": "Plant bingo",
+    "place": "A garden list",
+    "accent": "var(--sage)",
+    "strip": ["cardinal-flower", "pink-lemonade", "storm-cloud-amsonia", "bottlebrush-buckeye", "lipstick-hosta"],
+    "tag": "online"
+  },
+  "howto": {
+    "steps": [
+      "Tap a plant when you spot it. Five in a row wins.",
+      "Tap the i on a plant for a fun fact and where it comes from."
+    ],
+    "offlineLine": null
+  },
+  "og": {
+    "title": "Plant bingo · Species bingo",
+    "description": "Join my card. Tap to play.",
+    "image": "/og/moplants.png"
+  },
+  "offline": false,
+  "worker": "sw.js",
+
+  "list": { "file": "species.json", "expected": 25, "noun": "plants" },
+  "freeCentre": false,
+  "cardPair": false,
+  "dealStrategy": "shuffle-all",
+  "raceStrategy": "shuffle-split",
+  "raceSize": 10,
+
+  "modes": [
+    { "id": "bingo", "label": "Bingo" },
+    { "id": "hunt", "label": "Hunt" },
+    { "id": "race", "label": "Race" }
+  ],
+  "patterns": [
+    { "key": "line", "label": "Any line", "shape": "line", "hint": "Fill any row, column or diagonal." },
+    { "key": "corners", "label": "Four corners", "shape": "corners", "targets": true,
+      "hint": "Spot the four plants in the corners.", "win": "All four corners. Bingo." },
+    { "key": "x", "label": "Big X", "shape": "x", "targets": true,
+      "hint": "Fill both diagonals.", "win": "The X is complete. Bingo." },
+    { "key": "blackout", "label": "Blackout", "shape": "blackout",
+      "hint": "Spot all 25 plants on the card.", "win": "Full card. Every plant on the board." }
+  ],
+
+  "storage": { "ns": "moplants-bingo:v2", "marks": "ids", "legacyLast": true },
+  "urlCard": "race",
+
+  "gridPhoto": { "variant": "thumb", "dir": "img/thumb/" },
+  "labelField": "short",
+
+  "hunt": {
+    "groupBy": null,
+    "sortBy": "name",
+    "comment": "Hunt: every plant, one checklist across cards",
+    "subtitle": { "field": "botanical", "optional": false, "plainFlag": "various" },
+    "categoryLabels": {}
+  },
+
+  "detail": {
+    "ariaLabel": "Plant detail",
+    "comment": "Plant detail sheet",
+    "order": ["category", "name", "binomial", "callout", "note", "fact"],
+    "category": "kind",
+    "binomial": { "field": "botanical", "hideEmpty": false, "plainFlag": "various", "altField": "alt_botanical" },
+    "note": { "field": "fun_fact" },
+    "fact": { "sources": true, "extraLink": { "field": "plantfinder", "label": "Missouri Botanical Garden Plant Finder" } },
+    "callout": { "id": "detail-flag", "field": "uncertain", "prefix": "Name not confirmed. " },
+    "creditNote": "photo_note"
+  },
+
+  "belowCard": null,
+
+  "credits": {
+    "summary": "Photo credits & sources",
+    "intro": "Every image ships with its author, license and source, and every fun fact with where it came from. Full list also in",
+    "file": "CREDITS-moplants.md",
+    "pending": "no-author",
+    "withSources": true
+  },
+
+  "colophon": {
+    "bingo": ["All 25 plants on every card, in a fresh order each time. Needs a connection.", "Same seed, same card, on any phone."],
+    "hunt": ["Every plant on one list. Needs a connection.", "Your list stays on this phone."],
+    "race": ["Each racer chases {raceSize} different plants. Needs a connection.", "Same seed, same race, on any phone."]
+  },
+  "noscript": "This bingo card needs JavaScript to deal the plants and remember what you have spotted.",
+
+  "words": {
+    "bingo": { "stamp": "bingo.", "line": "That is a line. Bingo.", "lines": "{n} full lines now.", "full": "Full card. Every plant on the board." },
+    "hunt": { "stamp": "found.", "done": "All {n} {noun} on the list." },
+    "race": { "stamp": "done.", "done": "All {raceSize} found at {time}. Compare times: the earlier finish wins." }
+  },
+
+  "messages": {
+    "huntEmpty": "Tap each plant the first time you see it. This list carries across cards.",
+    "resetCardBody": "This clears {what} on this card. You cannot undo it."
+  },
+
+  "errors": {
+    "offline": {
+      "title": "This game needs a connection",
+      "body": "Osa wildlife bingo works offline.",
+      "alt": { "label": "Go to Osa", "href": "/osa/" }
+    }
+  }
+}

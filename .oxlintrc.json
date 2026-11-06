@@ -25,10 +25,10 @@
     { "files": ["public/**/*.js"], "env": { "browser": true } },
     { "files": ["public/sw.js"], "env": { "serviceworker": true } },
     {
-      "files": ["scripts/**", "test/**", "src/**"],
+      "files": ["scripts/**", "test/**", "worker/**", "astro.config.mjs"],
       "env": { "node": true },
       "rules": { "no-console": "off" }
     }
   ],
-  "ignorePatterns": ["node_modules/**", ".wrangler/**", ".claude/**"]
+  "ignorePatterns": ["node_modules/**", ".wrangler/**", ".claude/**", "dist/**", "**/*.astro", ".astro/**"]
 }
