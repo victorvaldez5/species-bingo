@@ -48,15 +48,11 @@ const games = readJson(join(ROOT, 'games', 'games.json')).map(g => ({
 }));
 
 // A game's page is built to dist/<path>; its own files (list, photos, manifest,
-// worker) live under public/<path>, e.g. Osa at "/osa/" is public/osa/. If the
-// list file is not there (a path that has not moved yet), fall back to
-// public/<id>/ so the script still finds the game's files.
+// worker) live under public/<path>, e.g. Osa at "/osa/" is public/osa/. A
+// wrong `path` fails loudly when the list file is read below.
 const pathDir = g => g.path.replace(/^\/|\/$/g, '');
 const distDir = g => join(DIST, pathDir(g));
-const appDir = g => {
-  const byPath = join(PUBLIC, pathDir(g));
-  return existsSync(join(byPath, g.list.file)) ? byPath : join(PUBLIC, g.id);
-};
+const appDir = g => join(PUBLIC, pathDir(g));
 const placeholdersOf = dir => {
   const f = join(dir, 'img', '.placeholders.json');
   if (!existsSync(f)) return new Set();
@@ -254,12 +250,19 @@ function stampWorker(file, build, precache) {
   return { next, changed: next !== sw };
 }
 
-const hashFiles = (files, htmlFile) => {
+// A worker's BUILD: a hash of each file's name and bytes, in order, skipping
+// files not on disk. Any change to what a worker serves yields a new cache.
+const fingerprint = entries => {
   const hash = createHash('sha256');
-  for (const { rel, path } of files) if (existsSync(path)) hash.update(rel).update(readFileSync(path));
-  if (htmlFile) hash.update('html').update(readFileSync(htmlFile));
+  for (const { rel, path } of entries) if (path && existsSync(path)) hash.update(rel).update(readFileSync(path));
   return hash.digest('hex').slice(0, 10);
 };
+
+// The shared fonts in public/fonts, as URLs under `prefix` ("/" from a game's
+// folder, "" from the root worker's).
+const fontUrls = prefix => existsSync(join(PUBLIC, 'fonts'))
+  ? readdirSync(join(PUBLIC, 'fonts')).filter(f => /\.(woff2|woff|ttf)$/i.test(f)).sort().map(f => `${prefix}fonts/${f}`)
+  : [];
 
 // ---- Run ---------------------------------------------------
 console.log(`\nGames · ${DRY ? 'check' : 'build'}`);
@@ -311,9 +314,7 @@ for (const { g, species, placeholders, dir } of results) {
     // Osa: precache the shell, data, fonts, icons and every photo. Its own
     // files are relative to its folder; the shared core, tokens and fonts live
     // at the site root, so they are root-absolute.
-    const fontFiles = existsSync(join(PUBLIC, 'fonts'))
-      ? readdirSync(join(PUBLIC, 'fonts')).filter(f => /\.(woff2|woff|ttf)$/i.test(f)).sort().map(f => `/fonts/${f}`)
-      : [];
+    const fontFiles = fontUrls('/');
     const iconFiles = ['img/icons/icon-192.png', 'img/icons/icon-512.png', 'img/icons/icon-maskable-512.png']
       .filter(p => existsSync(join(dir, p)));
     const photoFiles = species.flatMap(s => [`${s.photo}.webp`, `${s.photo}.jpg`]).sort();
@@ -328,18 +329,15 @@ for (const { g, species, placeholders, dir } of results) {
     if (iconFiles.length < 3) warn.push(`only ${iconFiles.length}/3 PWA icons present — run \`npm run images\`.`);
     // Fingerprint of every precached file's bytes (HTML from the Astro build),
     // so any asset change yields a new cache name and the update lands.
-    const h = createHash('sha256');
-    for (const rel of precache) {
-      const p = rel === './' ? htmlFile : rel.startsWith('/') ? join(PUBLIC, rel) : join(dir, rel);
-      if (p && existsSync(p)) h.update(rel).update(readFileSync(p));
-    }
-    build = h.digest('hex').slice(0, 10);
+    build = fingerprint(precache.map(rel => ({
+      rel, path: rel === './' ? htmlFile : rel.startsWith('/') ? join(PUBLIC, rel) : join(dir, rel),
+    })));
   } else {
     // Plant bingo: no precache, so the hash covers what the page loads:
     // its page, data, manifest and the shared files.
     const shared = ['core/deal.js', 'core/bingo.js', 'core/styles.css', 'tokens.css'].map(rel => ({ rel, path: join(PUBLIC, rel) }));
     const own = [g.list.file, 'manifest.webmanifest'].map(rel => ({ rel: `${g.id}/${rel}`, path: join(dir, rel) }));
-    build = hashFiles([...shared, ...own], html);
+    build = fingerprint([...shared, ...own, { rel: 'html', path: html }]);
   }
 
   const { next, changed } = stampWorker(swFile, build, precache);
@@ -376,9 +374,7 @@ for (const { g, species, placeholders, dir } of results) {
     if (DRY || existsSync(pageFile(page))) pages.push(page);
     else warn.push(`root worker: dist/${page}index.html not built yet, not precached.`);
   }
-  const fontFiles = existsSync(join(PUBLIC, 'fonts'))
-    ? readdirSync(join(PUBLIC, 'fonts')).filter(f => /\.(woff2|woff|ttf)$/i.test(f)).sort().map(f => `fonts/${f}`)
-    : [];
+  const fontFiles = fontUrls('');
   const iconFiles = existsSync(join(PUBLIC, 'icons'))
     ? readdirSync(join(PUBLIC, 'icons')).filter(f => /\.png$/i.test(f)).sort().map(f => `icons/${f}`)
     : [];
@@ -394,12 +390,9 @@ for (const { g, species, placeholders, dir } of results) {
     'core/deal.js', 'core/styles.css', 'tokens.css', 'manifest.webmanifest',
     ...iconFiles, ...fontFiles, ...stripFiles,
   ];
-  const h = createHash('sha256');
-  for (const rel of precache) {
-    const p = rel === './' ? pageFile('') : rel.endsWith('/') ? pageFile(rel) : join(PUBLIC, rel);
-    if (existsSync(p)) h.update(rel).update(readFileSync(p));
-  }
-  const build = h.digest('hex').slice(0, 10);
+  const build = fingerprint(precache.map(rel => ({
+    rel, path: rel === './' ? pageFile('') : rel.endsWith('/') ? pageFile(rel) : join(PUBLIC, rel),
+  })));
   const swFile = join(PUBLIC, 'sw.js');
   const { next, changed } = stampWorker(swFile, build, precache);
   console.log('\nRoot (hub) worker');
