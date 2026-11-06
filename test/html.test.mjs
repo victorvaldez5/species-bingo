@@ -147,6 +147,12 @@ test('The hub redirects old Osa links before paint and links every game', t => {
     assert.ok(html.includes(`href="${cfg.path}"`), `hub card for ${g.id}`);
     assert.ok(html.includes(cfg.hub.name) && html.includes(cfg.hub.place.replace(/&/g, '&amp;')));
     assert.equal(cfg.hub.strip.length, 5);
+    // The strip loads thumbs, not the 800px photos the grid uses.
+    for (const id of cfg.hub.strip) {
+      const stem = `${cfg.path}img/thumb/${id}`;
+      assert.ok(html.includes(`srcset="${stem}.webp"`) && html.includes(`src="${stem}.jpg"`), `${g.id} strip thumb ${id}`);
+      for (const ext of ['webp', 'jpg']) assert.ok(existsSync(path(`public${stem}.${ext}`)), `public${stem}.${ext}`);
+    }
   }
   assert.ok(head.includes('species-bingo:theme') && head.indexOf('species-bingo:theme') < head.indexOf('rel="stylesheet"'), 'theme script before first paint');
   assert.equal((html.slice(html.indexOf("</head>")).match(/data-theme-cycle/g) || []).length, 1, 'one theme button in the footer');

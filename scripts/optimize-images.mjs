@@ -6,6 +6,10 @@
 
    - Reads raw downloads from img-raw/ (git-ignored, never deployed)
    - Emits public/osa/img/<id>.webp (q82, ~800px long edge) + .jpg fallback
+   - Emits public/osa/img/thumb/<id>.webp + .jpg (300x300, cropped to the
+     subject, the same size as Plant bingo's) for the hub's photo strip.
+     The game grid keeps the full photos, which its worker precaches; the
+     thumbs are not precached (the root worker caches them at runtime)
    - Skips already-processed, unchanged files (cheap reruns)
    - For any species with no raw source yet, writes a clearly-marked
      BRANDED PLACEHOLDER so the app runs and precaches offline. Every
@@ -25,14 +29,16 @@ const PUBLIC = join(ROOT, 'public');
 const OSA = join(PUBLIC, 'osa');
 const IMG = join(OSA, 'img');
 const ICONS = join(IMG, 'icons');
+const THUMBS = join(IMG, 'thumb');
 const RAW = join(ROOT, 'img-raw');
 
 const LONG_EDGE = 800;
+const THUMB_W = 300, THUMB_H = 300;   // matches scripts/moplants-images.mjs
 const WEBP_Q = 82;
 const JPEG_Q = 82;
 const RAW_EXT = ['jpg', 'jpeg', 'png', 'webp', 'tif', 'tiff', 'JPG', 'JPEG', 'PNG', 'WEBP'];
 
-for (const d of [IMG, ICONS]) if (!existsSync(d)) mkdirSync(d, { recursive: true });
+for (const d of [IMG, ICONS, THUMBS]) if (!existsSync(d)) mkdirSync(d, { recursive: true });
 
 // Brand tokens (mirrored from tokens.css) for the placeholders/icons.
 const C = {
@@ -60,6 +66,7 @@ function findRaw(id) {
   return null;
 }
 const outputs = id => ({ webp: join(IMG, `${id}.webp`), jpg: join(IMG, `${id}.jpg`) });
+const thumbOutputs = id => ({ webp: join(THUMBS, `${id}.webp`), jpg: join(THUMBS, `${id}.jpg`) });
 function upToDate(srcPath, id) {
   const { webp, jpg } = outputs(id);
   if (!existsSync(webp) || !existsSync(jpg)) return false;
@@ -105,6 +112,31 @@ async function emit(imageBuf, id, isSvg) {
   return statSync(webp).size + statSync(jpg).size;
 }
 
+// Square hub-strip thumb. 'attention' crops toward the most salient region
+// (the animal, not the canopy). Its own up-to-date check, so adding thumbs
+// never rewrites the committed full-size photos.
+async function emitThumb(imageBuf, id, isSvg) {
+  const { webp, jpg } = thumbOutputs(id);
+  const thumb = sharp(imageBuf).rotate().resize(THUMB_W, THUMB_H, { fit: 'cover', position: isSvg ? 'centre' : 'attention' });
+  await thumb.clone().webp({ quality: WEBP_Q }).toFile(webp);
+  await thumb.clone().jpeg({ quality: JPEG_Q, mozjpeg: true }).toFile(jpg);
+  return statSync(webp).size + statSync(jpg).size;
+}
+// Thumb source: the raw photo when there is one, else the committed 800px
+// jpg (a clone without img-raw/), else the placeholder art.
+async function stripThumb(s, src) {
+  const { webp, jpg } = thumbOutputs(s.id);
+  const full = outputs(s.id).jpg;
+  const from = src || (existsSync(full) ? full : null);
+  const fresh = existsSync(webp) && existsSync(jpg) &&
+    (!from || (statSync(webp).mtimeMs >= statSync(from).mtimeMs && statSync(jpg).mtimeMs >= statSync(from).mtimeMs));
+  if (fresh) return { made: false, bytes: statSync(webp).size + statSync(jpg).size };
+  const bytes = from
+    ? await emitThumb(readFileSync(from), s.id, false)
+    : await emitThumb(placeholderSvg(s.name, s.category), s.id, true);
+  return { made: true, bytes };
+}
+
 // ---- PWA icons ---------------------------------------------
 function iconSvg(size, maskable) {
   // full-bleed forest ground; leaf sprig + sun dot centered.
@@ -133,10 +165,14 @@ async function makeIcon(name, size, maskable) {
 const kb = n => (n / 1024).toFixed(1) + ' KB';
 async function run() {
   let realCount = 0, phCount = 0, skipped = 0, rawTotal = 0, outTotal = 0;
+  let thumbCount = 0, thumbTotal = 0;
   const placeholders = [];
 
   for (const s of species) {
     const src = findRaw(s.id);
+    const t = await stripThumb(s, src);
+    thumbTotal += t.bytes;
+    if (t.made) thumbCount++;
     if (src) {
       if (upToDate(src, s.id)) {
         skipped++;
@@ -170,8 +206,9 @@ async function run() {
   console.log(`  placeholders remaining: ${placeholders.length}/${species.length}  (need real, licensed photos)`);
   if (rawTotal) console.log(`  raw in:  ${kb(rawTotal)}`);
   console.log(`  photo payload out (webp + jpg, all ${species.length}): ${kb(outTotal)}`);
+  console.log(`  hub thumbs (webp + jpg, ${THUMB_W}x${THUMB_H}): ${kb(thumbTotal)}   made: ${thumbCount}`);
   console.log(`  icons: ${kb(iconTotal)}`);
-  console.log(`  total shipped image bytes: ${kb(outTotal + iconTotal)}\n`);
+  console.log(`  total shipped image bytes: ${kb(outTotal + thumbTotal + iconTotal)}\n`);
   if (placeholders.length) {
     console.log(`  Next: drop a licensed photo named <id>.jpg (or .png/.webp) into img-raw/`);
     console.log(`  and rerun. Fill that species' credit block before it ships.\n`);

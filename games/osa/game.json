@@ -10,6 +10,7 @@
     "place": "Corcovado & Golfo Dulce, Costa Rica",
     "accent": "var(--sun)",
     "strip": ["scarlet-macaw", "blue-morpho-butterfly", "red-eyed-tree-frog", "three-toed-sloth", "chestnut-mandibled-toucan"],
+    "stripDir": "img/thumb/",
     "tag": "offline"
   },
   "howto": {
