@@ -6,6 +6,7 @@ import { defineConfig } from 'astro/config';
 // not change. Scripts in pages are is:inline so nothing is bundled.
 export default defineConfig({
   output: 'static',
+  site: process.env.SITE_URL || undefined,   // og:url and absolute og:image only when set
   trailingSlash: 'ignore',
   compressHTML: false,
   build: {

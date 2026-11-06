@@ -13,7 +13,7 @@
     ['Neotropical River Otter', 'neotropical-river-otter'], ['Mangrove Tree Crab', 'mangrove-tree-crab'],
     ['Ringed Kingfisher', 'ringed-kingfisher'], ['Northern Jacana', 'northern-jacana'],
     ['Halloween Moon Crab', 'halloween-moon-crab'], ['Bare-throated Tiger-Heron', 'bare-throated-tiger-heron'],
-  ].map(([n, id]) => [n, `../../public/img/${id}.webp`]);
+  ].map(([n, id]) => [n, `../../public/osa/img/${id}.webp`]);
   const PLANTS = [
     ['Pink Lemonade', 'pink-lemonade'], ['Bottlebrush Buckeye', 'bottlebrush-buckeye'], ['St. Johnswort', 'st-johnwort'],
     ['Pretty in Pink Epimedium', 'pretty-in-pink-epimedium'], ['Korean Feather Reed Grass', 'korean-feather-reed-grass'],

@@ -1,0 +1,63 @@
+---
+import Site from '../../layouts/Site.astro';
+import { loadGames, shapeCells } from '../../lib/games';
+
+const games = loadGames();
+const first = games[0].game;
+
+// One picture per win pattern across the games, from each game's patterns.
+// The wording is about the shape, so it reads true for every game.
+const shapeText: Record<string, string> = {
+  line: 'Fill any row, column or diagonal.',
+  corners: 'Fill the four corner cells.',
+  x: 'Fill both diagonals.',
+  blackout: 'Fill every cell on the card.',
+};
+const patterns: { key: string; label: string; shape: string; text: string }[] = [];
+for (const { game } of games) {
+  for (const p of game.patterns) {
+    if (!patterns.some(x => x.shape === p.shape)) patterns.push({ key: p.key, label: p.label, shape: p.shape, text: shapeText[p.shape] ?? p.hint });
+  }
+}
+const withFree = first.freeCentre;
+const cells = Array.from({ length: 25 }, (_, i) => i);
+const raceWords = first.raceSize === 10 ? 'ten' : String(first.raceSize);
+---
+<Site title="How to play · Species bingo" description="Bingo, Hunt and Race, the win patterns, playing with a friend, and using it offline." heading="How to play" path="/how-to-play/">
+  <div class="site__body prose">
+    <h2>Three ways to play</h2>
+    <p><strong>Bingo.</strong> A 5 by 5 card. Tap a cell when you spot it. Tap the pattern button under the modes to pick a win pattern.</p>
+    <p><strong>Hunt.</strong> Every item on the list as one checklist, for the whole trip. Tap each one the first time you see it.</p>
+    <p><strong>Race.</strong> You each get {raceWords} targets from the same link. First to find all of theirs wins. Compare finish times.</p>
+
+    <h2>Win patterns</h2>
+    <ul class="shapes">
+      {patterns.map(p => {
+        const on = shapeCells(p.shape);
+        return (
+        <li class="shape">
+          <span class="shape__mini" aria-hidden="true">
+            {cells.map(i => <i class={withFree && i === 12 ? 'fr' : on.has(i) ? 'on' : ''}></i>)}
+          </span>
+          <span><strong>{p.label}</strong><span>{p.text}</span></span>
+        </li>
+        );
+      })}
+    </ul>
+    {withFree && <p class="prose__note">The orange <em>free</em> cell in the middle always counts.</p>}
+
+    <h2>Playing with a friend</h2>
+    <p>Open Actions and tap Copy link, then send it. Your friend opens the same seed. In a game with a card pair you hold card 1 and they hold card 2, and nothing is on both cards. In a race, each of you gets different targets.</p>
+    <p>Tap Card or Racer to flip between the two. Each card keeps its own marks.</p>
+
+    <h2>Use it offline</h2>
+    <p>Osa wildlife bingo works with no signal once it has loaded. Open it once on wifi, then add it to your home screen.</p>
+    <p><strong>iPhone.</strong> In Safari, tap Share, then Add to Home Screen.</p>
+    <p><strong>Android.</strong> In Chrome, tap the menu (three dots), then Install app or Add to Home screen.</p>
+    <p>Plant bingo needs a connection.</p>
+
+    <h2>New card and Reset</h2>
+    <p><strong>New card</strong> deals a fresh card with a new link. The old card keeps its marks, and Back brings it back.</p>
+    <p><strong>Reset marks</strong> clears the marks on the card or list you are looking at. It asks first, and you cannot undo it.</p>
+  </div>
+</Site>

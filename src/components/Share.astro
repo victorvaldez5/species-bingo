@@ -1,0 +1,24 @@
+---
+// Share-preview tags (S13). og:url and an absolute og:image need a known
+// site address, so they appear only when astro.config `site` is set
+// (SITE_URL at build). Without it og:image is root-relative.
+interface Props {
+  title: string;
+  description: string;
+  image: string;   // root-absolute path, e.g. /og/osa.png
+  path: string;    // this page's own path, for og:url
+}
+const { title, description, image, path } = Astro.props;
+const site = Astro.site;
+const imageUrl = site ? new URL(image, site).href : image;
+const pageUrl = site ? new URL(path, site).href : null;
+---
+<meta property="og:type" content="website">
+<meta property="og:title" content={title}>
+<meta property="og:description" content={description}>
+<meta property="og:image" content={imageUrl}>
+{pageUrl && <meta property="og:url" content={pageUrl}>}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content={title}>
+<meta name="twitter:description" content={description}>
+<meta name="twitter:image" content={imageUrl}>

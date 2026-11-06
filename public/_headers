@@ -2,13 +2,44 @@
 # running the old worker after a deploy and never receive updated assets.
 # This file overrides Cloudflare's defaults (up to 100 rules allowed).
 
+# The hub (root) worker and manifest.
 /sw.js
   Cache-Control: no-cache
 
 /manifest.webmanifest
   Cache-Control: no-cache
 
-/species.json
+# The hub's icons keep stable filenames.
+/icons/*
+  Cache-Control: no-cache
+
+# Osa's own worker, data and manifest (under /osa/ since step 3).
+/osa/sw.js
+  Cache-Control: no-cache
+
+/osa/species.json
+  Cache-Control: no-cache
+
+/osa/manifest.webmanifest
+  Cache-Control: no-cache
+
+# Plant bingo's own worker and data, same reasons as above. Its worker is
+# network-first, but it can only stay that way if it is itself re-fetched.
+/moplants/sw.js
+  Cache-Control: no-cache
+
+/moplants/species.json
+  Cache-Control: no-cache
+
+/moplants/manifest.webmanifest
+  Cache-Control: no-cache
+
+# The shared game code and tokens keep stable filenames and are loaded by both
+# games, so a deploy must reach clients on the next load, not after a year.
+/core/*
+  Cache-Control: no-cache
+
+/tokens.css
   Cache-Control: no-cache
 
 # Photos and fonts keep a stable filename across content changes (img/<id>.webp
@@ -17,7 +48,10 @@
 # which is exactly what stranded old placeholder photos in browsers after the
 # real-photo deploy. Revalidate instead — Cloudflare's ETag makes an unchanged
 # asset a cheap 304, and offline is served from the service-worker cache anyway.
-/img/*
+/osa/img/*
+  Cache-Control: no-cache
+
+/moplants/img/*
   Cache-Control: no-cache
 
 /fonts/*
