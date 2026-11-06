@@ -195,57 +195,63 @@ button { font: inherit; color: inherit; }
   font-family: var(--font-mono); text-transform: none; letter-spacing: .04em;
   color: var(--accent-text);
 }
-/* Game switch: Bingo / Hunt / Race */
+/* Game switch: Bingo / Hunt / Race. A quiet segmented control: the
+   chosen game gets a soft tint of the brand colour, the others are text. */
 .modes {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
-  padding: 4px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+  padding: 3px;
   background: var(--surface);
-  border: 1px solid var(--surface-deep);
   border-radius: var(--r-pill);
 }
 .modes__btn {
   appearance: none; cursor: pointer;
-  min-height: 44px; padding: 0 var(--sp-3);
+  min-height: 36px; padding: 0 var(--sp-3);
   border: 0; border-radius: var(--r-pill);
-  background: none; color: var(--brand-text);
+  background: none; color: var(--text-soft);
   font-family: var(--font-body); font-weight: 700; font-size: var(--t-small);
 }
 /* No transition: the page can open straight into Hunt or Race, and a fade
-   would flash Bingo as selected on load. --brand-text / --bg is forest on
-   cream in light, sage on canopy in dark. */
-.modes__btn[aria-pressed="true"] { background: var(--brand-text); color: var(--bg); }
-/* Hunt category filters */
-.chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
-.chip {
+   would flash Bingo as selected on load. */
+.modes__btn[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--brand-text) 16%, var(--surface));
+  color: var(--brand-text);
+}
+
+/* Soft chips: the status row's buttons and the Hunt filters share one look,
+   a light fill with no outline, so the photos stay the loudest thing. */
+.chip, .status__btn {
   appearance: none; cursor: pointer;
-  min-height: 44px; padding: 0 var(--sp-3);
-  border: 1.5px solid var(--ghost-line); border-radius: var(--r-pill);
-  background: transparent; color: var(--brand-text);
-  font-family: var(--font-body); font-weight: 700; font-size: var(--t-caption);
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 34px; padding: 0 var(--sp-3);
+  border: 0; border-radius: var(--r-pill);
+  background: var(--surface); color: var(--brand-text);
+  font-family: var(--font-body); font-weight: 700; font-size: 13px;
   white-space: nowrap;
 }
-.chip[aria-pressed="true"] { background: var(--terracotta-deep); border-color: var(--terracotta-deep); color: var(--cream); }
-.chip__count { margin-left: 6px; font-family: var(--font-mono); font-weight: 400; }
+@media (hover: hover) { .chip:hover, .status__btn:hover { background: var(--surface-deep); } }
+
+/* Hunt category filters: one row that scrolls sideways on a phone. */
+.chips {
+  display: flex; gap: 6px;
+  overflow-x: auto; scrollbar-width: none;
+  margin: 0 calc(-1 * var(--sp-4)); padding: 2px var(--sp-4);
+}
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex: none; }
+.chip[aria-pressed="true"] { background: var(--brand-text); color: var(--bg); }
+.chip__count { font-family: var(--font-mono); font-weight: 400; font-size: 12px; opacity: .7; }
 
 /* The status row (S2): progress, pattern, card. One line on a phone. */
 .status {
-  display: flex; align-items: center; flex-wrap: wrap; gap: var(--sp-2);
-  min-height: 44px;
+  display: flex; align-items: center; gap: 6px;
+  min-height: 34px;
 }
 .status__prog {
-  margin: 0; margin-right: var(--sp-1);
-  font-family: var(--font-mono); font-size: var(--t-small);
-  color: var(--text);
+  margin: 0 var(--sp-1) 0 2px;
+  font-family: var(--font-mono); font-size: var(--t-small); font-weight: 700;
+  color: var(--brand-text);
 }
-.status__btn {
-  appearance: none; cursor: pointer;
-  min-height: 44px; padding: 0 var(--sp-3);
-  border: 1.5px solid var(--ghost-line); border-radius: var(--r-pill);
-  background: transparent; color: var(--brand-text);
-  font-family: var(--font-body); font-weight: 700; font-size: var(--t-small);
-  white-space: nowrap;
-}
-.status__btn:hover { background: var(--surface); }
+.status__btn span[aria-hidden] { font-size: 11px; opacity: .65; }
 .status__btn--push { margin-left: auto; }
 
 /* One quiet line above the card or the list (private browsing, empty Hunt). */
@@ -808,29 +814,26 @@ button { font: inherit; color: inherit; }
 
 /* ---- Shared footer (every page, D3) ------------------------- */
 .site-foot {
-  max-width: 560px; margin: var(--sp-5) auto 0;
-  padding: var(--sp-4) var(--sp-4) calc(var(--sp-6) + env(safe-area-inset-bottom));
+  max-width: 560px; margin: var(--sp-4) auto 0;
+  padding: var(--sp-2) var(--sp-4) calc(var(--sp-4) + env(safe-area-inset-bottom));
   border-top: 1px solid var(--surface-deep);
   text-align: center;
 }
-.site-foot__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 var(--sp-3); }
-.site-foot__links a {
-  display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--sp-1);
-  font-size: var(--t-small); font-weight: 700; color: var(--brand-text); text-decoration: none;
+/* One quiet row: the text pages, then the theme button. */
+.site-foot__links { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0 var(--sp-1); }
+.site-foot__links a, .theme-btn {
+  display: inline-flex; align-items: center; min-height: 32px; padding: 0 var(--sp-2);
+  font-family: var(--font-body); font-size: 13px; font-weight: 700; color: var(--text-soft); text-decoration: none;
 }
-.site-foot__links a:hover { text-decoration: underline; }
-/* The theme button: one small text button that steps Auto, Light, Dark. */
-.theme-btn {
-  appearance: none; cursor: pointer;
-  min-height: 44px; padding: 0 var(--sp-2);
-  border: 0; background: none;
-  font-family: var(--font-body); font-size: var(--t-small); font-weight: 700; color: var(--text-mute);
+/* The theme button steps Auto, Light, Dark (src/lib/theme.ts). */
+.theme-btn { appearance: none; cursor: pointer; gap: .3em; border: 0; background: none; color: var(--text-mute); }   /* gap: flex drops the space before the label */
+@media (hover: hover) {
+  .site-foot__links a:hover, .theme-btn:hover { color: var(--brand-text); text-decoration: underline; }
 }
-@media (hover: hover) { .theme-btn:hover { color: var(--brand-text); text-decoration: underline; } }
 .site-foot__maker {
-  margin: var(--sp-3) 0 0;
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
-  font-size: 11px; color: var(--text-mute); letter-spacing: .08em; text-transform: uppercase;
+  margin: var(--sp-2) 0 0;
+  display: flex; align-items: center; justify-content: center; gap: var(--sp-2);
+  font-size: 10px; color: var(--text-mute); letter-spacing: .08em; text-transform: uppercase;
 }
 .site-foot .wnd-logo { --logo-fg: var(--brand-text); --logo-ac: var(--accent-text); }
 

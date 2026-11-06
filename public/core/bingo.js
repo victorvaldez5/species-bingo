@@ -245,6 +245,10 @@
     $('#new-card').hidden = mode === 'hunt';
     $('#new-card').textContent = mode === 'race' ? 'New race' : 'New card';
     $('#copy-link .menu__share-head').textContent = mode === 'race' ? 'Copy link to this race' : 'Copy link to this card';
+    // The note under the card describes the mode on screen.
+    const [main, seed] = (cfg.colophon[mode] || cfg.colophon.bingo).map(t => t.replace('{raceSize}', RACE_SIZE));
+    $('#colophon-main').textContent = main;
+    $('#colophon-seed').textContent = seed;
   }
 
   function hideBanner() {

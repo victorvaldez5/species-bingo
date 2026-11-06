@@ -97,10 +97,11 @@
     "withSources": false
   },
 
-  "colophon": [
-    "Works offline. Add to your home screen on wifi, then it runs in airplane mode.",
-    "Same seed, same pair of cards, on any phone."
-  ],
+  "colophon": {
+    "bingo": ["Works offline. Add to your home screen on wifi, then it runs in airplane mode.", "Same seed, same pair of cards, on any phone."],
+    "hunt": ["Works offline. Add to your home screen on wifi, then it runs in airplane mode.", "One list for the whole trip, kept on this phone."],
+    "race": ["Works offline. Add to your home screen on wifi, then it runs in airplane mode.", "Same seed, same race, on any phone."]
+  },
   "noscript": "This bingo card needs JavaScript to deal the species and remember what you have spotted. It runs entirely in your browser and works offline once loaded.",
 
   "words": {
