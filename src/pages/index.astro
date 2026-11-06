@@ -1,5 +1,172 @@
 ---
-import Game from '../components/Game.astro';
-import osa from '../../games/osa/game.json';
+// The front door (S1). Static HTML from games/games.json and each game's
+// `hub` block; a small inline script then adds the Continue row (from the
+// same storage keys the games write, via BingoKeys) and the offline tag.
+import Site from '../layouts/Site.astro';
+import { loadGames, stripStem } from '../lib/games';
+
+const games = loadGames();
+
+const cards = games.map(({ game, items }) => {
+  const byId = new Map(items.map(i => [i.id, i]));
+  const strip = game.hub.strip.map((id: string) => {
+    const item = byId.get(id);
+    if (!item) throw new Error(`${game.id}: hub strip item "${id}" is not in the list`);
+    return stripStem(game, item);
+  });
+  return { game, strip };
+});
+
+// What the script needs to read a game's saved state and build its link.
+const hubConfig = games.map(({ game }) => ({
+  id: game.id, path: game.path, name: game.hub.name,
+  storage: game.storage, urlCard: game.urlCard, modes: game.modes, patterns: game.patterns,
+  freeCentre: game.freeCentre, cardPair: game.cardPair, raceSize: game.raceSize,
+  expected: game.list.expected, offline: game.offline,
+}));
+const hubJson = JSON.stringify(hubConfig).replace(/</g, '\\u003c');
+
+// Old Osa links and launches from the installed Osa icon arrive here (D2).
+// This runs in <head> before first paint, so nothing flashes, and it also
+// works from the cache when offline.
+const redirect = `(function () {
+  var q = location.search, p = new URLSearchParams(q);
+  if (['s', 'c', 'm', 'p'].some(function (k) { return p.has(k); })) { location.replace('/osa/' + q); return; }
+  var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  // Only a launch from an old Osa icon: it opens "/" with no query and no
+  // referrer. The in-app "All games" links also open "/" with no query, but
+  // they carry the game page as referrer, so the hub stays reachable.
+  if (q === '' && standalone && !document.referrer) location.replace('/osa/');
+})();`;
+
+const homeScript = `(function () {
+  var games = JSON.parse(document.getElementById('hub-games').textContent);
+  var Keys = globalThis.BingoKeys;
+  var store = null;
+  try { store = localStorage; } catch (e) { /* blocked storage: no Continue row */ }
+
+  function count(key) {
+    try {
+      var arr = JSON.parse(store.getItem(key) || '[]');
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+
+  // One Continue row per game that has a saved card. The link is built by
+  // the game's own URL rules, so it opens exactly the card the game left.
+  function resume(cfg) {
+    if (!store || !Keys) return null;
+    var rec;
+    try { rec = Keys.parseLast(cfg, store.getItem(Keys.last(cfg))); } catch (e) { return null; }
+    if (!rec || typeof rec.seed !== 'string' || !rec.seed.trim()) return null;
+    var card = rec.card === 2 ? 2 : 1;
+    var mode = cfg.modes.some(function (m) { return m.id === rec.mode; }) ? rec.mode : cfg.modes[0].id;
+    var pattern = cfg.patterns.some(function (x) { return x.key === rec.pattern; }) ? rec.pattern : cfg.patterns[0].key;
+    var state = { seed: rec.seed, card: card, mode: mode, pattern: pattern };
+    var done, total;
+    if (mode === 'hunt') { done = count(Keys.hunt(cfg)).length; total = cfg.expected; }
+    else if (mode === 'race') { done = count(Keys.race(cfg, rec.seed, card)).length; total = cfg.raceSize; }
+    else {
+      var marks = count(Keys.marks(cfg, rec.seed, card));
+      if (cfg.freeCentre && cfg.storage.marks === 'cells') marks = marks.filter(function (i) { return i !== 12; });
+      done = marks.length; total = 25 - (cfg.freeCentre ? 1 : 0);
+    }
+    var who = cfg.cardPair ? ' \\u00b7 card ' + card : mode === 'race' ? ' \\u00b7 racer ' + card : '';
+    return {
+      href: cfg.path + '?' + Keys.writeQuery(cfg, '', state),
+      text: cfg.name + who + ' \\u00b7 ' + done + ' of ' + total
+    };
+  }
+
+  var rows = document.getElementById('continue');
+  games.forEach(function (cfg) {
+    var r = resume(cfg);
+    if (!r) return;
+    var a = document.createElement('a');
+    a.className = 'continue';
+    a.href = r.href;
+    var wrap = document.createElement('span');
+    var small = document.createElement('small');
+    small.textContent = 'Continue';
+    var strong = document.createElement('strong');
+    strong.textContent = r.text;
+    wrap.appendChild(small); wrap.appendChild(strong);
+    var chev = document.createElement('span');
+    chev.setAttribute('aria-hidden', 'true');
+    chev.textContent = '\\u203a';
+    a.appendChild(wrap); a.appendChild(chev);
+    rows.appendChild(a);
+  });
+  rows.hidden = !rows.children.length;
+
+  // "Ready offline" once the Osa worker has cached the game; until then the
+  // card says it works offline. Never blocks the link.
+  if (window.caches && caches.keys) {
+    caches.keys().then(function (keys) {
+      if (!keys.some(function (k) { return k.indexOf('osa-bingo-v3-') === 0; })) return;
+      document.querySelectorAll('[data-offline-tag]').forEach(function (el) { el.textContent = 'Ready offline'; });
+    }).catch(function () { /* leave the default */ });
+  }
+
+  // The root worker caches the hub and the text pages. A returning Osa
+  // player also gets the Osa worker under its own scope, so offline play
+  // survives the root worker retiring the old root-scoped cache.
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function () { /* still works online */ });
+      var returning = false;
+      try {
+        for (var i = 0; store && i < store.length; i++) {
+          if (store.key(i).indexOf('osa-bingo:v1:') === 0) { returning = true; break; }
+        }
+      } catch (e) { /* ignore */ }
+      if (returning) navigator.serviceWorker.register('/osa/sw.js', { scope: '/osa/' }).catch(function () { /* ignore */ });
+    });
+  }
+})();`;
 ---
-<Game game={osa} />
+<Site
+  title="Species bingo"
+  description="Spot it, tap it, get five in a row. Wildlife and plant bingo for trips and gardens. Share a link and a friend plays the other card."
+  home
+  path="/"
+>
+  <Fragment slot="head-start">
+    <script is:inline set:html={redirect}></script>
+  </Fragment>
+
+  <div class="site__body">
+    <p class="pitch">Bingo for the things you see outside. <em>Spot it, tap it</em>, get five in a row. Share the link and a friend plays the other card.</p>
+
+    <div id="continue" class="continues" aria-label="Pick up where you left off" hidden></div>
+
+    {cards.map(({ game, strip }) => (
+    <a class="gcard" style={`--game-accent: ${game.hub.accent}`} href={game.path}>
+      <div class="gcard__strip" aria-hidden="true">
+        {strip.map((stem: string) => (
+        <picture>
+          <source srcset={`${stem}.webp`} type="image/webp">
+          <img src={`${stem}.jpg`} alt="" decoding="async" draggable="false">
+        </picture>
+        ))}
+      </div>
+      <div class="gcard__body">
+        <p class="gcard__name">{game.hub.name}</p>
+        <p class="gcard__place">{game.hub.place}</p>
+        <div class="gcard__tags">
+          <span class="tag">{game.list.expected} {game.list.noun}</span>
+          {game.hub.tag === 'offline'
+            ? <span class="tag tag--ok" data-offline-tag>Works offline</span>
+            : <span class="tag">Needs signal</span>}
+        </div>
+      </div>
+    </a>
+    ))}
+  </div>
+
+  <Fragment slot="scripts">
+    <script is:inline type="application/json" id="hub-games" set:html={hubJson}></script>
+    <script is:inline src="/core/deal.js"></script>
+    <script is:inline set:html={homeScript}></script>
+  </Fragment>
+</Site>

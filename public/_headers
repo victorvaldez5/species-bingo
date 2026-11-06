@@ -2,10 +2,25 @@
 # running the old worker after a deploy and never receive updated assets.
 # This file overrides Cloudflare's defaults (up to 100 rules allowed).
 
+# The hub (root) worker and manifest.
 /sw.js
   Cache-Control: no-cache
 
 /manifest.webmanifest
+  Cache-Control: no-cache
+
+# The hub's icons keep stable filenames.
+/icons/*
+  Cache-Control: no-cache
+
+# Osa's own worker, data and manifest (under /osa/ since step 3).
+/osa/sw.js
+  Cache-Control: no-cache
+
+/osa/species.json
+  Cache-Control: no-cache
+
+/osa/manifest.webmanifest
   Cache-Control: no-cache
 
 # Plant bingo's own worker and data, same reasons as above. Its worker is
@@ -27,16 +42,13 @@
 /tokens.css
   Cache-Control: no-cache
 
-/species.json
-  Cache-Control: no-cache
-
 # Photos and fonts keep a stable filename across content changes (img/<id>.webp
 # is overwritten in place when a photo is swapped), so they must NOT be
 # `immutable`: an immutable response is cached for a year with no revalidation,
 # which is exactly what stranded old placeholder photos in browsers after the
 # real-photo deploy. Revalidate instead — Cloudflare's ETag makes an unchanged
 # asset a cheap 304, and offline is served from the service-worker cache anyway.
-/img/*
+/osa/img/*
   Cache-Control: no-cache
 
 /moplants/img/*

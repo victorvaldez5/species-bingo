@@ -8,6 +8,7 @@
     "images": "node scripts/optimize-images.mjs",
     "moplants:images": "node scripts/moplants-images.mjs",
     "fonts": "node scripts/build-fonts.mjs",
+    "og": "node scripts/build-og.mjs",
     "check": "node scripts/build-games.mjs --dry-run",
     "build": "astro build && node scripts/build-games.mjs",
     "dev": "npm run build && wrangler dev",

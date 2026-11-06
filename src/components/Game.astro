@@ -3,17 +3,22 @@
 // page as <script id="game-config"> for /core/bingo.js to read, so the markup
 // here and the script agree on every id, label and rule.
 import Page from '../layouts/Page.astro';
+import SiteFooter from './SiteFooter.astro';
+import { shapeCells } from '../lib/games';
 
 interface Props {
   game: Record<string, any>;
 }
 const { game } = Astro.props;
-const { detail, belowCard, credits, controlsLayout, hunt } = game;
+const { detail, belowCard, hunt, howto } = game;
 const totalCells = 25 - (game.freeCentre ? 1 : 0);
-// The racer flip shows from the start only when the game has a card pair.
-const cardToggleText = game.cardPair ? 'Card 1 of 2' : 'Racer 1 of 2';
-// Moplants' scope: only a page that is not at the site root needs the
-// trailing-slash redirect, because its relative URLs need the slash.
+// The name in the top bar: the last word in the italic accent, the way the
+// hub's own title does ("Osa wildlife <em>bingo</em>").
+const nameWords: string[] = game.hub.name.split(' ');
+const nameLast = nameWords.pop();
+const nameLead = nameWords.join(' ');
+// Every game lives in its own folder, and its relative URLs need the
+// trailing slash, so /osa and /moplants redirect to the slash form.
 const slug = game.path.replace(/\//g, '');
 const redirect = `if (/\\/${slug}$/.test(location.pathname)) location.replace(location.pathname + '/' + location.search + location.hash);`;
 
@@ -29,15 +34,29 @@ const sheetLine = {
 };
 const sheetHtml = detail.order.map((key: string) => sheetLine[key as keyof typeof sheetLine]()).join('\n      ');
 
-// The mode switch and pattern chips: one button per line, as written by hand.
+// The mode switch: one button per enabled mode, as written by hand.
 const modesHtml = game.modes
   .map((m: { id: string; label: string }, i: number) =>
     `<button class="modes__btn" type="button" data-mode="${m.id}" aria-pressed="${i === 0}">${m.label}</button>`)
   .join('\n        ');
+
+// The pattern sheet (S3): a mini 5x5 picture of each shape plus its hint.
+// The free centre, when the game has one, is drawn in terracotta.
+const cells = Array.from({ length: 25 }, (_, i) => i);
 const patternsHtml = game.patterns
-  .map((p: { key: string; label: string }, i: number) =>
-    `<button class="chip" type="button" data-pattern="${p.key}" aria-pressed="${i === 0}">${p.label}</button>`)
-  .join('\n        ');
+  .map((p: { key: string; label: string; shape: string; hint: string }, i: number) => {
+    const on = shapeCells(p.shape);
+    const mini = cells.map(c => `<i${game.freeCentre && c === 12 ? ' class="fr"' : on.has(c) ? ' class="on"' : ''}></i>`).join('');
+    return `<button class="pat" type="button" data-pattern="${p.key}" aria-pressed="${i === 0}">` +
+      `<span class="pat__mini" aria-hidden="true">${mini}</span>` +
+      `<span class="pat__text"><strong>${p.label}</strong><span>${p.hint}</span></span></button>`;
+  })
+  .join('\n      ');
+
+// Skeleton squares in the card's exact shape (S7), until the list arrives.
+const skeletonHtml = cells
+  .map(c => `<div class="cell cell--skel${game.freeCentre && c === 12 ? ' cell--skel-free' : ''}"></div>`)
+  .join('');
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 // The optional section under the card (Osa: "Keep your distance").
@@ -55,9 +74,10 @@ const belowHtml = belowCard && `<!-- Safety callouts -->
   title={game.title}
   description={game.description}
   appTitle={game.appTitle}
-  colorScheme={game.metaColorScheme}
-  scheme={game.scheme}
+  accent={game.hub.accent}
   config={JSON.stringify(game)}
+  og={game.og}
+  path={game.path}
 >
   {slug && (
     <Fragment slot="head-start">
@@ -65,69 +85,73 @@ const belowHtml = belowCard && `<!-- Safety callouts -->
     <script is:inline set:html={redirect}></script>
     </Fragment>
   )}
-  <Fragment slot="title">{game.masthead.lead}{" "}<em>{game.masthead.em}</em></Fragment>
+  <Fragment slot="title">{nameLead}{" "}<em>{nameLast}</em></Fragment>
+
+  <details class="menu" id="actions-menu" slot="bar-end">
+    <summary class="menu__trigger bar__menu">Actions</summary>
+    <div class="menu__panel" aria-label="Card actions">
+      <button id="copy-link" class="menu__share" type="button">
+        <span class="menu__share-head">Copy link to this card</span>
+        <span class="menu__share-sub">seed <span id="seed">----</span></span>
+      </button>
+      <button id="new-card" class="btn menu__item" type="button">New card</button>
+      <button id="reset" class="btn btn--ghost menu__item" type="button">Reset marks</button>
+      <hr class="menu__rule">
+      <button id="howto-open" class="menu__link" type="button">How to play</button>
+      <button type="button" class="menu__link menu__theme" data-theme-cycle>Theme: <span data-theme-label>Auto</span></button>
+    </div>
+  </details>
 
   <main class="wrap">
-    <!-- Control strip -->
-    <section class="controls" aria-label="Card controls">
+    <!-- Control strip: the modes, then one status row -->
+    <section id="controls" class="controls" aria-label="Card controls">
       <div id="modes" class="modes" role="group" aria-label="Game">
         <Fragment set:html={modesHtml} />
       </div>
-      <div id="patterns" class="chips" role="group" aria-label="Win pattern">
-        <Fragment set:html={patternsHtml} />
+      <div class="status">
+        <p id="progress" class="status__prog" aria-live="polite">Dealing your card&hellip;</p>
+        <button id="pattern-open" class="status__btn" type="button" aria-haspopup="dialog" hidden></button>
+        <button id="card-toggle" class="status__btn status__btn--push" type="button" aria-live="polite" hidden></button>
       </div>
-      <p id="mode-hint" class="mode-hint" aria-live="polite"></p>
-      {controlsLayout === 'flat' ? (
-      <div class="controls__meta">
-        <button id="card-toggle" class="btn btn--ghost" type="button" aria-live="polite">{cardToggleText}</button>
-        <details class="menu" id="actions-menu">
-          <summary class="menu__trigger btn btn--ghost">Actions</summary>
-          <div class="menu__panel" aria-label="Card actions">
-            <button id="copy-link" class="menu__share" type="button">
-              <span class="menu__share-head">Copy link to this card</span>
-              <span class="menu__share-sub">seed <span id="seed">----</span></span>
-            </button>
-            <button id="new-card" class="btn menu__item" type="button">New card</button>
-            <button id="reset" class="btn btn--ghost menu__item" type="button">Reset marks</button>
-          </div>
-        </details>
+    </section>
+
+    <!-- One line above the card: private browsing (S8). Play continues. -->
+    <p id="notice" class="note-line" role="status" hidden>Private browsing: your marks won&rsquo;t be kept after you close this tab.</p>
+
+    <!-- How to play (first visit; Actions brings it back) -->
+    <section id="howto" class="howto" aria-labelledby="howto-title" hidden>
+      <h2 id="howto-title" class="howto__title">How to play</h2>
+      <ol class="howto__steps">
+        {howto.steps.map((step: string, i: number) => (
+        <li><b aria-hidden="true">{i + 1}</b><span>{step}</span></li>
+        ))}
+      </ol>
+      {howto.offlineLine && <p class="howto__off">{howto.offlineLine}</p>}
+      <div class="howto__actions">
+        <a class="btn btn--ghost" href="/how-to-play/">More</a>
+        <button id="howto-dismiss" class="btn" type="button">Got it</button>
       </div>
-      <p id="progress" class="progress" aria-live="polite">0 of {totalCells} spotted</p>
-      ) : (
-      <div class="controls__meta">
-        <p id="progress" class="progress" aria-live="polite">0 of {totalCells} spotted</p>
-        <div class="controls__actions">
-          <button id="card-toggle" class="btn btn--ghost" type="button" aria-live="polite" hidden>{cardToggleText}</button>
-          <details class="menu" id="actions-menu">
-            <summary class="menu__trigger btn btn--ghost">Actions</summary>
-            <div class="menu__panel" aria-label="Card actions">
-              <button id="copy-link" class="menu__share" type="button">
-                <span class="menu__share-head">Copy link to this card</span>
-                <span class="menu__share-sub">seed <span id="seed">----</span></span>
-              </button>
-              <button id="new-card" class="btn menu__item" type="button">New card</button>
-              <button id="reset" class="btn btn--ghost menu__item" type="button">Reset marks</button>
-            </div>
-          </details>
-        </div>
-      </div>
-      )}
     </section>
 
     <!-- Bingo announcement -->
     <p id="bingo-banner" class="bingo-banner" role="status" aria-live="polite" hidden></p>
 
+    <!-- Load and error cards (S7, S8), in the card's place -->
+    <section id="state" class="state" aria-live="polite" hidden></section>
+
     <div id="play" tabindex="-1">
-      <!-- The card -->
+      <!-- The card: skeleton squares until bingo.js deals it -->
       <section
         id="grid"
         class="grid"
-        aria-label="Bingo card, 5 by 5">
-        <!-- cells injected by bingo.js -->
+        aria-label="Bingo card, 5 by 5"
+        aria-busy="true">
+        <Fragment set:html={skeletonHtml} />
       </section>
 
       <Fragment set:html={`<!-- ${hunt.comment} -->`} />
       <section id="hunt" class="hunt" aria-label="Hunt list" hidden>
+        <p id="hunt-empty" class="note-line" hidden>{game.messages.huntEmpty}</p>
         {hunt.groupBy === 'category' ? (
         <div id="hunt-filters" class="chips" role="group" aria-label="Show category"></div>
         <div id="hunt-list"></div>
@@ -140,22 +164,15 @@ const belowHtml = belowCard && `<!-- Safety callouts -->
       <section id="race" class="grid grid--race" aria-label="Race targets" hidden></section>
     </div>
 
-    {belowHtml && <Fragment set:html={belowHtml} />}<!-- Credits -->
-    <section class="credits">
-      <details id="credits">
-        <summary class="credits__summary">{credits.summary}</summary>
-        <p class="credits__intro">{credits.intro} <code>{credits.file}</code>.</p>
-        <ul id="credits-list" class="credits__list">
-          <!-- injected by bingo.js -->
-        </ul>
-      </details>
-    </section>
-
+    {belowHtml && <Fragment set:html={belowHtml} />}
+    {/* Per mode (game.json colophon.<mode>); bingo.js swaps it on a mode change. */}
     <footer class="colophon">
-      <p>{game.colophon[0]}</p>
-      <p class="colophon__seed">{game.colophon[1]}</p>
+      <p id="colophon-main">{game.colophon.bingo[0].replace('{raceSize}', game.raceSize)}</p>
+      <p id="colophon-seed" class="colophon__seed">{game.colophon.bingo[1].replace('{raceSize}', game.raceSize)}</p>
     </footer>
   </main>
+
+  <SiteFooter game={game.id} />
 
   <Fragment set:html={`<!-- ${detail.comment} -->`} />
   <dialog id="detail" class="sheet" aria-label={detail.ariaLabel}>
@@ -166,9 +183,23 @@ const belowHtml = belowCard && `<!-- Safety callouts -->
       <picture id="detail-picture" class="sheet__photo">
         <img id="detail-img" alt="" decoding="async">
       </picture>
+      <p id="detail-nophoto" class="sheet__nophoto" hidden>Photo coming soon.</p>
       <Fragment set:html={sheetHtml} />
       <button id="detail-mark" class="btn btn--mark" type="button">Mark as spotted</button>
       <p id="detail-credit" class="sheet__credit"></p>
+    </div>
+  </dialog>
+
+  <Fragment set:html={`<!-- Win pattern sheet -->`} />
+  <dialog id="pattern-sheet" class="sheet sheet--patterns" aria-labelledby="pattern-title">
+    <form method="dialog" class="sheet__form">
+      <button class="sheet__close" value="close" aria-label="Close">&times;</button>
+    </form>
+    <div class="sheet__body">
+      <h2 id="pattern-title" class="sheet__title">Win pattern</h2>
+      <div class="patlist">
+      <Fragment set:html={patternsHtml} />
+      </div>
     </div>
   </dialog>
 
