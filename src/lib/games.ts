@@ -11,14 +11,11 @@ export interface Game { id: string; path: string; [key: string]: any }
 export interface Loaded { game: Game; items: any[]; list: any }
 
 // A game's list sits in the game's public folder, which follows its URL path
-// (/osa/ -> public/osa/). Osa's list was at public/ before it moved, so fall
-// back to that: the pages build before and after the move.
+// (/osa/ -> public/osa/).
 function listPath(game: Game): string {
-  const dir = game.path.replace(/^\/|\/$/g, '');
-  const candidates = [join('public', dir, game.list.file), join('public', game.list.file)];
-  const found = candidates.find(c => existsSync(join(ROOT, c)));
-  if (!found) throw new Error(`list file for ${game.id} not found (tried ${candidates.join(', ')})`);
-  return found;
+  const file = join('public', game.path.replace(/^\/|\/$/g, ''), game.list.file);
+  if (!existsSync(join(ROOT, file))) throw new Error(`list file for ${game.id} not found at ${file} (check its path in game.json)`);
+  return file;
 }
 
 export function loadGames(): Loaded[] {
