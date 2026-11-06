@@ -20,9 +20,10 @@ const ORIGIN = 'https://example.test';
 const SW_SOURCE = readFileSync(path('public/sw.js'), 'utf8');
 
 // A Cache keyed by absolute URL; ignoreSearch drops the query on both sides.
-function fakeCache() {
+// Relative keys resolve against the worker's own URL, as in a browser.
+function fakeCache(base = `${ORIGIN}/sw.js`) {
   const store = new Map();
-  const abs = r => new URL(typeof r === 'string' ? r : r.url, `${ORIGIN}/`).href;
+  const abs = r => new URL(typeof r === 'string' ? r : r.url, base).href;
   const bare = u => u.split('?')[0];
   return {
     store,
@@ -37,30 +38,32 @@ function fakeCache() {
   };
 }
 
-function loadWorker({ online = true, cacheNames = [] } = {}) {
-  const caches = new Map(cacheNames.map(n => [n, fakeCache()]));
+function loadWorker({ online = true, cacheNames = [], file = 'public/sw.js', at = '/sw.js', respond } = {}) {
+  const swUrl = `${ORIGIN}${at}`;
+  const caches = new Map(cacheNames.map(n => [n, fakeCache(swUrl)]));
   const listeners = {};
   const network = [];
   const sandbox = {
     self: {
-      location: new URL(`${ORIGIN}/sw.js`),
+      location: new URL(swUrl),
       addEventListener: (type, fn) => { listeners[type] = fn; },
       skipWaiting: async () => {},
       clients: { claim: async () => {} },
     },
     caches: {
       keys: async () => [...caches.keys()],
-      open: async n => { if (!caches.has(n)) caches.set(n, fakeCache()); return caches.get(n); },
+      open: async n => { if (!caches.has(n)) caches.set(n, fakeCache(swUrl)); return caches.get(n); },
       delete: async n => caches.delete(n),
     },
     fetch: async req => {
       network.push(req.url);
       if (!online) throw new TypeError('offline');
+      if (respond) return respond(req);
       return new Response(`net:${new URL(req.url).pathname}`, { status: 200 });
     },
     Request, Response, URL, Promise, Boolean,
   };
-  vm.runInNewContext(SW_SOURCE, sandbox);
+  vm.runInNewContext(file === 'public/sw.js' ? SW_SOURCE : readFileSync(path(file), 'utf8'), sandbox);
 
   // Dispatch a fetch event; resolves to the Response, or null if the worker
   // stepped aside (no respondWith).
@@ -183,4 +186,42 @@ test('the hub manifest does not take over old Osa installs', () => {
   const hub = JSON.parse(readFileSync(path('public/manifest.webmanifest'), 'utf8'));
   assert.notEqual(new URL(hub.id, ORIGIN).href, `${ORIGIN}/`);
   assert.equal(new URL(hub.id, ORIGIN).href, new URL(hub.start_url, ORIGIN).href);
+});
+
+// ---- The Osa worker (public/osa/sw.js) ---------------------------
+// Every Osa page is the same HTML, so it is cached once under './' (/osa/).
+const osaWorker = opts => loadWorker({ file: 'public/osa/sw.js', at: '/osa/sw.js', ...opts });
+const osaCache = w => w.caches.get([...w.caches.keys()].find(k => k.startsWith('osa-bingo-v3-')));
+
+test('Osa never precaches index.html, which the server answers with a redirect', () => {
+  const src = readFileSync(path('public/osa/sw.js'), 'utf8');
+  const block = src.slice(src.indexOf('// BEGIN-PRECACHE'), src.indexOf('// END-PRECACHE'));
+  assert.ok(block.includes("'./',"), 'the page is precached as ./');
+  assert.ok(!block.includes("'index.html'"), 'no index.html entry');
+});
+
+test('offline, a new Osa share link opens from the one cached page', async () => {
+  const w = osaWorker({ online: false });
+  await w.request('/osa/species.json');                   // opens the cache
+  await osaCache(w).put('./', new Response('osa shell'));
+  const res = await w.request('/osa/?s=never-seen&c=2', { mode: 'navigate' });
+  assert.equal(await res.text(), 'osa shell');
+});
+
+test('online, Osa pages are stored once, not once per seed', async () => {
+  const w = osaWorker();
+  for (const q of ['?s=a&c=1', '?s=b&c=2', '?s=c&c=1&m=hunt']) {
+    await w.request(`/osa/${q}`, { mode: 'navigate' });
+  }
+  await new Promise(r => setTimeout(r, 0));               // let the background puts land
+  const pages = [...osaCache(w).store.keys()].filter(k => !k.endsWith('.json'));
+  assert.deepEqual(pages, [`${ORIGIN}/osa/`]);
+});
+
+test('Osa never stores a redirected response as its page', async () => {
+  const redirected = () => { const r = new Response('moved'); Object.defineProperty(r, 'redirected', { value: true }); return r; };
+  const w = osaWorker({ respond: redirected });
+  await w.request('/osa/index.html', { mode: 'navigate' });
+  await new Promise(r => setTimeout(r, 0));
+  assert.equal(await osaCache(w).match('./'), undefined);
 });
