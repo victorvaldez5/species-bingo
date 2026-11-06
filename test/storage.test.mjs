@@ -19,7 +19,7 @@ const read = p => readFileSync(new URL(p, root), 'utf8');
 const readJson = p => JSON.parse(read(p));
 
 // deal.js reads URLSearchParams from the global; a bare vm context has none.
-const sandbox = { URLSearchParams };
+const sandbox = { URLSearchParams, URL };
 vm.runInNewContext(read('public/core/deal.js'), sandbox);
 const K = sandbox.BingoKeys;
 const plain = v => JSON.parse(JSON.stringify(v));
@@ -102,5 +102,24 @@ test('Both read ?s= ?c= ?m= ?p=; anything but c=2 is card 1', () => {
     assert.equal(K.readQuery(cfg, '?s=a&p=toString').pattern, null);
     assert.equal(K.readQuery(cfg, '?s=%20a3f2%20').seed, 'a3f2');
     assert.equal(K.readQuery(cfg, '').seed, '');
+  }
+});
+
+// "Open a shared card": what people paste or type in the installed app.
+test('Shared-card input: links, messages with links, query parts and bare seeds', () => {
+  const p = (t, here = '/osa/') => plain(K.parseShared(t, here));
+  const site = 'https://species-bingo.victorvaldez5.workers.dev';
+  assert.deepEqual(p(`${site}/osa/?s=trip&c=2`), { path: '/osa/', search: '?s=trip&c=2' });
+  assert.deepEqual(p(`Join my card! ${site}/moplants/?s=ab12&m=race&c=2 see you`), { path: '/moplants/', search: '?s=ab12&m=race&c=2' });
+  assert.deepEqual(p('species-bingo.victorvaldez5.workers.dev/osa/?s=x1'), { path: '/osa/', search: '?s=x1' });
+  assert.deepEqual(p('?s=a%20b&c=2'), { path: '/osa/', search: '?s=a%20b&c=2' }, 'just the query: this game');
+  assert.deepEqual(p(`${site}/?s=trip&c=2`), { path: '/', search: '?s=trip&c=2' }, 'old root Osa link: the hub forwards it');
+  // Only path and query survive: a pasted host never decides where we go.
+  assert.deepEqual(p('https://evil.example/osa/?s=x'), { path: '/osa/', search: '?s=x' });
+  assert.deepEqual(p('  1m94o '), { seed: '1m94o' });
+  assert.deepEqual(p('Osa 2026'), { seed: 'Osa 2026' });
+  assert.deepEqual(p('ñandú'), { seed: 'ñandú' });
+  for (const bad of ['', '   ', `${site}/osa/`, `${site}/osa/?c=2`, '?s=', 'a'.repeat(65), 'a/b']) {
+    assert.equal(K.parseShared(bad, '/osa/'), null, JSON.stringify(bad));
   }
 });

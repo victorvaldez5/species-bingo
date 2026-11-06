@@ -46,19 +46,18 @@ good.
 
 These are marked **Name not confirmed** in the game until you decide:
 
-1. **Pink Lemonade.** Assumed to be the pink blueberry. There is also a
-   false indigo (Baptisia) called 'Pink Lemonade'. Which one is it?
-2. **Pretty & Pink Epimedium.** Assumed to be Epimedium 'Pretty in Pink'.
-3. **Girard Azalea.** Which one? For example Girard's Crimson, Fuchsia, Rose
+1. **Pretty & Pink Epimedium.** Assumed to be Epimedium 'Pretty in Pink'.
+2. **Girard Azalea.** Which one? For example Girard's Crimson, Fuchsia, Rose
    or Scarlet. Knowing the color would let the photo match.
-4. **Lipstick Hosta.** No hosta called just 'Lipstick' turned up. Is it
+3. **Lipstick Hosta.** No hosta called just 'Lipstick' turned up. Is it
    'Lipstick Blonde' (gold leaves, red stems) or 'Lipstick Blush'?
-5. **Sambucas.** Assumed to be elderberry, most likely the native American
+4. **Sambucas.** Assumed to be elderberry, most likely the native American
    elder. If it has a name like BLACK LACE, say so.
-6. **Lemon Perfection Catmint.** The catmint sold today is spelled
+5. **Lemon Perfection Catmint.** The catmint sold today is spelled
    'Lemon Purrfection', so that is what the game uses.
 
-Checked and fine: Emerald Spreader yew is a Japanese yew (*Taxus cuspidata*
+Checked and fine: Pink Lemonade is the false indigo, *Baptisia* 'Pink
+Lemonade', not the pink blueberry. Emerald Spreader yew is a Japanese yew (*Taxus cuspidata*
 'Monloo'). 'Arnold' tulip tree is the same tree as 'Fastigiatum'. Hummelo is
 listed under both *Stachys* and *Betonica*, and the game shows both names.
 
@@ -70,7 +69,8 @@ and the game says so on each one:
 
 - **Species only:** Pretty in Pink Epimedium, Sugar Shack Buttonbush, Emerald
   Spreader Yew, Storm Cloud Bluestar
-- **A related plant:** Pink Lemonade (a regular blue blueberry), Lipstick
+- **A related plant:** Pink Lemonade ('Lemon Meringue', an all-yellow
+  sister in the same Baptisia series), Lipstick
   Hosta (a different gold hosta), Lemon Purrfection Catmint (a regular blue
   catmint), Girard Azalea ('Girard's Rose', which may not be the right color)
 - **"Any" plants:** Espalier/Topiary shows an espaliered fruit tree, and

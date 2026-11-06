@@ -511,15 +511,6 @@ button { font: inherit; color: inherit; }
 /* A pending photo credit, in a detail sheet or on the credits page. */
 .sheet__credit--pending { color: var(--accent-text); font-style: italic; }
 
-/* ---- Colophon ---------------------------------------------- */
-.colophon {
-  margin-top: var(--sp-6); padding-top: var(--sp-4);
-  border-top: 1px solid var(--surface-deep);
-  font-size: var(--t-caption); color: var(--text-mute); line-height: 1.5;
-}
-.colophon p { margin: 0 0 var(--sp-1); font-size: inherit; }
-.colophon__seed { font-family: var(--font-mono); }
-
 .loaderr { padding: var(--sp-5); color: var(--err); font-size: var(--t-small); grid-column: 1 / -1; }
 
 /* ---- Detail sheet ------------------------------------------ */
@@ -668,7 +659,7 @@ button { font: inherit; color: inherit; }
   font-size: var(--t-h2); line-height: 1.15; color: var(--brand-text);
 }
 .errcard__title:focus { outline: none; }
-.is-error .safety, .is-error .colophon { display: none; }   /* the card is all the page says */
+.is-error .safety { display: none; }   /* the card is all the page says */
 .is-error .menu__share, .is-error .menu__item, .is-error .menu__link:not(.menu__theme), .is-error .menu__rule { display: none; }   /* only the theme is left to change */
 .errcard__body { margin: 0 0 var(--sp-5); font-size: var(--t-body); line-height: 1.5; color: var(--text-soft); }
 .errcard__acts { display: flex; flex-direction: column; gap: var(--sp-2); }
@@ -691,6 +682,20 @@ button { font: inherit; color: inherit; }
   box-shadow: var(--shadow-lg);
 }
 .confirm::backdrop { background: var(--backdrop); backdrop-filter: blur(2px); }
+/* Open a shared card: the same box as the reset confirm, with a field. */
+.open { margin: 0; }
+.open__label { display: block; margin: 0 0 var(--sp-3); font-size: var(--t-small); line-height: 1.45; color: var(--text-soft); }
+.open__input {
+  width: 100%; min-height: 44px; padding: 0 var(--sp-3);
+  border: 1px solid var(--surface-deep); border-radius: var(--r-sm);
+  background: var(--surface); color: var(--text);
+  font-family: var(--font-mono); font-size: 16px;     /* 16px: no zoom-on-focus on iOS */
+}
+.open__input:focus { outline: 2px solid var(--brand-text); outline-offset: 1px; }
+.open__cards { margin-top: var(--sp-3); grid-template-columns: repeat(2, 1fr); }
+.open__cards[hidden] { display: none; }
+.open__error { margin: var(--sp-2) 0 0; font-size: var(--t-small); color: var(--err); }
+.open .confirm__actions { margin-top: var(--sp-4); }
 .confirm__title {
   margin: 0 0 var(--sp-2);
   font-family: var(--font-display); font-style: italic; font-weight: 700;
@@ -871,7 +876,7 @@ button { font: inherit; color: inherit; }
   body { background: #fff; color: #000; }
   .bar { position: static; background: none; color: #000; padding: 0 0 6mm; border: 0; min-height: 0; }
   .bar__title, .bar__title em { color: #000; font-size: 28pt; }
-  .menu, .bar__back, .cell__info, .howto, .site-foot, .colophon, .skip-link, .bingo-banner,
+  .menu, .bar__back, .cell__info, .howto, .site-foot, .skip-link, .bingo-banner,
   .modes, .chips, .status__btn, .note-line, .hunt__info { display: none !important; }
   .controls { display: block; margin-bottom: 4mm; }
   .grid { gap: 2mm; }

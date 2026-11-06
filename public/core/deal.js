@@ -147,6 +147,33 @@
       if (state.pattern === cfg.patterns[0].key) p.delete('p'); else p.set('p', state.pattern);
       return p.toString();
     },
+
+    // What someone typed into "Open a shared card" (an installed app has no
+    // address bar to paste into). It may be a whole message with a link in
+    // it, a link, just its "?s=..." part, or a bare seed. `here` is the
+    // current page's path, for a link with no path of its own.
+    // -> { path, search } for a link: path and query only, so it always opens
+    //    on this site, never wherever the pasted host points
+    // -> { seed } for a bare seed
+    // -> null when there is nothing usable
+    parseShared(text, here = '/') {
+      const t = String(text || '').trim();
+      if (!t) return null;
+      const inMessage = t.match(/https?:\/\/[^\s<>"']+/i);
+      const link = inMessage ? inMessage[0]
+        : /^[?/]/.test(t) || /[?&]s=/.test(t) || /^[\w-]+(\.[\w-]+)+\//.test(t) ? t : null;
+      if (link) {
+        let u;
+        try {
+          const abs = /^https?:\/\//i.test(link) || /^[?/]/.test(link) ? link : `https://${link}`;
+          u = new URL(abs, `https://site.invalid${here}`);
+        } catch { return null; }
+        if (!(u.searchParams.get('s') || '').trim()) return null;
+        return { path: u.pathname, search: u.search };
+      }
+      if (t.length > 64 || /\s{2,}|[?&#=/]/.test(t)) return null;
+      return { seed: t };
+    },
   };
 
   globalThis.BingoDeal = { xmur3, mulberry32, makeRng, shuffle, dealStratifiedPair, deal, race };

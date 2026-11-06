@@ -4,25 +4,27 @@
     {
       "id": "pink-lemonade",
       "name": "Pink Lemonade",
-      "botanical": "Vaccinium 'Pink Lemonade'",
-      "kind": "pink blueberry",
+      "botanical": "Baptisia 'Pink Lemonade'",
+      "kind": "false indigo",
       "photo": "img/pink-lemonade",
-      "photo_note": "A regular blue highbush blueberry (Vaccinium corymbosum) is shown, not 'Pink Lemonade'.",
-      "fun_fact": "This blueberry was bred in New Jersey, and its berries go from pale green to bright pink as they ripen. It needs far fewer cold winter hours than most blueberries to set fruit, so it crops even after mild winters.",
+      "photo_note": "A sister plant from the same Decadence series is shown (Baptisia 'Lemon Meringue', all yellow), not 'Pink Lemonade', whose flowers turn pink to purple as they age.",
+      "fun_fact": "Its flower spikes open soft yellow and age to a dusty raspberry purple, so one plant shows both colors at once. It came from a cross made in Waseca, Minnesota in 2009, and like other false indigos it lives for decades and shrugs off drought and deer once settled.",
       "sources": [
         {
-          "label": "Missouri Botanical Garden Plant Finder",
-          "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=298790"
+          "label": "Proven Winners",
+          "url": "https://www.provenwinners.com/plants/baptisia/decadence-deluxe-pink-lemonade-false-indigo-baptisia-hybrid"
+        },
+        {
+          "label": "Canadian Food Inspection Agency, plant breeders' rights",
+          "url": "https://active.inspection.gc.ca/english/plaveg/pbrpov/cropreport/bap/app00011047e.shtml"
         }
       ],
-      "plantfinder": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=298790",
-      "uncertain": "The plant list just says \"Pink Lemonade\". This assumes the pink blueberry. Baptisia 'Pink Lemonade' (sold as DECADENCE DELUXE false indigo) is another common plant with the same name.",
       "credit": {
-        "author": "Opioła Jerzy (Poland)",
-        "license": "CC BY 2.5",
-        "license_url": "https://creativecommons.org/licenses/by/2.5",
-        "source": "https://commons.wikimedia.org/wiki/File:Vaccinium_corymbosum_a2.jpg",
-        "file": "Vaccinium corymbosum a2.jpg"
+        "author": "F. D. Richards",
+        "license": "CC BY-SA 2.0",
+        "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Baptisia_%27Lemon_Meringue%27_5_2021_Baptisia-_(51210425345).jpg",
+        "file": "Baptisia 'Lemon Meringue' 5 2021 Baptisia- (51210425345).jpg"
       }
     },
     {
@@ -49,7 +51,7 @@
     },
     {
       "id": "st-johnwort",
-      "name": "St. Johnswort",
+      "name": "Groundcover St. Johnswort",
       "botanical": "Hypericum calycinum",
       "kind": "groundcover shrub",
       "photo": "img/st-johnwort",

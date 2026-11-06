@@ -11,9 +11,9 @@ shows in the app's detail sheet and credits list.
 
 | Plant | Photo credit | What the photo shows |
 |---|---|---|
-| Pink Lemonade | Opioła Jerzy (Poland), CC BY 2.5, <https://commons.wikimedia.org/wiki/File:Vaccinium_corymbosum_a2.jpg> | A regular blue highbush blueberry (Vaccinium corymbosum) is shown, not 'Pink Lemonade'. |
+| Pink Lemonade | F. D. Richards, CC BY-SA 2.0, <https://commons.wikimedia.org/wiki/File:Baptisia_%27Lemon_Meringue%27_5_2021_Baptisia-_(51210425345).jpg> | A sister plant from the same Decadence series is shown (Baptisia 'Lemon Meringue', all yellow), not 'Pink Lemonade', whose flowers turn pink to purple as they age. |
 | Bottlebrush Buckeye | robert_alabama, CC0, <https://commons.wikimedia.org/wiki/File:Aesculus_parviflora,_Irondale,_Alabama_1.jpg> | Exact plant |
-| St. Johnswort | そらみみ (Soramimi), CC BY-SA 4.0, <https://commons.wikimedia.org/wiki/File:Flower_of_hypericum_calycinum_in_Hakozaki_Campus,_Kyushu_University.JPG> | Exact plant |
+| Groundcover St. Johnswort | そらみみ (Soramimi), CC BY-SA 4.0, <https://commons.wikimedia.org/wiki/File:Flower_of_hypericum_calycinum_in_Hakozaki_Campus,_Kyushu_University.JPG> | Exact plant |
 | Pretty in Pink Epimedium | Alpsdake, CC BY-SA 3.0, <https://commons.wikimedia.org/wiki/File:Epimedium_grandiflorum.JPG> | Species shown (Epimedium grandiflorum), not the cultivar. |
 | Korean Feather Reed Grass | Aleksandrs Balodis (AfroBrazilian), CC BY-SA 4.0, <https://commons.wikimedia.org/wiki/File:Calamagrostis_brachytricha_01.JPG> | Exact plant |
 | New Jersey Tea | Dan Keck from Ohio, CC0, <https://commons.wikimedia.org/wiki/File:New_Jersey_Tea_(35268197676).jpg> | Exact plant |
@@ -44,9 +44,9 @@ university extension or the plant's introducer where it has no entry.
 
 | Plant | Source |
 |---|---|
-| Pink Lemonade | [Missouri Botanical Garden Plant Finder](https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=298790) |
+| Pink Lemonade | [Proven Winners](https://www.provenwinners.com/plants/baptisia/decadence-deluxe-pink-lemonade-false-indigo-baptisia-hybrid)<br>[Canadian Food Inspection Agency, plant breeders' rights](https://active.inspection.gc.ca/english/plaveg/pbrpov/cropreport/bap/app00011047e.shtml) |
 | Bottlebrush Buckeye | [Missouri Botanical Garden Plant Finder](https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=281048) |
-| St. Johnswort | [Missouri Botanical Garden Plant Finder](https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=279207) |
+| Groundcover St. Johnswort | [Missouri Botanical Garden Plant Finder](https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=279207) |
 | Pretty in Pink Epimedium | [Missouri Botanical Garden Plant Finder](https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=277770) |
 | Korean Feather Reed Grass | [Missouri Botanical Garden Plant Finder](https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=285318) |
 | New Jersey Tea | [Missouri Botanical Garden Plant Finder](https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=245521) |

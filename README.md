@@ -102,7 +102,7 @@ Both games run the same code. `public/core/bingo.js` is a plain classic script
 `<script type="application/json" id="game-config">`. Nothing in the core
 checks a game id: if two games differ, the difference is a key in `game.json`.
 
-`game.json` holds the page text (title, colophon, credits wording,
+`game.json` holds the page text (title, credits wording,
 noscript), `offline` and `worker` (the service worker file the page registers,
 relative to the page: Osa's offline worker, Plant bingo's network-first one), the list
 file with its expected count and noun, `freeCentre`, `cardPair`, the deal and

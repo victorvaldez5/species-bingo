@@ -97,6 +97,7 @@ const belowHtml = belowCard && `<!-- Safety callouts -->
       <button id="new-card" class="btn menu__item" type="button">New card</button>
       <button id="reset" class="btn btn--ghost menu__item" type="button">Reset marks</button>
       <hr class="menu__rule">
+      <button id="open-card" class="menu__link" type="button" aria-haspopup="dialog">Open a shared card</button>
       <button id="howto-open" class="menu__link" type="button">How to play</button>
       <button type="button" class="menu__link menu__theme" data-theme-cycle>Theme: <span data-theme-label>Auto</span></button>
     </div>
@@ -165,11 +166,6 @@ const belowHtml = belowCard && `<!-- Safety callouts -->
     </div>
 
     {belowHtml && <Fragment set:html={belowHtml} />}
-    {/* Per mode (game.json colophon.<mode>); bingo.js swaps it on a mode change. */}
-    <footer class="colophon">
-      <p id="colophon-main">{game.colophon.bingo[0].replace('{raceSize}', game.raceSize)}</p>
-      <p id="colophon-seed" class="colophon__seed">{game.colophon.bingo[1].replace('{raceSize}', game.raceSize)}</p>
-    </footer>
   </main>
 
   <SiteFooter game={game.id} />
@@ -185,7 +181,7 @@ const belowHtml = belowCard && `<!-- Safety callouts -->
       </picture>
       <p id="detail-nophoto" class="sheet__nophoto" hidden>Photo coming soon.</p>
       <Fragment set:html={sheetHtml} />
-      <button id="detail-mark" class="btn btn--mark" type="button">Mark as spotted</button>
+      <button id="detail-mark" class="btn btn--mark" type="button">Mark</button>
       <p id="detail-credit" class="sheet__credit"></p>
     </div>
   </dialog>
@@ -211,6 +207,26 @@ const belowHtml = belowCard && `<!-- Safety callouts -->
       <button id="confirm-cancel" class="btn btn--ghost" type="button" autofocus>Keep them</button>
       <button id="confirm-yes" class="btn btn--danger" type="button">Reset marks</button>
     </div>
+  </dialog>
+
+  <Fragment set:html={`<!-- Open a shared card: the installed app has no address bar to paste a link into -->`} />
+  <dialog id="open-sheet" class="confirm" aria-labelledby="open-title">
+    <form id="open-form" class="open" novalidate>
+      <h2 id="open-title" class="confirm__title">Open a shared card</h2>
+      <label class="open__label" for="open-input">Paste the link you were sent, or type the seed shown under &ldquo;Copy link&rdquo;.</label>
+      <input id="open-input" class="open__input" type="text" inputmode="url" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Link or seed" aria-describedby="open-error">
+      {game.cardPair && (
+      <div id="open-cards" class="modes open__cards" role="group" aria-label="Which card">
+        <button type="button" class="modes__btn" data-open-card="1" aria-pressed="true">Card 1</button>
+        <button type="button" class="modes__btn" data-open-card="2" aria-pressed="false">Card 2</button>
+      </div>
+      )}
+      <p id="open-error" class="open__error" role="alert" hidden>That doesn&rsquo;t look like a link or a seed.</p>
+      <div class="confirm__actions">
+        <button id="open-cancel" class="btn btn--ghost" type="button">Cancel</button>
+        <button id="open-go" class="btn" type="submit">Open</button>
+      </div>
+    </form>
   </dialog>
 
   <Fragment slot="noscript">{game.noscript}</Fragment>

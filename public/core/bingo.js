@@ -245,10 +245,6 @@
     $('#new-card').hidden = mode === 'hunt';
     $('#new-card').textContent = mode === 'race' ? 'New race' : 'New card';
     $('#copy-link .menu__share-head').textContent = mode === 'race' ? 'Copy link to this race' : 'Copy link to this card';
-    // The note under the card describes the mode on screen.
-    const [main, seed] = (cfg.colophon[mode] || cfg.colophon.bingo).map(t => t.replace('{raceSize}', RACE_SIZE));
-    $('#colophon-main').textContent = main;
-    $('#colophon-seed').textContent = seed;
   }
 
   function hideBanner() {
@@ -290,7 +286,7 @@
       const inLine = lineCells.has(i);
       html += `<div class="cell${marked ? ' is-marked' : ''}${inLine ? ' is-line' : ''}${targets.has(i) ? ' is-target' : ''}${hasPhoto(s) ? '' : ' cell--noimg'}" data-index="${i}">` +
         `<button class="cell__mark" type="button" aria-pressed="${marked}" ` +
-        `aria-label="${esc(s.name)}${marked ? ', spotted' : ''}" data-mark="${i}">` +
+        `aria-label="${esc(s.name)}${marked ? ', marked' : ''}" data-mark="${i}">` +
         (hasPhoto(s) ? pictureHtml(gridStem(s), s.name, 'cell__photo') : '') +
         `<span class="cell__name">${esc(cellLabel(s))}</span>` +
         CHECK +
@@ -310,7 +306,7 @@
     if (btn) {
       btn.setAttribute('aria-pressed', String(marked));
       const name = itemAt(i)?.name || '';
-      btn.setAttribute('aria-label', `${name}${marked ? ', spotted' : ''}`);
+      btn.setAttribute('aria-label', `${name}${marked ? ', marked' : ''}`);
     }
   }
 
@@ -350,7 +346,7 @@
     } else if (state.mode === 'race') {
       html = `${state.raceMarks.size}/${RACE_SIZE}<span class="vh"> found</span>`;
     } else {
-      html = `${state.marks.size}/${POSITIONS.length}<span class="vh"> spotted</span>`;
+      html = `${state.marks.size}/${POSITIONS.length}<span class="vh"> marked</span>`;
       const targets = [...patternTargets()].filter(i => !FREE || i !== CENTER);
       if (targets.length) {
         html += ` &middot; ${targets.filter(isMarked).length}/${targets.length}<span class="vh"> on the pattern</span>`;
@@ -563,7 +559,7 @@
   function syncDetailMark() {
     const btn = $('#detail-mark');
     const marked = detail.isMarked();
-    btn.textContent = marked ? 'Spotted. Tap to undo.' : 'Mark as spotted';
+    btn.textContent = marked ? 'Marked. Tap to undo.' : 'Mark';
     btn.classList.toggle('is-marked', marked);
     btn.setAttribute('aria-pressed', String(marked));
   }
@@ -906,6 +902,61 @@
     });
     $('#confirm-cancel').addEventListener('click', () => $('#confirm-reset').close());
     $('#confirm-yes').addEventListener('click', () => { $('#confirm-reset').close(); resetMarks(); });
+
+    // Open a shared card. The installed app has no address bar, so a link
+    // someone sent has nowhere to go; this takes the link (or the whole
+    // message it came in) or just the seed. A link to this game loads in
+    // place, a link to another page of the site opens it, and a bare seed
+    // loads here on the card picked in the sheet (card 1 if there is no pick).
+    const openSheet = $('#open-sheet');
+    const openInput = $('#open-input');
+    const openError = $('#open-error');
+    const openCards = $('#open-cards');
+    let openCard = 1;
+    const parseOpen = () => Keys.parseShared(openInput.value, cfg.path);
+    const syncOpen = () => {
+      openError.hidden = true;
+      if (openCards) openCards.hidden = Boolean(parseOpen()?.path);   // a link carries its own card
+    };
+    const pickOpenCard = n => {
+      openCard = n;
+      for (const b of document.querySelectorAll('[data-open-card]')) {
+        b.setAttribute('aria-pressed', String(Number(b.dataset.openCard) === n));
+      }
+    };
+    $('#open-card').addEventListener('click', () => {
+      openInput.value = '';
+      pickOpenCard(1);
+      syncOpen();
+      if (typeof openSheet.showModal === 'function') openSheet.showModal();
+      else openSheet.setAttribute('open', '');
+      openInput.focus();
+    });
+    openInput.addEventListener('input', syncOpen);
+    openCards?.addEventListener('click', e => {
+      const b = e.target.closest('[data-open-card]');
+      if (b) pickOpenCard(Number(b.dataset.openCard));
+    });
+    $('#open-cancel').addEventListener('click', () => openSheet.close());
+    openSheet.addEventListener('click', e => { if (e.target === openSheet) openSheet.close(); });
+    $('#open-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const shared = parseOpen();
+      if (!shared) { openError.hidden = false; openInput.focus(); return; }
+      openSheet.close();
+      if (shared.seed) {
+        loadCard(shared.seed, openCard, true);
+      } else if (shared.path !== cfg.path && shared.path !== `${cfg.path}index.html`) {
+        location.assign(shared.path + shared.search);     // same site, another page (the hub sends old "/?s=" links to Osa)
+        return;
+      } else {
+        const q = Keys.readQuery(cfg, shared.search);
+        state.mode = q.mode || DEFAULT_MODE;          // links leave the defaults out
+        state.pattern = q.pattern || DEFAULT_PATTERN;
+        loadCard(q.seed, q.card, true);
+      }
+      scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
     // Back / forward through seeds, card flips and mode switches.
     window.addEventListener('popstate', () => {

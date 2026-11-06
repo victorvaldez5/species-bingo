@@ -14,7 +14,7 @@
      prefix and never touches any other (Osa's are osa-bingo-*).
    ============================================================= */
 
-const BUILD = 'ee771a763c';                                 // BUILD (rewritten by build-games)
+const BUILD = 'af10226809';                                 // BUILD (rewritten by build-games)
 const PREFIX = 'moplants-bingo-';
 const CACHE = `${PREFIX}${BUILD}`;
 const SCOPE_PATH = new URL(self.registration.scope).pathname;   // "/moplants/"

@@ -85,12 +85,7 @@
     "withSources": true
   },
 
-  "colophon": {
-    "bingo": ["All 25 plants on every card, in a fresh order each time. Needs a connection.", "Same seed, same card, on any phone."],
-    "hunt": ["Every plant on one list. Needs a connection.", "Your list stays on this phone."],
-    "race": ["Each racer chases {raceSize} different plants. Needs a connection.", "Same seed, same race, on any phone."]
-  },
-  "noscript": "This bingo card needs JavaScript to deal the plants and remember what you have spotted.",
+  "noscript": "This bingo card needs JavaScript to deal the plants and remember what you have marked.",
 
   "words": {
     "bingo": { "stamp": "bingo.", "line": "That is a line. Bingo.", "lines": "{n} full lines now.", "full": "Full card. Every plant on the board." },
