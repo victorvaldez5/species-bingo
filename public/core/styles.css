@@ -3,17 +3,21 @@
    Design system tokens come from tokens.css (imported first, a
    verbatim copy of Wild & Native Gardens colors_and_type.css).
 
-   Surfaces and text go through the semantic tokens below so the
-   card has a dark mode. In light mode every token resolves to the
-   exact value each game used before they shared this file. A page
-   opts out of dark with <html data-scheme="light"> (Osa for now).
+   Surfaces and text go through the semantic tokens below, so one
+   theme covers every page, in light and dark. The tokens sit on :root;
+   dark is the phone's choice (Auto) unless the page says
+   <html data-theme="light">, and <html data-theme="dark"> forces it.
+   The inline head script on every page sets data-theme from the saved
+   choice before first paint (see src/lib/theme.ts).
 
    Legibility rules: this card is read one-handed in direct
    equatorial sun, so where brand aesthetics and legibility
    conflict, legibility wins. Marked cells use a solid --forest
    fill with a cream mark, never a tint or hue alone, and small or
    load-bearing text uses --terracotta-deep (7.6:1), never plain
-   --terracotta (3.66:1, AA-Large only).
+   --terracotta (3.66:1, AA-Large only). Marked cells, the free
+   centre (--terracotta-deep) and the line ring (--sun) look the same
+   in both themes.
    ============================================================= */
 
 @import "../tokens.css";   /* /core/styles.css -> /tokens.css (fonts resolve from there) */
@@ -26,7 +30,7 @@
   --surface-deep:  var(--paper-deep);
   --text:          var(--ink);
   --text-soft:     var(--ink-soft);
-  --text-mute:     var(--ink-mute);
+  --text-mute:     #5f5a4f;         /* a touch darker than --ink-mute: 5.4:1 on --surface, which --ink-mute misses (4.48) */
   --accent-text:   var(--terracotta-deep);
   --brand-text:    var(--forest);
   --ghost-line:    var(--bark);
@@ -34,16 +38,18 @@
   --banner-bg:     var(--sage-pale);
   --banner-line:   var(--sage);
   --banner-text:   var(--forest-deep);
-  --ghost-hover:   var(--forest);
-  --bar-bg:        var(--forest);   /* the hub and text-page top bar */
+  --bar-bg:        var(--forest);   /* the top bar on every page */
+  --backdrop:      rgba(31, 44, 28, .55);
+  /* A game sets this on <html>: the hub card stripe and the line under
+     its top bar. Decoration only, never text and never a state. */
+  --game-accent:   var(--sun);
 }
-/* Osa is light-only for now and its ghost buttons darken to --forest-deep on
-   hover; the Plant game's use --forest. Drop this when the themes merge. */
-:root[data-scheme="light"] { --ghost-hover: var(--forest-deep); }
 /* Dark: same greens and warm accents on a deep canopy ground. Text
-   pairings stay AA or better (--text-mute 8.3:1, --accent-text 9.6:1). */
+   pairings stay AA or better (see the contrast notes in the README). The
+   block is written twice on purpose: once for Auto (the phone is dark and
+   the page has not chosen light), once for an explicit choice. */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-scheme="light"]) {
+  :root:not([data-theme="light"]) {
     color-scheme: dark;
     --bg:            #141a12;
     --surface:       #1f281c;
@@ -58,9 +64,27 @@
     --banner-bg:     #26331f;
     --banner-line:   #4a5a3e;
     --banner-text:   #e3ead0;
-    --ghost-hover:   #c6d4a6;
     --bar-bg:        #1f2c1c;
+    --backdrop:      rgba(0, 0, 0, .6);
   }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg:            #141a12;
+  --surface:       #1f281c;
+  --surface-deep:  #34412f;
+  --text:          #f5efe3;
+  --text-soft:     #ddd5c5;
+  --text-mute:     #b9b1a2;
+  --accent-text:   #eab27c;
+  --brand-text:    #c6d4a6;
+  --ghost-line:    #c6d4a6;
+  --hover:         #2b3727;
+  --banner-bg:     #26331f;
+  --banner-line:   #4a5a3e;
+  --banner-text:   #e3ead0;
+  --bar-bg:        #1f2c1c;
+  --backdrop:      rgba(0, 0, 0, .6);
 }
 
 /* ---- Reset-ish --------------------------------------------- */
@@ -92,27 +116,11 @@ button { font: inherit; color: inherit; }
   outline-offset: 2px;
 }
 
-/* ---- Masthead ---------------------------------------------- */
-.masthead {
-  background: var(--forest);
-  color: var(--cream);
-  padding: calc(var(--sp-5) + env(safe-area-inset-top)) var(--sp-4) var(--sp-6);
+/* ---- Visually hidden: words for a screen reader ------------- */
+.vh {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
 }
-.masthead__inner {
-  max-width: 560px; margin: 0 auto;
-  display: flex; flex-wrap: wrap;
-  align-items: baseline;
-  column-gap: var(--sp-4); row-gap: var(--sp-2);
-}
-.masthead .wnd-logo { margin-bottom: 0; opacity: .92; }
-.masthead__title {
-  font-family: var(--font-display);
-  font-weight: 700; font-style: normal;
-  font-size: clamp(24px, 7.5vw, 50px); line-height: 1.02;
-  letter-spacing: -.015em;
-  margin: 0; color: var(--cream);
-}
-.masthead__title em { font-style: italic; color: var(--sun); }
 
 /* ---- Layout wrap ------------------------------------------- */
 .wrap {
@@ -125,16 +133,13 @@ button { font: inherit; color: inherit; }
 .controls {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-3);
-  margin-bottom: var(--sp-4);
-}
-.controls__meta {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: var(--sp-3); flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-3);
 }
 /* Actions menu: New card / Reset marks live behind a tap instead of
    sitting exposed where a stray touch fires them. Sharing the card
-   (copy link) lives here too. */
+   (copy link) lives here too, and so does the site-wide theme switch.
+   The menu sits in the top bar and opens under it. */
 .menu { position: relative; }
 .menu__trigger {
   list-style: none;
@@ -152,13 +157,25 @@ button { font: inherit; color: inherit; }
 .menu__panel {
   position: absolute; top: calc(100% + var(--sp-2)); right: 0; z-index: 10;
   display: flex; flex-direction: column; gap: var(--sp-2);
-  min-width: 208px; padding: var(--sp-3);
-  background: var(--bg);
+  width: 248px; padding: var(--sp-3);
+  background: var(--bg); color: var(--text);
   border: 1px solid var(--surface-deep);
   border-radius: var(--r-md);
   box-shadow: var(--shadow-lg);
 }
 .menu__item { width: 100%; }
+.menu__rule { width: 100%; margin: 2px 0; border: 0; border-top: 1px solid var(--surface-deep); }
+.menu__link {
+  appearance: none; cursor: pointer; text-align: left;
+  min-height: 44px; padding: 0 var(--sp-3);
+  border: 0; border-radius: var(--r-sm); background: none;
+  font-family: var(--font-body); font-weight: 700; font-size: var(--t-small); color: var(--brand-text);
+}
+.menu__link:hover { background: var(--hover); }
+.menu__lbl {
+  margin: 0 var(--sp-3) -4px;
+  font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--text-mute);
+}
 .menu__share {
   display: flex; flex-direction: column; align-items: flex-start; gap: 1px;
   width: 100%; min-height: 44px; text-align: left; cursor: pointer;
@@ -178,44 +195,71 @@ button { font: inherit; color: inherit; }
   font-family: var(--font-mono); text-transform: none; letter-spacing: .04em;
   color: var(--accent-text);
 }
-/* Game switch: Bingo / Hunt / Race */
+/* Game switch: Bingo / Hunt / Race. A quiet segmented control: the
+   chosen game gets a soft tint of the brand colour, the others are text. */
 .modes {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
-  padding: 4px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+  padding: 3px;
   background: var(--surface);
-  border: 1px solid var(--surface-deep);
   border-radius: var(--r-pill);
 }
 .modes__btn {
   appearance: none; cursor: pointer;
-  min-height: 44px; padding: 0 var(--sp-3);
+  min-height: 36px; padding: 0 var(--sp-3);
   border: 0; border-radius: var(--r-pill);
-  background: none; color: var(--brand-text);
+  background: none; color: var(--text-soft);
   font-family: var(--font-body); font-weight: 700; font-size: var(--t-small);
 }
 /* No transition: the page can open straight into Hunt or Race, and a fade
-   would flash Bingo as selected on load. --brand-text / --bg is forest on
-   cream in light, sage on canopy in dark. */
-.modes__btn[aria-pressed="true"] { background: var(--brand-text); color: var(--bg); }
-/* Pattern picker and hunt filters */
-.chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
-.chip {
+   would flash Bingo as selected on load. */
+.modes__btn[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--brand-text) 16%, var(--surface));
+  color: var(--brand-text);
+}
+
+/* Soft chips: the status row's buttons and the Hunt filters share one look,
+   a light fill with no outline, so the photos stay the loudest thing. */
+.chip, .status__btn {
   appearance: none; cursor: pointer;
-  min-height: 40px; padding: 0 var(--sp-3);
-  border: 1.5px solid var(--ghost-line); border-radius: var(--r-pill);
-  background: transparent; color: var(--brand-text);
-  font-family: var(--font-body); font-weight: 700; font-size: var(--t-caption);
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 34px; padding: 0 var(--sp-3);
+  border: 0; border-radius: var(--r-pill);
+  background: var(--surface); color: var(--brand-text);
+  font-family: var(--font-body); font-weight: 700; font-size: 13px;
   white-space: nowrap;
 }
-.chip[aria-pressed="true"] { background: var(--terracotta-deep); border-color: var(--terracotta-deep); color: var(--cream); }
-.chip__count { margin-left: 6px; font-family: var(--font-mono); font-weight: 400; }
-.mode-hint { margin: 0; font-size: var(--t-small); line-height: 1.45; color: var(--text-soft); }
-.controls__actions { display: flex; align-items: center; gap: var(--sp-2); }
-.progress {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: var(--t-small);
-  color: var(--text-soft);
+@media (hover: hover) { .chip:hover, .status__btn:hover { background: var(--surface-deep); } }
+
+/* Hunt category filters: one row that scrolls sideways on a phone. */
+.chips {
+  display: flex; gap: 6px;
+  overflow-x: auto; scrollbar-width: none;
+  margin: 0 calc(-1 * var(--sp-4)); padding: 2px var(--sp-4);
+}
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex: none; }
+.chip[aria-pressed="true"] { background: var(--brand-text); color: var(--bg); }
+.chip__count { font-family: var(--font-mono); font-weight: 400; font-size: 12px; opacity: .7; }
+
+/* The status row (S2): progress, pattern, card. One line on a phone. */
+.status {
+  display: flex; align-items: center; gap: 6px;
+  min-height: 34px;
+}
+.status__prog {
+  margin: 0 var(--sp-1) 0 2px;
+  font-family: var(--font-mono); font-size: var(--t-small); font-weight: 700;
+  color: var(--brand-text);
+}
+.status__btn span[aria-hidden] { font-size: 11px; opacity: .65; }
+.status__btn--push { margin-left: auto; }
+
+/* One quiet line above the card or the list (private browsing, empty Hunt). */
+.note-line {
+  margin: 0 0 var(--sp-3); padding: var(--sp-2) var(--sp-3);
+  background: var(--surface); border-left: 3px solid var(--game-accent, var(--sun));
+  border-radius: var(--r-sm);
+  font-size: var(--t-small); line-height: 1.45; color: var(--text-soft);
 }
 
 .btn {
@@ -234,7 +278,7 @@ button { font: inherit; color: inherit; }
 .btn--ghost {
   background: transparent; color: var(--brand-text); border-color: var(--ghost-line);
 }
-.btn--ghost:hover { background: var(--surface); color: var(--ghost-hover); }
+.btn--ghost:hover { background: var(--surface); color: var(--brand-text); }
 
 /* ---- Bingo banner ------------------------------------------ */
 .bingo-banner {
@@ -499,7 +543,7 @@ button { font: inherit; color: inherit; }
 .sheet[open] { transform: translateY(0); }
 @starting-style { .sheet[open] { transform: translateY(100%); } }
 .sheet::backdrop {
-  background: rgba(31, 44, 28, .55); backdrop-filter: blur(2px);
+  background: var(--backdrop); backdrop-filter: blur(2px);
   opacity: 0;
   transition: opacity var(--dur-base) var(--ease-soft),
               overlay var(--dur-base) allow-discrete,
@@ -518,8 +562,8 @@ button { font: inherit; color: inherit; }
 }
 .sheet__form { margin: 0; }
 .sheet__close {
-  position: absolute; top: var(--sp-3); right: var(--sp-3); z-index: 7;
-  width: 36px; height: 36px; border-radius: var(--r-pill);
+  position: absolute; top: var(--sp-2); right: var(--sp-2); z-index: 7;
+  width: 44px; height: 44px; border-radius: var(--r-pill);
   border: none; cursor: pointer;
   background: color-mix(in srgb, var(--forest-deep) 72%, transparent);
   color: var(--cream); font-size: 24px; line-height: 1;
@@ -574,6 +618,70 @@ button { font: inherit; color: inherit; }
 }
 .sheet__credit a { color: var(--accent-text); }
 
+/* A photo that has not arrived yet: the drawer says so. */
+.sheet__nophoto {
+  margin: 0; padding: var(--sp-8) var(--sp-5) var(--sp-5);
+  background: var(--surface);
+  font-family: var(--font-hand); font-weight: 700; font-size: 28px; text-align: center;
+  color: var(--accent-text);
+}
+
+/* ---- Pattern sheet (S3) ------------------------------------ */
+.sheet--patterns .sheet__body { padding-top: var(--sp-5); }
+.sheet__title {
+  margin: 0 var(--sp-5) var(--sp-2);
+  font-family: var(--font-display); font-style: italic; font-weight: 700;
+  font-size: var(--t-h2); color: var(--brand-text);
+}
+.patlist { display: grid; gap: var(--sp-1); padding: 0 var(--sp-3); }
+.pat {
+  appearance: none; cursor: pointer; text-align: left;
+  display: flex; align-items: center; gap: var(--sp-4);
+  width: 100%; min-height: 64px; padding: var(--sp-2) var(--sp-3);
+  border: 2px solid transparent; border-radius: var(--r-md);
+  background: none; color: var(--text);
+}
+.pat:hover { background: var(--hover); }
+.pat[aria-pressed="true"] { border-color: var(--accent-text); background: var(--surface); }
+.pat__mini { flex: none; display: grid; grid-template-columns: repeat(5, 8px); gap: 2px; }
+.pat__mini i { width: 8px; height: 8px; border-radius: 1px; background: var(--surface-deep); }
+.pat__mini i.on { background: var(--brand-text); }
+.pat__mini i.fr { background: var(--terracotta-deep); }
+.pat__text strong { display: block; font-size: var(--t-body); color: var(--text); }
+.pat__text span { font-size: var(--t-small); line-height: 1.4; color: var(--text-soft); }
+
+/* ---- Loading and error cards (S7, S8) ---------------------- */
+/* Skeleton squares in the card's exact shape: same grid, same aspect
+   ratio, so nothing moves when the photos arrive. */
+.cell--skel { box-shadow: none; animation: pulse 1.4s ease-in-out infinite; }
+.cell--skel-free { background: color-mix(in srgb, var(--terracotta-deep) 45%, var(--surface)); }
+@keyframes pulse { 50% { opacity: .55; } }
+.errcard {
+  margin: var(--sp-5) 0; padding: var(--sp-6) var(--sp-5);
+  text-align: center;
+  background: var(--surface); border: 1px solid var(--surface-deep); border-radius: var(--r-lg);
+}
+.errcard__icon { margin: 0; font-family: var(--font-hand); font-weight: 700; font-size: 40px; line-height: 1; color: var(--accent-text); }
+.errcard__title {
+  margin: var(--sp-2) 0 var(--sp-2);
+  font-family: var(--font-display); font-style: italic; font-weight: 700;
+  font-size: var(--t-h2); line-height: 1.15; color: var(--brand-text);
+}
+.errcard__title:focus { outline: none; }
+.is-error .safety, .is-error .colophon { display: none; }   /* the card is all the page says */
+.is-error .menu__share, .is-error .menu__item, .is-error .menu__link:not(.menu__theme), .is-error .menu__rule { display: none; }   /* only the theme is left to change */
+.errcard__body { margin: 0 0 var(--sp-5); font-size: var(--t-body); line-height: 1.5; color: var(--text-soft); }
+.errcard__acts { display: flex; flex-direction: column; gap: var(--sp-2); }
+.errcard__acts .btn { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+/* No photo: the name on paper, centred, in place of the strip along the bottom. */
+.cell--noimg .cell__name {
+  inset: 0; display: flex; align-items: center; justify-content: center;
+  padding: 26px 3px 4px; background: none; border-top: 0;      /* clear of the info button */
+  font-size: clamp(9px, 2.8vw, 12px); -webkit-line-clamp: unset;
+}
+.cell--noimg.is-marked .cell__name { background: none; }
+.hunt__item.is-noimg .hunt__mark { padding-left: var(--sp-3); }
+
 /* ---- Reset confirmation ------------------------------------ */
 .confirm {
   width: min(360px, calc(100vw - 2 * var(--sp-4)));
@@ -582,7 +690,7 @@ button { font: inherit; color: inherit; }
   background: var(--bg); color: var(--text);
   box-shadow: var(--shadow-lg);
 }
-.confirm::backdrop { background: rgba(31, 44, 28, .55); backdrop-filter: blur(2px); }
+.confirm::backdrop { background: var(--backdrop); backdrop-filter: blur(2px); }
 .confirm__title {
   margin: 0 0 var(--sp-2);
   font-family: var(--font-display); font-style: italic; font-weight: 700;
@@ -607,7 +715,7 @@ button { font: inherit; color: inherit; }
   min-height: 56px;
   padding: calc(var(--sp-2) + env(safe-area-inset-top)) var(--sp-4) var(--sp-2) var(--sp-1);
   background: var(--bar-bg); color: var(--cream);
-  border-bottom: 2px solid var(--sun);
+  border-bottom: 2px solid var(--game-accent, var(--sun));   /* a game's own colour; the hub and text pages use --sun */
 }
 .bar__back {
   flex: none; width: 44px; height: 44px;
@@ -623,6 +731,16 @@ button { font: inherit; color: inherit; }
 }
 .bar__title em { font-style: italic; color: var(--sun); }
 .bar__title--site { padding-left: var(--sp-3); font-size: 28px; }
+/* The game's bar: back, name, Actions. */
+.bar--game { padding-right: var(--sp-3); }
+.bar--game .bar__title { min-width: 0; font-size: 20px; line-height: 1.1; }
+.bar__menu {
+  min-height: 44px; padding: 0 var(--sp-3);
+  border: 1.5px solid color-mix(in srgb, var(--cream) 55%, transparent); border-radius: var(--r-pill);
+  color: var(--cream); font-family: var(--font-body); font-weight: 700; font-size: var(--t-small);
+}
+.bar__menu:hover { background: color-mix(in srgb, var(--cream) 14%, transparent); }
+.bar .menu summary:focus-visible { outline-color: var(--cream); }
 
 .site { display: block; }
 .site__body {
@@ -696,21 +814,26 @@ button { font: inherit; color: inherit; }
 
 /* ---- Shared footer (every page, D3) ------------------------- */
 .site-foot {
-  max-width: 560px; margin: var(--sp-5) auto 0;
-  padding: var(--sp-4) var(--sp-4) calc(var(--sp-6) + env(safe-area-inset-bottom));
+  max-width: 560px; margin: var(--sp-4) auto 0;
+  padding: var(--sp-2) var(--sp-4) calc(var(--sp-4) + env(safe-area-inset-bottom));
   border-top: 1px solid var(--surface-deep);
   text-align: center;
 }
-.site-foot__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 var(--sp-3); }
-.site-foot__links a {
-  display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--sp-1);
-  font-size: var(--t-small); font-weight: 700; color: var(--brand-text); text-decoration: none;
+/* One quiet row: the text pages, then the theme button. */
+.site-foot__links { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0 var(--sp-1); }
+.site-foot__links a, .theme-btn {
+  display: inline-flex; align-items: center; min-height: 32px; padding: 0 var(--sp-2);
+  font-family: var(--font-body); font-size: 13px; font-weight: 700; color: var(--text-soft); text-decoration: none;
 }
-.site-foot__links a:hover { text-decoration: underline; }
+/* The theme button steps Auto, Light, Dark (src/lib/theme.ts). */
+.theme-btn { appearance: none; cursor: pointer; gap: .3em; border: 0; background: none; color: var(--text-mute); }   /* gap: flex drops the space before the label */
+@media (hover: hover) {
+  .site-foot__links a:hover, .theme-btn:hover { color: var(--brand-text); text-decoration: underline; }
+}
 .site-foot__maker {
-  margin: var(--sp-3) 0 0;
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
-  font-size: 11px; color: var(--text-mute); letter-spacing: .08em; text-transform: uppercase;
+  margin: var(--sp-2) 0 0;
+  display: flex; align-items: center; justify-content: center; gap: var(--sp-2);
+  font-size: 10px; color: var(--text-mute); letter-spacing: .08em; text-transform: uppercase;
 }
 .site-foot .wnd-logo { --logo-fg: var(--brand-text); --logo-ac: var(--accent-text); }
 
@@ -718,7 +841,7 @@ button { font: inherit; color: inherit; }
 .howto {
   margin: 0 0 var(--sp-4); padding: var(--sp-4) var(--sp-4) var(--sp-3);
   background: var(--surface); border: 1px solid var(--surface-deep);
-  border-left: 5px solid var(--sun); border-radius: var(--r-md);
+  border-left: 5px solid var(--game-accent, var(--sun)); border-radius: var(--r-md);
 }
 .howto__title {
   margin: 0 0 var(--sp-2);
@@ -746,13 +869,10 @@ button { font: inherit; color: inherit; }
 @media print {
   @page { margin: 12mm; }
   body { background: #fff; color: #000; }
-  .masthead { background: none; color: #000; padding: 0 0 8mm; }
-  .masthead .wnd-logo { display: none; }
-  .masthead__title { color: #000; font-size: 28pt; }
-  .masthead__title em { color: #000; }
-  .menu, .cell__info, .howto, .site-foot, .colophon, .skip-link, .bingo-banner,
-  .modes, .chips, .mode-hint, .hunt__info { display: none !important; }
-  .controls__actions #card-toggle { display: none !important; }   /* the racer flip (Plant bingo); Osa keeps its card number */
+  .bar { position: static; background: none; color: #000; padding: 0 0 6mm; border: 0; min-height: 0; }
+  .bar__title, .bar__title em { color: #000; font-size: 28pt; }
+  .menu, .bar__back, .cell__info, .howto, .site-foot, .colophon, .skip-link, .bingo-banner,
+  .modes, .chips, .status__btn, .note-line, .hunt__info { display: none !important; }
   .controls { display: block; margin-bottom: 4mm; }
   .grid { gap: 2mm; }
   .cell {

@@ -26,7 +26,7 @@ existing `?s=<seed>&c=<card>` link keeps its meaning.
 | D8 | States | Loading shows a **skeleton grid** in the card's exact shape. Errors show **plain-words cards** in the grid's place, each with one button. A missing photo falls back to the name on paper. Details are in the states section below. |
 | D9 | Site pages | There are four short pages: `/how-to-play`, `/about`, `/credits` (generated from every game's data, grouped by game) and `/privacy` (about 150 words). The game pages no longer carry the long credits list; instead they get a footer link to `/credits#<game>`. |
 | D10 | Share previews | Each game gets one **static 1200×630 image**, built at deploy time: name, place and a photo mosaic. The title reads "Osa wildlife bingo · Species bingo" and the description "Join my card. Tap to play, works offline." Every seed shows the same preview. Per-seed images would need server code, which the roadmap rules out. |
-| D11 | Theme | There is **one theme across the site**, in light and dark, with a **Light / Dark / Auto toggle** (default Auto, follows the phone). The choice is site-wide and saved on the phone. Moplants' semantic tokens (`--bg`, `--surface`, `--text`, …) move into core on top of `tokens.css`. A game may set only an **accent** colour, used for the hub card stripe, a 2px line under the top bar and the preview image. The accent never appears on a marked cell. |
+| D11 | Theme | There is **one theme across the site**, in light and dark, with a **single theme button** that steps Auto, Light, Dark (default Auto, follows the phone). The choice is site-wide and saved on the phone. Moplants' semantic tokens (`--bg`, `--surface`, `--text`, …) move into core on top of `tokens.css`. A game may set only an **accent** colour, used for the hub card stripe, a 2px line under the top bar and the preview image. The accent never appears on a marked cell. |
 
 ## Pages and screens
 
@@ -113,7 +113,7 @@ workers stay scoped to their own folders, as in roadmap step 2.
   hide and progress reads "12 of 48 found".
 - **Actions menu** keeps today's items, in this order: Copy link (with
   seed), New card, Reset marks, then a divider, How to play and Theme
-  (Light / Dark / Auto). New card and Reset stay behind the menu because a
+  (one row that steps Auto, Light, Dark). New card and Reset stay behind the menu because a
   stray tap on either loses progress.
 - **Hunt** keeps the category chips and the list rows. **Race** keeps the
   2×5 board. Both use the same top bar, status row and banner.

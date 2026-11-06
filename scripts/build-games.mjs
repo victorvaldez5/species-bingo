@@ -97,6 +97,7 @@ function validateOsa(g, species, placeholders, errors, warnings) {
     // Both variants must exist on disk, or offline breaks for whichever the browser picks.
     for (const ext of ['webp', 'jpg']) {
       if (!existsSync(join(dir, `${s.photo}.${ext}`))) errors.push(`[${s.id}] photo missing on disk: ${s.photo}.${ext}`);
+      if (!existsSync(join(dir, `img/thumb/${s.id}.${ext}`))) errors.push(`[${s.id}] thumb missing on disk: img/thumb/${s.id}.${ext} (run npm run images).`);
     }
 
     // Credit / license: a legal requirement once a real photo ships.
@@ -107,7 +108,7 @@ function validateOsa(g, species, placeholders, errors, warnings) {
       else errors.push(`[${s.id}] real photo present but credit/license is empty. CC-BY attribution is required to ship.`);
     }
   }
-  orphans(species, dir, ['img'], errors);
+  orphans(species, dir, ['img', 'img/thumb'], errors);
 }
 
 function validateMoplants(g, species, placeholders, errors) {

@@ -4,6 +4,8 @@
 // "All games" goes back to the hub.
 interface Props { game?: string }
 const { game } = Astro.props;
+// Game pages keep the theme switch in their Actions menu; the hub and the
+// text pages keep it here.
 ---
 <footer class="site-foot">
   <nav class="site-foot__links" aria-label="Site">
@@ -12,10 +14,11 @@ const { game } = Astro.props;
     {game ? <a href={`/credits/#${game}`}>Photo credits</a> : <a href="/credits/">Credits</a>}
     <a href="/privacy/">Privacy</a>
     {game && <a href="/">All games</a>}
+    {!game && <button type="button" class="theme-btn" data-theme-cycle>Theme: <span data-theme-label>Auto</span></button>}
   </nav>
   <p class="site-foot__maker">
     <span>made by</span>
-    <span class="wnd-logo" style="--logo-size: 18px" role="img" aria-label="Wild and Native Gardens">
+    <span class="wnd-logo" style="--logo-size: 14px" role="img" aria-label="Wild and Native Gardens">
       <span class="wnd-logo__row" aria-hidden="true">Wild <em>&amp;</em> Native</span>
       <span class="wnd-logo__sub" aria-hidden="true"><span>Gardens</span></span>
     </span>

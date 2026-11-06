@@ -28,6 +28,7 @@
   const RACE_SIZE = cfg.raceSize;
   const CELLS = cfg.storage.marks === 'cells';      // marks are cell indices, else item ids
   const MSG = cfg.messages;
+  const WORDS = cfg.words;                          // banner stamp + message per mode
   const DEFAULT_MODE = cfg.modes[0].id;
   const DEFAULT_PATTERN = cfg.patterns[0].key;
 
@@ -70,7 +71,7 @@
   // has no seed) reopens your in-progress card instead of dealing a new one.
   function saveLast() {
     const { seed, card, mode, pattern } = state;
-    try { localStorage.setItem(LAST_KEY, JSON.stringify({ seed, card, mode, pattern })); } catch { /* ignore */ }
+    try { localStorage.setItem(LAST_KEY, JSON.stringify({ seed, card, mode, pattern })); } catch { storageBlocked(); }
   }
   function loadLast() {
     let raw = null;
@@ -97,7 +98,7 @@
     const set = new Set(state.marks);
     if (FREE && state.free) set.add(CENTER);
     try { localStorage.setItem(marksKey(state.seed, state.card), JSON.stringify([...set])); }
-    catch { /* private mode / blocked storage: card still works this session */ }
+    catch { storageBlocked(); }          // private mode: the card still works this session
   }
 
   // Race marks live beside the bingo marks under their own key, with the
@@ -113,12 +114,12 @@
       const k = Keys.raceEnd(cfg, state.seed, state.card);
       if (state.raceEnd) localStorage.setItem(k, String(state.raceEnd));
       else localStorage.removeItem(k);
-    } catch { /* ignore */ }
+    } catch { storageBlocked(); }
   }
 
   // The hunt list is one checklist per phone, not per seed: it runs the trip.
   function saveFound() {
-    try { localStorage.setItem(HUNT_KEY, JSON.stringify([...state.found])); } catch { /* ignore */ }
+    try { localStorage.setItem(HUNT_KEY, JSON.stringify([...state.found])); } catch { storageBlocked(); }
   }
 
   // ---- URL / seed --------------------------------------------
@@ -163,6 +164,7 @@
       `<img class="${cls}" src="${esc(stem)}.jpg" alt="${esc(alt)}" decoding="async" draggable="false">` +
       `</picture>`;
   }
+  const hasPhoto = s => Boolean(s.photo);   // an item with no photo yet shows its name on paper
   const link = (url, label) => `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(label)}</a>`;
   const checkSvg = cls => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5 11-12" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   const CHECK = checkSvg('cell__check');
@@ -219,7 +221,7 @@
     renderProgress();
   }
 
-  // Mode switch, pattern chips, section visibility and the mode-specific
+  // Mode switch, status row parts, section visibility and the mode-specific
   // labels on the shared controls.
   function renderChrome() {
     const { mode } = state;
@@ -229,20 +231,24 @@
     for (const b of document.querySelectorAll('[data-pattern]')) {
       b.setAttribute('aria-pressed', String(b.dataset.pattern === state.pattern));
     }
-    $('#patterns').hidden = mode !== 'bingo';
     $('#grid').hidden = mode !== 'bingo';
     $('#hunt').hidden = mode !== 'hunt';
     $('#race').hidden = mode !== 'race';
-    // A card pair flips in bingo and race; otherwise only racers flip.
+    // Status row: Hunt shows progress only. A card pair flips in bingo and
+    // race; otherwise only racers flip.
+    const open = $('#pattern-open');
+    open.hidden = mode !== 'bingo';
+    open.innerHTML = `${esc(PATTERNS[state.pattern].label)} <span aria-hidden="true">&#9662;</span>`;
+    open.setAttribute('aria-label', `Win pattern: ${PATTERNS[state.pattern].label}. Change`);
     $('#card-toggle').hidden = cfg.cardPair ? mode === 'hunt' : mode !== 'race';
     $('#copy-link').hidden = mode === 'hunt';
     $('#new-card').hidden = mode === 'hunt';
     $('#new-card').textContent = mode === 'race' ? 'New race' : 'New card';
     $('#copy-link .menu__share-head').textContent = mode === 'race' ? 'Copy link to this race' : 'Copy link to this card';
-    $('#mode-hint').textContent =
-      mode === 'hunt' ? MSG.hintHunt
-      : mode === 'race' ? fill(MSG.hintRace, { raceSize: RACE_SIZE })
-      : PATTERNS[state.pattern].hint;
+    // The note under the card describes the mode on screen.
+    const [main, seed] = (cfg.colophon[mode] || cfg.colophon.bingo).map(t => t.replace('{raceSize}', RACE_SIZE));
+    $('#colophon-main').textContent = main;
+    $('#colophon-seed').textContent = seed;
   }
 
   function hideBanner() {
@@ -282,10 +288,10 @@
       if (!s) { html += `<div class="cell cell--empty" aria-hidden="true"></div>`; continue; }
       const marked = isMarked(i);
       const inLine = lineCells.has(i);
-      html += `<div class="cell${marked ? ' is-marked' : ''}${inLine ? ' is-line' : ''}${targets.has(i) ? ' is-target' : ''}" data-index="${i}">` +
+      html += `<div class="cell${marked ? ' is-marked' : ''}${inLine ? ' is-line' : ''}${targets.has(i) ? ' is-target' : ''}${hasPhoto(s) ? '' : ' cell--noimg'}" data-index="${i}">` +
         `<button class="cell__mark" type="button" aria-pressed="${marked}" ` +
         `aria-label="${esc(s.name)}${marked ? ', spotted' : ''}" data-mark="${i}">` +
-        pictureHtml(gridStem(s), s.name, 'cell__photo') +
+        (hasPhoto(s) ? pictureHtml(gridStem(s), s.name, 'cell__photo') : '') +
         `<span class="cell__name">${esc(cellLabel(s))}</span>` +
         CHECK +
         `</button>` +
@@ -333,34 +339,43 @@
     paintFree();
   }
 
+  // The status row's progress, in mono: "8/24" on a card (with the pattern's
+  // own count when the pattern has fixed cells), "3/10" in a race, and in
+  // Hunt the plain "12 of 48 found". The visually hidden words keep it
+  // readable to a screen reader.
   function renderProgress() {
-    let text;
+    let html;
     if (state.mode === 'hunt') {
-      text = `${state.found.size} of ${state.data.species.length} found`;
+      html = `${state.found.size} of ${state.data.species.length} found`;
     } else if (state.mode === 'race') {
-      text = `${state.raceMarks.size} of ${RACE_SIZE} found`;
+      html = `${state.raceMarks.size}/${RACE_SIZE}<span class="vh"> found</span>`;
     } else {
-      text = `${state.marks.size} of ${POSITIONS.length} spotted`;
+      html = `${state.marks.size}/${POSITIONS.length}<span class="vh"> spotted</span>`;
       const targets = [...patternTargets()].filter(i => !FREE || i !== CENTER);
       if (targets.length) {
-        text += ` · ${targets.filter(isMarked).length} of ${targets.length} on the pattern`;
+        html += ` &middot; ${targets.filter(isMarked).length}/${targets.length}<span class="vh"> on the pattern</span>`;
       }
     }
-    $('#progress').textContent = text;
-    $('#card-toggle').textContent = `${state.mode === 'race' || !cfg.cardPair ? 'Racer' : 'Card'} ${state.card} of 2`;
+    $('#progress').innerHTML = html;
+    const racer = state.mode === 'race' || !cfg.cardPair;
+    $('#card-toggle').innerHTML = `${racer ? 'Racer' : 'Card'} ${state.card} <span aria-hidden="true">&#8644;</span>`;
+    $('#card-toggle').setAttribute('aria-label', `${racer ? 'Racer' : 'Card'} ${state.card} of 2. Switch to ${racer ? 'racer' : 'card'} ${state.card === 1 ? 2 : 1}`);
     $('#seed').textContent = state.seed;
+    // Hunt with nothing found yet: one line above the list (S8).
+    $('#hunt-empty').hidden = !(state.mode === 'hunt' && state.found.size === 0);
   }
 
   function renderBingo(justChanged) {
     const n = completedLines().length;
     if (n === 0) { hideBanner(); state.lines = 0; return; }
+    const w = WORDS.bingo;
     let msg = PATTERNS[state.pattern].win;
     if (!msg) {
-      if (state.marks.size === POSITIONS.length) msg = MSG.fullCard;
-      else if (n === 1) msg = 'That is a line. Bingo.';
-      else msg = `${n} full lines now.`;
+      if (state.marks.size === POSITIONS.length) msg = w.full;
+      else if (n === 1) msg = w.line;
+      else msg = fill(w.lines, { n });
     }
-    showBanner('bingo.', msg);
+    showBanner(w.stamp, msg);
     if (justChanged && n > state.lines) buzz();
     state.lines = n;
   }
@@ -397,10 +412,10 @@
 
   function huntRowHtml(s) {
     const found = state.found.has(s.id);
-    return `<li class="hunt__item${found ? ' is-found' : ''}" data-id="${esc(s.id)}">` +
+    return `<li class="hunt__item${found ? ' is-found' : ''}${hasPhoto(s) ? '' : ' is-noimg'}" data-id="${esc(s.id)}">` +
       `<button class="hunt__mark" type="button" aria-pressed="${found}" ` +
       `aria-label="${esc(s.name)}${found ? ', found' : ''}" data-hunt="${esc(s.id)}">` +
-      pictureHtml(gridStem(s), '', 'hunt__thumb') +
+      (hasPhoto(s) ? pictureHtml(gridStem(s), '', 'hunt__thumb') : '') +
       `<span class="hunt__text"><span class="hunt__name">${esc(s.name)}</span>` +
       huntSubtitle(s) + `</span>` +
       `<span class="hunt__box">${checkSvg('hunt__check')}</span>` +
@@ -449,7 +464,7 @@
 
   function renderHuntDone() {
     if (state.found.size === state.data.species.length) {
-      showBanner('found.', fill(MSG.huntDone, { n: state.found.size, noun: cfg.list.noun }));
+      showBanner(WORDS.hunt.stamp, fill(WORDS.hunt.done, { n: state.found.size, noun: cfg.list.noun }));
     } else hideBanner();
   }
 
@@ -457,10 +472,10 @@
   function buildRace() {
     $('#race').innerHTML = state.race.map((s, i) => {
       const marked = state.raceMarks.has(raceKey(i));
-      return `<div class="cell${marked ? ' is-marked' : ''}" data-race-index="${i}">` +
+      return `<div class="cell${marked ? ' is-marked' : ''}${hasPhoto(s) ? '' : ' cell--noimg'}" data-race-index="${i}">` +
         `<button class="cell__mark" type="button" aria-pressed="${marked}" ` +
         `aria-label="${esc(s.name)}${marked ? ', found' : ''}" data-race-mark="${i}">` +
-        pictureHtml(gridStem(s), s.name, 'cell__photo') +
+        (hasPhoto(s) ? pictureHtml(gridStem(s), s.name, 'cell__photo') : '') +
         `<span class="cell__name">${esc(cellLabel(s))}</span>` +
         CHECK +
         `</button>` +
@@ -494,7 +509,7 @@
 
   function renderRaceDone(justFinished) {
     if (state.raceEnd && raceDone()) {
-      showBanner('done.', `All ${RACE_SIZE} found at ${fmtClock(state.raceEnd)}. Compare times: the earlier finish wins.`);
+      showBanner(WORDS.race.stamp, fill(WORDS.race.done, { raceSize: RACE_SIZE, time: fmtClock(state.raceEnd) }));
       if (justFinished) buzz();
     } else hideBanner();
   }
@@ -508,9 +523,13 @@
   function openDetail(s, readMark, toggle) {
     if (!s) return;
     detail = { isMarked: readMark, toggle };
-    $('#detail-picture').innerHTML =
-      `<source srcset="${esc(s.photo)}.webp" type="image/webp">` +
-      `<img src="${esc(s.photo)}.jpg" alt="${esc(s.name)}" decoding="async">`;
+    // No photo yet: the sheet says it is coming rather than showing a gap.
+    $('#detail-picture').hidden = !hasPhoto(s);
+    $('#detail-nophoto').hidden = hasPhoto(s);
+    $('#detail-picture').innerHTML = hasPhoto(s)
+      ? `<source srcset="${esc(s.photo)}.webp" type="image/webp">` +
+        `<img src="${esc(s.photo)}.jpg" alt="${esc(s.name)}" decoding="async">`
+      : '';
     $('#detail-category').textContent = s[DETAIL.category] || '';
     $('#detail-name').textContent = s.name;
 
@@ -696,19 +715,103 @@
     });
   }
 
+  // ---- Loading and error cards (S7, S8) ----------------------
+  // The page ships a skeleton card and "Dealing your card..."; both go the
+  // moment the list is dealt. An error takes the card's place with one card
+  // and one or two buttons, and the controls step aside.
+  const SKELETON = $('#grid').innerHTML;
+  let wired = false;
+  function showLoading() {
+    $('#state').hidden = true; $('#state').innerHTML = '';
+    document.body.classList.remove('is-error');
+    $('#controls').hidden = false;
+    $('#play').hidden = false;
+    $('#grid').hidden = false; $('#grid').innerHTML = SKELETON; $('#grid').setAttribute('aria-busy', 'true');
+    $('#hunt').hidden = true; $('#race').hidden = true;
+    $('#pattern-open').hidden = true; $('#card-toggle').hidden = true;
+    $('#progress').textContent = 'Dealing your card…';
+  }
+  function showError({ icon, title, body, retry, alt }) {
+    for (const id of ['#controls', '#play', '#notice', '#howto']) $(id).hidden = true;
+    hideBanner();
+    document.body.classList.add('is-error');
+    const buttons = (retry ? `<button class="btn" type="button" data-retry>Try again</button>` : '') +
+      (alt ? `<a class="btn ${retry ? 'btn--ghost' : ''}" href="${esc(alt.href)}">${esc(alt.label)}</a>` : '');
+    const box = $('#state');
+    box.innerHTML = `<div class="errcard"><p class="errcard__icon" aria-hidden="true">${esc(icon)}</p>` +
+      `<h2 class="errcard__title" tabindex="-1">${esc(title)}</h2><p class="errcard__body">${esc(body)}</p>` +
+      `<div class="errcard__acts">${buttons}</div></div>`;
+    box.hidden = false;
+    box.querySelector('.errcard__title').focus({ preventScroll: true });
+  }
+  // The list would not load. A network failure is the offline case, with
+  // the game's own words; anything else (a server error, a broken file) is a
+  // plain "try again".
+  function showLoadError(offline) {
+    if (offline) showError({ icon: 'no signal.', ...cfg.errors.offline, retry: true, alt: cfg.errors.offline.alt });
+    else showError({ icon: 'hmm.', title: 'Could not load this game', body: 'Something went wrong getting the list. Try again in a moment.', retry: true });
+  }
+  // A link that names a mode this game does not have is not one of its
+  // links. Anything else (a missing or odd seed, card or pattern) still opens.
+  function badLink() {
+    const m = new URLSearchParams(location.search).get('m');
+    return Boolean(m) && !cfg.modes.some(x => x.id === m);
+  }
+  // Storage that refuses writes (private browsing): say so in one line and
+  // carry on. Called from every write that fails, and once up front.
+  function storageBlocked() {
+    const note = $('#notice');
+    if (note) note.hidden = false;
+  }
+  function probeStorage() {
+    try { localStorage.setItem('species-bingo:probe', '1'); localStorage.removeItem('species-bingo:probe'); }
+    catch { storageBlocked(); }
+  }
+  // A photo that will not load becomes the name on paper (cells, race) or an
+  // empty frame (hunt rows) or the drawer's "photo coming soon". Image
+  // errors do not bubble, so listen in the capture phase.
+  document.addEventListener('error', e => {
+    const img = e.target;
+    if (!(img instanceof HTMLImageElement)) return;
+    if (img.closest('#detail-picture')) {
+      $('#detail-picture').hidden = true; $('#detail-nophoto').hidden = false;
+    } else if (img.classList.contains('cell__photo')) {
+      img.closest('.cell')?.classList.add('cell--noimg');
+      img.closest('picture')?.remove();
+    } else if (img.classList.contains('hunt__thumb')) {
+      img.closest('.hunt__item')?.classList.add('is-noimg');
+      img.closest('picture')?.remove();
+    }
+  }, true);
+
   // ---- Init --------------------------------------------------
-  async function init() {
-    try {
-      const res = await fetch(cfg.list.file, { cache: 'no-cache' });
-      state.data = await res.json();
-    } catch (err) {
-      $('#grid').innerHTML = `<p class="loaderr">${esc(MSG.loadError)}</p>`;
+  async function boot() {
+    showLoading();
+    if (badLink()) {
+      showError({ icon: 'lost.', title: 'That link doesn’t match a game here', body: 'Pick a game to start a card.', alt: { label: 'All games', href: '/' } });
       return;
     }
+    try {
+      const res = await fetch(cfg.list.file, { cache: 'no-cache' });
+      if (!res.ok) throw new Error(`list ${res.status}`);
+      state.data = await res.json();
+      if (!Array.isArray(state.data.species) || !state.data.species.length) throw new Error('empty list');
+    } catch (err) {
+      showLoadError(err instanceof TypeError || navigator.onLine === false);
+      return;
+    }
+    start();
+  }
 
+  function start() {
+    $('#grid').removeAttribute('aria-busy');
     if (cfg.belowCard) renderSafety();
     initHowto();
     state.found = loadIds(HUNT_KEY);
+    probeStorage();
+
+    if (wired) { resolveCard(); return; }
+    wired = true;
 
     // Event delegation on the grid.
     $('#grid').addEventListener('click', e => {
@@ -746,10 +849,22 @@
       const b = e.target.closest('[data-mode]');
       if (b) setMode(b.dataset.mode);
     });
-    $('#patterns').addEventListener('click', e => {
-      const b = e.target.closest('[data-pattern]');
-      if (b) setPattern(b.dataset.pattern);
+
+    // Pattern sheet (S3): tap a pattern to pick it and close; the backdrop,
+    // the x and Escape close it too. Focus lands on the chosen pattern and
+    // goes back to the status row's button afterwards.
+    const patternSheet = $('#pattern-sheet');
+    $('#pattern-open').addEventListener('click', () => {
+      if (typeof patternSheet.showModal === 'function') patternSheet.showModal();
+      else patternSheet.setAttribute('open', '');
+      patternSheet.querySelector('[aria-pressed="true"]')?.focus();
     });
+    patternSheet.addEventListener('click', e => {
+      if (e.target === patternSheet) { patternSheet.close(); return; }
+      const b = e.target.closest('[data-pattern]');
+      if (b) { setPattern(b.dataset.pattern); patternSheet.close(); }
+    });
+    patternSheet.addEventListener('close', () => $('#pattern-open').focus());
 
     $('#detail-mark').addEventListener('click', () => {
       detail.toggle();
@@ -776,14 +891,18 @@
     });
     actionsMenu.querySelector('.menu__panel').addEventListener('click', e => {
       const btn = e.target.closest('button');
-      // Keep the menu open for copy-link so its "Link copied" feedback shows.
-      if (btn && btn.id !== 'copy-link') actionsMenu.open = false;
+      // Keep the menu open for copy-link (its "Link copied" feedback) and for
+      // the theme button (so the change is seen).
+      if (btn && btn.id !== 'copy-link' && !btn.hasAttribute('data-theme-cycle')) actionsMenu.open = false;
     });
     document.addEventListener('click', e => {
       if (actionsMenu.open && !actionsMenu.contains(e.target)) actionsMenu.open = false;
     });
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && actionsMenu.open) actionsMenu.open = false;
+      if (e.key === 'Escape' && actionsMenu.open) {
+        actionsMenu.open = false;
+        actionsMenu.querySelector('summary').focus();
+      }
     });
     $('#confirm-cancel').addEventListener('click', () => $('#confirm-reset').close());
     $('#confirm-yes').addEventListener('click', () => { $('#confirm-reset').close(); resetMarks(); });
@@ -799,10 +918,14 @@
       render();
     });
 
-    // Seed resolution: an explicit URL seed wins; otherwise reopen the last
-    // card you were on (so the installed app resumes); otherwise deal a fresh
-    // seed. Mode and pattern resolve the same way. Either way it is written
-    // into the URL so it is linkable.
+    resolveCard();
+  }
+
+  // Seed resolution: an explicit URL seed wins; otherwise reopen the last
+  // card you were on (so the installed app resumes); otherwise deal a fresh
+  // seed. Mode and pattern resolve the same way. Either way it is written
+  // into the URL so it is linkable.
+  function resolveCard() {
     const url = readUrl();
     const last = loadLast() || {};
     state.mode = url.mode || (cfg.modes.some(m => m.id === last.mode) ? last.mode : DEFAULT_MODE);
@@ -810,6 +933,14 @@
     if (url.seed) loadCard(url.seed, url.card, false);
     else if (last.seed) loadCard(last.seed, last.card === 2 ? 2 : 1, false);
     else loadCard(randomSeed(), 1, false);
+  }
+
+  function init() {
+    // "Try again" on an error card loads the list again without a reload.
+    $('#state').addEventListener('click', e => {
+      if (e.target.closest('[data-retry]')) boot();
+    });
+    boot();
   }
 
   // ---- Service worker (each game registers its own) ----------

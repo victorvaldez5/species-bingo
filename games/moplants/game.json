@@ -24,12 +24,8 @@
     "description": "Join my card. Tap to play.",
     "image": "/og/moplants.png"
   },
-  "masthead": { "lead": "Plant", "em": "bingo." },
   "offline": false,
   "worker": "sw.js",
-  "scheme": null,
-  "metaColorScheme": "light dark",
-  "controlsLayout": "grouped",
 
   "list": { "file": "species.json", "expected": 25, "noun": "plants" },
   "freeCentre": false,
@@ -89,18 +85,29 @@
     "withSources": true
   },
 
-  "colophon": [
-    "All 25 plants on every card, in a fresh order each time. Needs a connection.",
-    "Same seed, same card, on any phone."
-  ],
+  "colophon": {
+    "bingo": ["All 25 plants on every card, in a fresh order each time. Needs a connection.", "Same seed, same card, on any phone."],
+    "hunt": ["Every plant on one list. Needs a connection.", "Your list stays on this phone."],
+    "race": ["Each racer chases {raceSize} different plants. Needs a connection.", "Same seed, same race, on any phone."]
+  },
   "noscript": "This bingo card needs JavaScript to deal the plants and remember what you have spotted.",
 
+  "words": {
+    "bingo": { "stamp": "bingo.", "line": "That is a line. Bingo.", "lines": "{n} full lines now.", "full": "Full card. Every plant on the board." },
+    "hunt": { "stamp": "found.", "done": "All {n} {noun} on the list." },
+    "race": { "stamp": "done.", "done": "All {raceSize} found at {time}. Compare times: the earlier finish wins." }
+  },
+
   "messages": {
-    "hintHunt": "All 25 plants as one checklist that carries across cards. Tap each one the first time you see it.",
-    "hintRace": "Two racers on the same seed get {raceSize} different plants each. First to find all of theirs wins.",
-    "huntDone": "All {n} {noun} on the list.",
-    "fullCard": "Full card. Every plant on the board.",
-    "resetCardBody": "This clears {what} on this card. You cannot undo it.",
-    "loadError": "Could not load the plant list. Check your connection and reload."
+    "huntEmpty": "Tap each plant the first time you see it. This list carries across cards.",
+    "resetCardBody": "This clears {what} on this card. You cannot undo it."
+  },
+
+  "errors": {
+    "offline": {
+      "title": "This game needs a connection",
+      "body": "Osa wildlife bingo works offline.",
+      "alt": { "label": "Go to Osa", "href": "/osa/" }
+    }
   }
 }

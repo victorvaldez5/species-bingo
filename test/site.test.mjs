@@ -24,7 +24,11 @@ for (const name of ['how-to-play', 'about', 'credits', 'privacy']) {
     }
     assert.ok(html.includes('class="wnd-logo'), 'maker lockup');
     assert.ok(html.includes('href="/"'), 'back to the hub');
-    assert.ok(!html.includes('<script'), 'a text page needs no script');
+    // The only script is the theme one in <head>; the footer carries the toggle.
+    const scripts = html.match(/<script[\s>]/g) || [];
+    assert.equal(scripts.length, 1, 'a text page has just the theme script');
+    assert.ok(html.slice(0, html.indexOf('</head>')).includes('species-bingo:theme'), 'theme script in <head>');
+    assert.equal((html.slice(html.indexOf("</head>")).match(/data-theme-cycle/g) || []).length, 1, 'one theme button in the footer');
   });
 }
 

@@ -5,6 +5,7 @@
 // pages sit at the site root. Scripts are is:inline so nothing is bundled.
 import Share from '../components/Share.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import { themeScript } from '../lib/theme';
 
 interface Props {
   title: string;
@@ -29,6 +30,7 @@ const share = og ?? { title, description, image: '/og/hub.png' };
 
   <meta name="theme-color" content="#36492e">
   <meta name="color-scheme" content="light dark">
+  <script is:inline set:html={themeScript}></script>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" href="/icons/icon-192.png" sizes="192x192" type="image/png">
   <link rel="apple-touch-icon" href="/icons/icon-192.png">

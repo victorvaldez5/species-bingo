@@ -29,7 +29,7 @@
    ============================================================= */
 
 const VERSION = 'v1';                                       // manual major
-const BUILD = 'cd5af8a5be';                                 // BUILD (rewritten by build-games)
+const BUILD = '03a6789575';                                 // BUILD (rewritten by build-games)
 const PREFIX = 'species-bingo-root-';
 const CACHE = `${PREFIX}${VERSION}-${BUILD}`;
 
@@ -61,16 +61,16 @@ const PRECACHE = [
   'fonts/NunitoSans.woff2',
   'fonts/PlayfairDisplay-italic.woff2',
   'fonts/PlayfairDisplay-roman.woff2',
-  'osa/img/scarlet-macaw.webp',
-  'osa/img/scarlet-macaw.jpg',
-  'osa/img/blue-morpho-butterfly.webp',
-  'osa/img/blue-morpho-butterfly.jpg',
-  'osa/img/red-eyed-tree-frog.webp',
-  'osa/img/red-eyed-tree-frog.jpg',
-  'osa/img/three-toed-sloth.webp',
-  'osa/img/three-toed-sloth.jpg',
-  'osa/img/chestnut-mandibled-toucan.webp',
-  'osa/img/chestnut-mandibled-toucan.jpg',
+  'osa/img/thumb/scarlet-macaw.webp',
+  'osa/img/thumb/scarlet-macaw.jpg',
+  'osa/img/thumb/blue-morpho-butterfly.webp',
+  'osa/img/thumb/blue-morpho-butterfly.jpg',
+  'osa/img/thumb/red-eyed-tree-frog.webp',
+  'osa/img/thumb/red-eyed-tree-frog.jpg',
+  'osa/img/thumb/three-toed-sloth.webp',
+  'osa/img/thumb/three-toed-sloth.jpg',
+  'osa/img/thumb/chestnut-mandibled-toucan.webp',
+  'osa/img/thumb/chestnut-mandibled-toucan.jpg',
   'moplants/img/thumb/cardinal-flower.webp',
   'moplants/img/thumb/cardinal-flower.jpg',
   'moplants/img/thumb/pink-lemonade.webp',

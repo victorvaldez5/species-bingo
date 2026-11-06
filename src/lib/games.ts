@@ -45,6 +45,13 @@ export function photoStem(game: Game, item: any): string {
   return game.path + (gp.variant === 'thumb' ? `${gp.dir}${item.id}` : item.photo);
 }
 
+// A hub-strip photo (no extension). `hub.stripDir` points the strip at small
+// thumbs when the grid itself uses full photos (Osa precaches those for
+// offline play; the thumbs are only for the hub, which caches at runtime).
+export function stripStem(game: Game, item: any): string {
+  return game.hub.stripDir ? `${game.path}${game.hub.stripDir}${item.id}` : photoStem(game, item);
+}
+
 // Win-pattern shapes as cell sets, for the small pictures. `line` shows the
 // middle row as its example.
 export function shapeCells(shape: string): Set<number> {

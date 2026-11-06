@@ -48,7 +48,7 @@ games/                  one folder of settings per game, plus the list of games
   moplants/game.json    the same for Plant bingo
 src/pages/              the two HTML pages (Astro): thin wrappers that pass a game.json to Game.astro
 src/components/Game.astro  renders one game from its game.json, inline config included
-src/layouts/Page.astro  head, masthead and noscript shared by every game
+src/layouts/Page.astro  head, the compact top bar (back, name, Actions) and noscript shared by every game
 worker/index.js         the thin Cloudflare Worker: redirects old Osa links, logs page views (see Routing)
 astro.config.mjs        static output, no bundling of CSS or JS
 dist/                   build output, git-ignored: this is what is deployed
@@ -102,7 +102,7 @@ Both games run the same code. `public/core/bingo.js` is a plain classic script
 `<script type="application/json" id="game-config">`. Nothing in the core
 checks a game id: if two games differ, the difference is a key in `game.json`.
 
-`game.json` holds the page text (title, masthead, colophon, credits wording,
+`game.json` holds the page text (title, colophon, credits wording,
 noscript), `offline` and `worker` (the service worker file the page registers,
 relative to the page: Osa's offline worker, Plant bingo's network-first one), the list
 file with its expected count and noun, `freeCentre`, `cardPair`, the deal and
@@ -111,8 +111,12 @@ race strategy names (`stratified-pair`, `shuffle-all`, `shuffle-split`, all in
 stored (`storage.marks`: `cells` or `ids`) and when the card number rides in
 the link (`urlCard`: `always` or `race`), which photo the grid shows, how Hunt
 groups the list, which fields the detail sheet reads, the optional section under
-the card (`belowCard`, Osa's "Keep your distance") and the colour scheme
-(`scheme: "light"` opts a page out of dark mode).
+the card (`belowCard`, Osa's "Keep your distance"), the banner wording per mode
+(`words`), the offline and empty-Hunt lines (`errors`, `messages`) and the accent
+colour (`hub.accent`, the line under the top bar and the hub card stripe). There
+is one theme for the whole site, light and dark, with one small "Theme: Auto" button that
+steps Auto, Light, Dark (Actions menu in a game, footer elsewhere) stored under `species-bingo:theme`;
+the inline head script in `src/lib/theme.ts` applies it before first paint.
 
 **To add a game:** add `games/<id>/game.json`, an entry in `games/games.json`, a
 page that renders `<Game game={...} />`, and the game's own `species.json`,
@@ -361,8 +365,7 @@ list's owner are in `MOPLANTS.md`). It shares the core, `tokens.css` and
 - **Same UX as Osa, same code.** It runs the shared core (`/core/bingo.js`,
   `/core/styles.css`) with its own `games/moplants/game.json`, so a component
   change lands in both games. Surfaces and text go through semantic tokens, so
-  Plant bingo also has a system-driven dark mode; Osa is pinned to light
-  (`"scheme": "light"`) for now.
+  both games follow the site-wide light / dark theme.
 - 25 plants, 5 x 5, **no free space**, no card pair. A seed (`?s=`, same
   xmur3 + mulberry32 deal as Osa) puts all 25 in a deterministic order, so a
   copied link reproduces the card. Spotted plant ids persist per seed in
