@@ -13,16 +13,20 @@
      both formats of all 48 photos + icons.
    - Strategy: cache-first for images/fonts/static assets;
      stale-while-revalidate for the HTML shell and species.json.
+   - Every Osa page is the same HTML (the card comes from ?s= and
+     ?c=, read by the page itself), so pages are cached once, under
+     the shell URL './'. Never per seed, which piled up a copy per
+     card, and never /osa/index.html, which the server answers with
+     a redirect that a browser refuses to show as a page.
    ============================================================= */
 
 const VERSION = 'v3';                                       // manual major — v3: Osa moved from / to /osa/ (the old root-scoped v2 cache is deleted on activate below)
-const BUILD = 'ef11ff06f6';                                 // BUILD (rewritten by build-games)
+const BUILD = 'a693df521b';                                 // BUILD (rewritten by build-games)
 const CACHE = `osa-bingo-${VERSION}-${BUILD}`;
 
 const PRECACHE = [
   // BEGIN-PRECACHE
   './',
-  'index.html',
   'species.json',
   'manifest.webmanifest',
   'img/icons/icon-192.png',
@@ -168,14 +172,17 @@ self.addEventListener('activate', event => {
 });
 
 // ---- Fetch strategies --------------------------------------
-async function staleWhileRevalidate(request, fallbackKey) {
+const SHELL = './';
+
+// Stale-while-revalidate, stored under `key` (the request itself by default).
+// A redirected response is never stored: answering a page with one fails.
+async function staleWhileRevalidate(request, key = request) {
   const cache = await caches.open(CACHE);
-  const cached = (await cache.match(request)) ||
-                 (fallbackKey ? await cache.match(fallbackKey) : undefined);
+  const cached = await cache.match(key);
   const network = fetch(request)
-    .then(res => { if (res && res.ok) cache.put(request, res.clone()); return res; })
+    .then(res => { if (res && res.ok && !res.redirected) cache.put(key, res.clone()); return res; })
     .catch(() => undefined);
-  return cached || (await network) || (await cache.match('index.html'));
+  return cached || (await network) || Response.error();
 }
 
 async function cacheFirst(request) {
@@ -204,11 +211,11 @@ self.addEventListener('fetch', event => {
 
   // The HTML shell: fresh when possible, cached when not.
   if (request.mode === 'navigate') {
-    event.respondWith(staleWhileRevalidate(request, 'index.html'));
+    event.respondWith(staleWhileRevalidate(request, SHELL));
     return;
   }
   // Species data can change without a version bump: keep it fresh.
-  if (url.pathname.endsWith('/species.json') || url.pathname.endsWith('species.json')) {
+  if (url.pathname.endsWith('/species.json')) {
     event.respondWith(staleWhileRevalidate(request));
     return;
   }

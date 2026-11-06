@@ -318,7 +318,7 @@ for (const { g, species, placeholders, dir } of results) {
       .filter(p => existsSync(join(dir, p)));
     const photoFiles = species.flatMap(s => [`${s.photo}.webp`, `${s.photo}.jpg`]).sort();
     precache = [
-      './', 'index.html',
+      './',                          // the page; never index.html, which redirects
       g.list.file, 'manifest.webmanifest',
       ...iconFiles, ...photoFiles,
       '/core/deal.js', '/core/bingo.js', '/core/styles.css', '/tokens.css',
@@ -330,8 +330,7 @@ for (const { g, species, placeholders, dir } of results) {
     // so any asset change yields a new cache name and the update lands.
     const h = createHash('sha256');
     for (const rel of precache) {
-      if (rel === './') continue;
-      const p = rel === 'index.html' ? htmlFile : rel.startsWith('/') ? join(PUBLIC, rel) : join(dir, rel);
+      const p = rel === './' ? htmlFile : rel.startsWith('/') ? join(PUBLIC, rel) : join(dir, rel);
       if (p && existsSync(p)) h.update(rel).update(readFileSync(p));
     }
     build = h.digest('hex').slice(0, 10);
