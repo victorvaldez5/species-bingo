@@ -165,3 +165,15 @@ test('games.json lists the games in order, each with a game.json', () => {
     assert.equal(cfg.path, g.path);
   }
 });
+
+// The note under the card follows the mode (bingo.js renderChrome), so every
+// mode a game offers needs its own two lines.
+test('every game has a colophon for each of its modes', () => {
+  for (const g of readJson('games/games.json')) {
+    const cfg = readJson(`games/${g.id}/game.json`);
+    for (const m of cfg.modes) {
+      const lines = cfg.colophon[m.id];
+      assert.ok(Array.isArray(lines) && lines.length === 2 && lines.every(l => typeof l === 'string' && l), `${g.id} colophon.${m.id}`);
+    }
+  }
+});

@@ -165,9 +165,10 @@ const belowHtml = belowCard && `<!-- Safety callouts -->
     </div>
 
     {belowHtml && <Fragment set:html={belowHtml} />}
+    {/* Per mode (game.json colophon.<mode>); bingo.js swaps it on a mode change. */}
     <footer class="colophon">
-      <p>{game.colophon[0]}</p>
-      <p class="colophon__seed">{game.colophon[1]}</p>
+      <p id="colophon-main">{game.colophon.bingo[0].replace('{raceSize}', game.raceSize)}</p>
+      <p id="colophon-seed" class="colophon__seed">{game.colophon.bingo[1].replace('{raceSize}', game.raceSize)}</p>
     </footer>
   </main>
 
