@@ -19,7 +19,7 @@
     "ci": "npm run lint && npm run build && npm test && npm run check"
   },
   "devDependencies": {
-    "astro": "7.4.2",
+    "astro": "7.4.7",
     "oxlint": "^1.91.0",
     "sharp": "^0.35.5",
     "subset-font": "^2.9.0",
